@@ -35,7 +35,7 @@ const Sidebar = () => {
   return (
     <div className="w-64 bg-gray-50 border-r border-gray-200 min-h-screen flex flex-col">
       {/* Logo */}
-      <div className="p-6 flex items-center gap-3">
+      {/* <div className="p-6 flex items-center gap-3">
         <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
           <svg
             className="w-5 h-5 text-white"
@@ -51,8 +51,8 @@ const Sidebar = () => {
             />
           </svg>
         </div>
-        <span className="text-xl font-bold text-indigo-900">LuxeAura</span>
-      </div>
+         <span className="text-xl font-bold text-indigo-900">LuxeAura</span> 
+      </div> */}
 
       {/* Navigation */}
       <nav className="flex-1 px-4 space-y-2">

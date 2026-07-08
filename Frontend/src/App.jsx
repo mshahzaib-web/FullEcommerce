@@ -7,6 +7,9 @@ import ShoppingCart from "./pages/ShoppingCart";
 import CheckOut from "./pages/CheckOut";
 import AdminDashboard from "./pages/AdminDashboard";
 import AddProduct from "./pages/AddProduct";
+import ProductManage from "./pages/ProductManage";
+import OrdersManage from "./pages/OrdersManage";
+import OrderDetails from "./pages/OrderDetails";
 
 function App() {
   return (
@@ -21,6 +24,9 @@ function App() {
           <Route path="/checkout" element={<CheckOut />}></Route>
           <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
           <Route path="/admin/add-product" element={<AddProduct />}></Route>
+          <Route path="/admin/products" element={<ProductManage />}></Route>
+          <Route path="/admin/orders" element={<OrdersManage />}></Route>
+          <Route path="/admin/order-details" element={<OrderDetails />}></Route>
         </Routes>
       </BrowserRouter>
     </>

@@ -37,7 +37,7 @@ export default function ShopByCategory() {
             <div className="text-center group cursor-pointer">
               <div className="bg-gray-100 rounded-xl overflow-hidden mb-3 aspect-square">
                 <img
-                  src="https://shorturl.at/KoFLO"
+                  src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop"
                   alt=""
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                 />
@@ -50,7 +50,7 @@ export default function ShopByCategory() {
             <div className="text-center group cursor-pointer">
               <div className="bg-gray-100 rounded-xl overflow-hidden mb-3 aspect-square">
                 <img
-                  src="https://shorturl.at/KoFLO"
+                  src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop"
                   alt=""
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                 />
@@ -63,7 +63,33 @@ export default function ShopByCategory() {
             <div className="text-center group cursor-pointer">
               <div className="bg-gray-100 rounded-xl overflow-hidden mb-3 aspect-square">
                 <img
-                  src="https://shorturl.at/KoFLO"
+                  src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop"
+                  alt=""
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+              </div>
+              <h3 className="font-semibold text-sm text-gray-800">
+                Beautiful Address
+              </h3>
+              <p className="text-xs text-gray-400">1,220</p>
+            </div>
+            <div className="text-center group cursor-pointer">
+              <div className="bg-gray-100 rounded-xl overflow-hidden mb-3 aspect-square">
+                <img
+                  src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop"
+                  alt=""
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+              </div>
+              <h3 className="font-semibold text-sm text-gray-800">
+                Beautiful Address
+              </h3>
+              <p className="text-xs text-gray-400">1,220</p>
+            </div>
+            <div className="text-center group cursor-pointer">
+              <div className="bg-gray-100 rounded-xl overflow-hidden mb-3 aspect-square">
+                <img
+                  src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&h=500&fit=crop"
                   alt=""
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                 />

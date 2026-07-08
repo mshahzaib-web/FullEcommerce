@@ -29,10 +29,10 @@ const Header = () => {
         </button>
 
         {/* Divider */}
-        <div className="w-px h-10 bg-gray-300 mx-6"></div>
+        <div className="hidden md:block w-px h-10 bg-gray-300 mx-6"></div>
 
         {/* User Profile */}
-        <div className="flex items-center gap-4">
+        <div className="hidden md:block flex items-center gap-4">
           <div className="text-right">
             <p className="font-semibold text-gray-900">Alex Rivera</p>
             <p className="text-xs text-gray-500 uppercase tracking-wide">

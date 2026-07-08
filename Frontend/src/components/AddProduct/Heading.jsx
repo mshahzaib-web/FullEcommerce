@@ -2,7 +2,7 @@ export default function Heading() {
   return (
     <>
       <div className="bg-gray-50 p-4 md:p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="hidden lg:block max-w-7xl mx-auto">
           {/* Breadcrumb */}
           <nav className="mb-4 text-sm text-gray-600">
             <ol className="flex items-center space-x-2">
@@ -21,9 +21,6 @@ export default function Heading() {
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
               Add New Product
             </h1>
-            <button className="w-full sm:w-auto px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200">
-              Save Product
-            </button>
           </div>
 
           {/* Main Content Grid */}

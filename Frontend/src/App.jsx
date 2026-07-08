@@ -6,6 +6,7 @@ import ProductDetails from "./pages/ProductDetails";
 import ShoppingCart from "./pages/ShoppingCart";
 import CheckOut from "./pages/CheckOut";
 import AdminDashboard from "./pages/AdminDashboard";
+import AddProduct from "./pages/AddProduct";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/cart" element={<ShoppingCart />}></Route>
           <Route path="/checkout" element={<CheckOut />}></Route>
           <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
+          <Route path="/admin/add-product" element={<AddProduct />}></Route>
         </Routes>
       </BrowserRouter>
     </>

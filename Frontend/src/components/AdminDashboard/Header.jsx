@@ -1,8 +1,27 @@
 const Header = () => {
   return (
-    <header className="bg-white border-b border-gray-200 px-8 py-4">
+    <header className="bg-white border-b border-gray-200  py-4">
       <div className="flex items-center justify-between">
-        <div className="flex-1"></div>
+        <div className="flex-1">
+          <div className="p-6 flex items-center gap-3">
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+              <svg
+                className="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+            </div>
+            <span className="text-xl font-bold text-indigo-900">LuxeAura</span>
+          </div>{" "}
+        </div>
 
         {/* Create New Button */}
         <button className="bg-indigo-600 text-white px-6 py-2.5 rounded-full font-medium hover:bg-indigo-700 transition-colors">

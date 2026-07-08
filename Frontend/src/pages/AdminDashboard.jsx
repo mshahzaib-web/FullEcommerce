@@ -5,7 +5,30 @@ import Card from "../components/AdminDashboard/Card";
 export default function AdminDashboard() {
   return (
     <>
-      <div className="container mx-auto">
+      <div>
+        <div>
+          <Header />
+        </div>
+        <div className="grid grid-cols-12">
+          <div className="col-span-12 md:col-span-4 lg:col-span-3">
+            <Sidebar />
+          </div>
+          <div className="col-span-12 md:col-span-7 lg:col-span-8 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <Card />
+              <Card />
+              <Card />
+              <Card />
+              <Card />
+              <Card />
+              <Card />
+              <Card />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* <div className="container mx-auto">
         <div className="flex">
           <div className="hidden md:block ">
             <Sidebar />
@@ -30,7 +53,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

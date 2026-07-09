@@ -10,6 +10,8 @@ import AddProduct from "./pages/AddProduct";
 import ProductManage from "./pages/ProductManage";
 import OrdersManage from "./pages/OrdersManage";
 import OrderDetails from "./pages/OrderDetails";
+import SignUp from "./pages/SignUp";
+import LogIn from "./pages/LogIn";
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
           <Route path="/admin/products" element={<ProductManage />}></Route>
           <Route path="/admin/orders" element={<OrdersManage />}></Route>
           <Route path="/admin/order-details" element={<OrderDetails />}></Route>
+          <Route path="/admin/signup" element={<SignUp />}></Route>
+          <Route path="/admin/login" element={<LogIn />}></Route>
         </Routes>
       </BrowserRouter>
     </>

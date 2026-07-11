@@ -1,4 +1,50 @@
+import { useRef, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { uploadImage, deleteImage } from "../../api/product";
+import { MdDeleteForever } from "react-icons/md";
+
 const Media = () => {
+  const inputRef = useRef(null);
+  const [image, setImage] = useState({ url: null, public_id: null });
+
+  const divClickHandle = () => {
+    if (image.url == null) {
+      inputRef.current.click();
+    }
+  };
+
+  const imageMutation = useMutation({
+    mutationFn: uploadImage,
+    onSuccess: (data) => {
+      // console.log(data);
+      // console.log(data.image);
+      setImage(data.image);
+    },
+  });
+  console.log(image);
+
+  const handleImageChange = (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    imageMutation.mutate(formData);
+  };
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteImage,
+    onSuccess: (data) => {
+      setImage({ url: null, public_id: null });
+      alert(data.message);
+    },
+  });
+
+  const handleDelteBtn = () => {
+    deleteMutation.mutate(image);
+  };
+
   return (
     <>
       <div className=" lg:hidden max-w-7xl mx-auto">
@@ -39,21 +85,48 @@ const Media = () => {
         </div>
 
         {/* Upload Area */}
-        <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-indigo-400 hover:bg-indigo-50 transition-all cursor-pointer mb-6">
-          <div className="w-12 h-12 mx-auto mb-3 text-indigo-600">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+        <input
+          onChange={handleImageChange}
+          accept="image/*"
+          className="hidden"
+          type="file"
+          ref={inputRef}
+        />
+        <div
+          onClick={divClickHandle}
+          className="border-2 border-dashed border-gray-300 rounded-xl py-2  text-center hover:border-indigo-400 hover:bg-indigo-50 transition-all cursor-pointer mb-6"
+        >
+          {image.url != null ? (
+            <div className="relative group">
+              <img
+                className="object-cover w-full h-full"
+                src={image.url}
+                alt=""
               />
-            </svg>
-          </div>
-          <p className="text-gray-700 font-medium mb-1">
-            Click or drag to upload
-          </p>
-          <p className="text-sm text-gray-500">PNG, JPG, up to 10MB</p>
+              <div className="hidden  group-hover:flex absolute inset-0  justify-center items-center">
+                <div className="flex justify-center items-center w-8 h-8 bg-amber-500 rounded-full">
+                  <MdDeleteForever onClick={handleDelteBtn} color="#f23224" />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="w-12 h-12 mx-auto mb-3 text-indigo-600">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                  />
+                </svg>
+              </div>
+              <p className="text-gray-700 font-medium mb-1">
+                Click or drag to upload
+              </p>
+              <p className="text-sm text-gray-500">PNG, JPG, up to 10MB</p>
+            </>
+          )}
         </div>
 
         {/* Existing Images */}

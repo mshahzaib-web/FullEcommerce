@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Home from "./pages/Home";
 import ShopProducts from "./pages/ShopProducts";
 import Category from "./pages/Category";
@@ -13,26 +14,33 @@ import OrderDetails from "./pages/OrderDetails";
 import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
 
+const queryClient = new QueryClient();
+
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/shop" element={<ShopProducts />}></Route>
-          <Route path="/category" element={<Category />}></Route>
-          <Route path="/product" element={<ProductDetails />}></Route>
-          <Route path="/cart" element={<ShoppingCart />}></Route>
-          <Route path="/checkout" element={<CheckOut />}></Route>
-          <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
-          <Route path="/admin/add-product" element={<AddProduct />}></Route>
-          <Route path="/admin/products" element={<ProductManage />}></Route>
-          <Route path="/admin/orders" element={<OrdersManage />}></Route>
-          <Route path="/admin/order-details" element={<OrderDetails />}></Route>
-          <Route path="/admin/signup" element={<SignUp />}></Route>
-          <Route path="/admin/login" element={<LogIn />}></Route>
-        </Routes>
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />}></Route>
+            <Route path="/shop" element={<ShopProducts />}></Route>
+            <Route path="/category" element={<Category />}></Route>
+            <Route path="/product" element={<ProductDetails />}></Route>
+            <Route path="/cart" element={<ShoppingCart />}></Route>
+            <Route path="/checkout" element={<CheckOut />}></Route>
+            <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
+            <Route path="/admin/add-product" element={<AddProduct />}></Route>
+            <Route path="/admin/products" element={<ProductManage />}></Route>
+            <Route path="/admin/orders" element={<OrdersManage />}></Route>
+            <Route
+              path="/admin/order-details"
+              element={<OrderDetails />}
+            ></Route>
+            <Route path="/admin/signup" element={<SignUp />}></Route>
+            <Route path="/admin/login" element={<LogIn />}></Route>
+          </Routes>
+        </BrowserRouter>
+      </QueryClientProvider>
     </>
   );
 }

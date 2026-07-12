@@ -6,6 +6,7 @@ import Header from "../components/AdminDashboard/Header";
 import Sidebar from "../components/AdminDashboard/Sidebar";
 import Inventory from "../components/AddProduct/Inventory";
 import Variants from "../components/AddProduct/Variants";
+import SubImages from "../components/AddProduct/SubImages";
 
 export default function AddProduct() {
   return (
@@ -28,6 +29,7 @@ export default function AddProduct() {
 
             <div className="col-span-1 md:col-span-12 lg:col-span-3 order-1 lg:order-2">
               <Media />
+              <SubImages />
             </div>
           </div>
         </div>

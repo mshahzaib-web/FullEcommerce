@@ -33,3 +33,35 @@ export const deleteImage = asyncHandler(async (req, res) => {
     message: "image delete",
   });
 });
+
+export const uploadSubImages = asyncHandler(async (req, res) => {
+  const files = req.files;
+  const uploadPromises = files.map((file) => {
+    // Use file.buffer if using memoryStorage, or file.path if saving locally first
+    return uploadToCloudinary(file.buffer);
+  });
+
+  // 2. Wait for all uploads to complete in parallel
+  const cloudinaryResults = await Promise.all(uploadPromises);
+
+  const subImageDetails = cloudinaryResults.map((result) => ({
+    url: result.secure_url,
+    public_id: result.public_id,
+  }));
+
+  res.status(200).json({
+    success: true,
+    message: "Images Upload Successfully",
+    subImageDetails,
+  });
+});
+
+export const deleteSubImage = asyncHandler(async (req, res) => {
+  const { public_id } = req.body;
+  const result = await deleteFromCloudinary(public_id);
+  res.status(200).json({
+    success: true,
+    message: "subImage delte",
+    public_id,
+  });
+});

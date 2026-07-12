@@ -5,6 +5,7 @@ import { MdDeleteForever } from "react-icons/md";
 
 const Media = () => {
   const inputRef = useRef(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [image, setImage] = useState({ url: null, public_id: null });
 
   const divClickHandle = () => {
@@ -19,6 +20,7 @@ const Media = () => {
       // console.log(data);
       // console.log(data.image);
       setImage(data.image);
+      setIsUploadingImage(false);
     },
   });
   console.log(image);
@@ -26,6 +28,8 @@ const Media = () => {
   const handleImageChange = (e) => {
     e.preventDefault();
     const file = e.target.files[0];
+
+    setIsUploadingImage(true);
 
     const formData = new FormData();
     formData.append("image", file);
@@ -83,119 +87,84 @@ const Media = () => {
           </svg>
           <h2 className="text-lg font-semibold text-gray-900">Media</h2>
         </div>
-
-        {/* Upload Area */}
-        <input
-          onChange={handleImageChange}
-          accept="image/*"
-          className="hidden"
-          type="file"
-          ref={inputRef}
-        />
-        <div
-          onClick={divClickHandle}
-          className="border-2 border-dashed border-gray-300 rounded-xl py-2  text-center hover:border-indigo-400 hover:bg-indigo-50 transition-all cursor-pointer mb-6"
-        >
-          {image.url != null ? (
-            <div className="relative group">
-              <img
-                className="object-cover w-full h-full"
-                src={image.url}
-                alt=""
-              />
-              <div className="hidden  group-hover:flex absolute inset-0  justify-center items-center">
-                <div className="flex justify-center items-center w-8 h-8 bg-amber-500 rounded-full">
-                  <MdDeleteForever onClick={handleDelteBtn} color="#f23224" />
-                </div>
-              </div>
-            </div>
-          ) : (
-            <>
-              <div className="w-12 h-12 mx-auto mb-3 text-indigo-600">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                  />
-                </svg>
-              </div>
-              <p className="text-gray-700 font-medium mb-1">
-                Click or drag to upload
-              </p>
-              <p className="text-sm text-gray-500">PNG, JPG, up to 10MB</p>
-            </>
-          )}
-        </div>
-
-        {/* Existing Images */}
-        <div className="grid grid-cols-3 gap-3">
-          <div className="relative aspect-square rounded-lg overflow-hidden group">
-            <img
-              src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=200&h=200&fit=crop"
-              alt="Product"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center">
-              <button className="opacity-0 group-hover:opacity-100 p-1.5 bg-white rounded-full text-red-600 hover:bg-red-50 transition-all">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div className="relative aspect-square rounded-lg overflow-hidden group">
-            <img
-              src="https://images.unsplash.com/photo-1558171813-4c088753af8f?w=200&h=200&fit=crop"
-              alt="Product"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center">
-              <button className="opacity-0 group-hover:opacity-100 p-1.5 bg-white rounded-full text-red-600 hover:bg-red-50 transition-all">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <button className="aspect-square rounded-lg border-2 border-dashed border-gray-300 hover:border-indigo-400 hover:bg-indigo-50 flex items-center justify-center text-gray-400 hover:text-indigo-600 transition-all">
+        {isUploadingImage ? (
+          <div className="flex flex-col items-center justify-center">
             <svg
-              className="w-6 h-6"
+              className="animate-spin h-8 w-8 text-indigo-600 mb-3"
               fill="none"
-              stroke="currentColor"
               viewBox="0 0 24 24"
             >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-          </button>
-        </div>
+            <p className="text-gray-700 font-medium text-sm">
+              Uploading image...
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Upload Area */}
+            <input
+              onChange={handleImageChange}
+              accept="image/*"
+              className="hidden"
+              type="file"
+              ref={inputRef}
+            />
+            <div
+              onClick={divClickHandle}
+              className="border-2 border-dashed border-gray-300 rounded-xl py-2  text-center hover:border-indigo-400 hover:bg-indigo-50 transition-all cursor-pointer mb-6"
+            >
+              {image.url != null ? (
+                <div className="relative group">
+                  <img
+                    className="object-cover w-full h-full"
+                    src={image.url}
+                    alt=""
+                  />
+                  <div className="hidden  group-hover:flex absolute inset-0  justify-center items-center">
+                    <div className="flex justify-center items-center w-8 h-8 bg-amber-500 rounded-full">
+                      <MdDeleteForever
+                        onClick={handleDelteBtn}
+                        color="#f23224"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="w-12 h-12 mx-auto mb-3 text-indigo-600">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      />
+                    </svg>
+                  </div>
+                  <p className="text-gray-700 font-medium mb-1">
+                    Click or drag to upload
+                  </p>
+                  <p className="text-sm text-gray-500">PNG, JPG, up to 10MB</p>
+                </>
+              )}
+            </div>
+          </>
+        )}
+
+        {/* Existing Images */}
       </div>
     </>
   );

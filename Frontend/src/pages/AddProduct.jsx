@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { productSchema } from "../validation/productSchema";
 import { useForm, FormProvider, Form } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import Heading from "../components/AddProduct/Heading";
 import GeneralInformation from "../components/AddProduct/GeneralInformation";
@@ -16,7 +19,10 @@ export default function AddProduct() {
   const [mainImageData, setMainImageData] = useState({});
   const [subImageData, setSubImageData] = useState([]);
 
-  const methods = useForm();
+  const methods = useForm({
+    resolver: zodResolver(productSchema),
+  });
+  const { handleSubmit } = methods;
 
   // const addProductMutation = useMutation({
   //   mutationFn: addProduct,
@@ -25,10 +31,46 @@ export default function AddProduct() {
   //   },
   // });
 
+  const onSubmit = (data) => {
+    if (mainImageData.url == null) {
+      toast.error("Main image required");
+      return;
+    }
+
+    if (subImageData.length === 0) {
+      toast.error("At least one sub image required");
+      return;
+    }
+
+    console.log("Form Data:", data);
+
+    console.log("Main Image:", mainImageData);
+    console.log("Sub Images:", subImageData);
+
+    const finalData = {
+      ...data,
+      mainImage: mainImageData,
+      subImages: subImageData,
+    };
+
+    console.log("Final Data:", finalData);
+  };
+
+  //Error
+  const onError = (errors) => {
+    console.log("Validation Errors:", errors);
+
+    const firstError = Object.values(errors)[0];
+
+    if (firstError) {
+      toast.error(firstError.message);
+    }
+  };
+
   return (
     <>
       <FormProvider {...methods}>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
           <div>
             <Header />
             <div className="grid grid-cols-12 gap-3 py-6">
@@ -53,7 +95,10 @@ export default function AddProduct() {
             </div>
           </div>
           <div className="flex justify-center items-center pb-6">
-            <button className="w-full sm:w-auto px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200">
+            <button
+              type="submit"
+              className="w-full sm:w-auto px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200 hover:cursor-pointer"
+            >
               Add Product
             </button>
           </div>

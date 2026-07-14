@@ -28,13 +28,10 @@ const Pricing = () => {
             Price
           </label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-              $
-            </span>
             <input
               {...register("price")}
               type="number"
-              defaultValue="0.00"
+              placeholder="$ 00"
               className="w-full pl-8 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
             />
           </div>

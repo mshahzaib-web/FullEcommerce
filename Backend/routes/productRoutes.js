@@ -5,7 +5,7 @@ import {
   deleteImage,
   uploadSubImages,
   deleteSubImage,
-} from "../controllers/product.js";
+} from "../controllers/productImage.js";
 
 const router = express.Router();
 

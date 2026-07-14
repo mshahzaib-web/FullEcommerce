@@ -11,7 +11,8 @@ export default function SubImages({ sendData }) {
     sendData(subImages);
   }, [subImages, sendData]);
 
-  const divClickHandle = () => {
+  const divClickHandle = (e) => {
+    e.preventDefault();
     inputRef.current.click();
   };
 
@@ -78,6 +79,7 @@ export default function SubImages({ sendData }) {
             />
             <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center">
               <button
+                type="button"
                 onClick={() => handleDeleteSubImage(subImage)}
                 className="opacity-0 group-hover:opacity-100 p-1.5 bg-white rounded-full text-red-600 hover:bg-red-50 transition-all"
               >

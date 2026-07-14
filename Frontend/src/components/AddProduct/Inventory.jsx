@@ -30,7 +30,7 @@ const Inventory = () => {
           <input
             {...register("stock")}
             type="number"
-            defaultValue="0"
+            placeholder="Stock"
             className="w-full md:w-64 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
           />
         </div>

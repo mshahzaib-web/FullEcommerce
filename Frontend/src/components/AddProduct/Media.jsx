@@ -30,7 +30,6 @@ const Media = ({ onSendData }) => {
   // console.log(image);
 
   const handleImageChange = (e) => {
-    e.preventDefault();
     const file = e.target.files[0];
 
     setIsUploadingImage(true);
@@ -45,7 +44,7 @@ const Media = ({ onSendData }) => {
     mutationFn: deleteImage,
     onSuccess: (data) => {
       setImage({ url: null, public_id: null });
-      alert(data.message);
+      console(data.message);
     },
   });
 

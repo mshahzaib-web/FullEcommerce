@@ -1,12 +1,16 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { uploadImage, deleteImage } from "../../api/product";
 import { MdDeleteForever } from "react-icons/md";
 
-const Media = () => {
+const Media = ({ onSendData }) => {
   const inputRef = useRef(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [image, setImage] = useState({ url: null, public_id: null });
+
+  useEffect(() => {
+    onSendData(image);
+  }, [image, onSendData]);
 
   const divClickHandle = () => {
     if (image.url == null) {
@@ -23,7 +27,7 @@ const Media = () => {
       setIsUploadingImage(false);
     },
   });
-  console.log(image);
+  // console.log(image);
 
   const handleImageChange = (e) => {
     e.preventDefault();

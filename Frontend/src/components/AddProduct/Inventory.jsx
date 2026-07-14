@@ -1,4 +1,8 @@
+import { useFormContext } from "react-hook-form";
+
 const Inventory = () => {
+  const { register } = useFormContext();
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
       <div className="flex items-center gap-2 mb-6">
@@ -24,19 +28,9 @@ const Inventory = () => {
             Stock Quantity
           </label>
           <input
+            {...register("stock")}
             type="number"
             defaultValue="0"
-            className="w-full md:w-64 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Warehouse Location
-          </label>
-          <input
-            type="text"
-            placeholder="e.g. Floor 2, Row B"
             className="w-full md:w-64 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
           />
         </div>

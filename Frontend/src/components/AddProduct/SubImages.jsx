@@ -1,11 +1,15 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { uploadSubImages, deleteSubImage } from "../../api/product";
 
-export default function SubImages() {
+export default function SubImages({ sendData }) {
   const inputRef = useRef(null);
   const [isUploadingSubImages, setIsUploadingSubImages] = useState(false);
   const [subImages, setSubImages] = useState([]);
+
+  useEffect(() => {
+    sendData(subImages);
+  }, [subImages, sendData]);
 
   const divClickHandle = () => {
     inputRef.current.click();

@@ -1,4 +1,27 @@
+import { useFormContext } from "react-hook-form";
+import { useRef, useState } from "react";
+
 const Variants = () => {
+  const { register } = useFormContext();
+  const [sizeValue, setSizeValue] = useState([]);
+  const sizeInputRef = useRef();
+
+  const handleSizeInputData = (e) => {
+    e.preventDefault();
+    const value = sizeInputRef.current.value.trim();
+
+    if (!value) return;
+
+    setSizeValue((prev) => [...prev, value]);
+
+    sizeInputRef.current.value = "";
+  };
+
+  const handleDeleteSize = (size) => {
+    const newSizeValue = sizeValue.filter((sizeVal) => sizeVal != size);
+    setSizeValue(newSizeValue);
+  };
+
   return (
     <>
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
@@ -19,22 +42,6 @@ const Variants = () => {
             </svg>
             <h2 className="text-lg font-semibold text-gray-900">Variants</h2>
           </div>
-          <button className="text-indigo-600 hover:text-indigo-700 font-medium text-sm flex items-center gap-1">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            Add Option
-          </button>
         </div>
 
         <div className="space-y-5">
@@ -44,79 +51,71 @@ const Variants = () => {
               Size
             </label>
             <div className="flex flex-wrap items-center gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg min-h-11">
-              <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-md text-sm font-medium text-gray-700">
-                XS
-                <button className="text-gray-400 hover:text-red-600">
-                  <svg
-                    className="w-3 h-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
+              {sizeValue.map((size, index) => (
+                <div key={index}>
+                  <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-md text-sm font-medium text-gray-700">
+                    <input
+                      {...register(`size.${index}`)}
+                      type="text"
+                      className="text-center w-10 font-bold rounded-md"
+                      value={size}
                     />
-                  </svg>
-                </button>
-              </span>
+                    <button
+                      onClick={() => handleDeleteSize(size)}
+                      type="button"
+                      className=" text-red-600 hover:cursor-pointer"
+                    >
+                      <svg
+                        className="w-3 h-3"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  </span>
+                </div>
+              ))}
+
               <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-md text-sm font-medium text-gray-700">
-                S
-                <button className="text-gray-400 hover:text-red-600">
-                  <svg
-                    className="w-3 h-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </span>
-              <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-gray-200 rounded-md text-sm font-medium text-gray-700">
-                M
-                <button className="text-gray-400 hover:text-red-600">
-                  <svg
-                    className="w-3 h-3"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </span>
-              <button className="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700">
-                Add...
-              </button>
-            </div>
-            <div className="flex justify-end mt-2">
-              <button className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                <input
+                  ref={sizeInputRef}
+                  type="text"
+                  className="text-center w-10 border-indigo-600 border-2 font-bold rounded-md focus:border-indigo-600"
+                  // defaultValue="XL"
+                />
+                <button
+                  type="button"
+                  className="text-gray-400 hover:text-red-600 hover:cursor-pointer"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
+                  <svg
+                    className="w-3 h-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </span>
+
+              <button
+                onClick={handleSizeInputData}
+                type="button"
+                className="px-2 py-1 text-sm text-white hover:font-bold hover:cursor-pointer bg-indigo-600 rounded-3xl"
+              >
+                Add
               </button>
             </div>
           </div>
@@ -128,9 +127,16 @@ const Variants = () => {
             </label>
             <div className="flex flex-wrap items-center gap-2 p-2 bg-gray-50 border border-gray-200 rounded-lg min-h-11">
               <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-gray-200 rounded-md text-sm font-medium text-gray-700">
-                <span className="w-3 h-3 rounded-full bg-gray-900"></span>
-                Midnight
-                <button className="text-gray-400 hover:text-red-600">
+                <input
+                  {...register("color")}
+                  className="w-10"
+                  type="text"
+                  defaultValue="xg"
+                />
+                <button
+                  type="button"
+                  className="text-gray-400 hover:text-red-600"
+                >
                   <svg
                     className="w-3 h-3"
                     fill="none"
@@ -146,34 +152,15 @@ const Variants = () => {
                   </svg>
                 </button>
               </span>
-              <button className="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700">
-                Add...
-              </button>
-            </div>
-            <div className="flex justify-end mt-2">
-              <button className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
+              <button
+                type="button"
+                className="px-2 py-1 text-sm text-white hover:font-bold hover:cursor-pointer bg-indigo-600 rounded-3xl"
+              >
+                Add
               </button>
             </div>
           </div>
         </div>
-      </div>
-      <div className="flex justify-center">
-        <button className="w-full sm:w-auto px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-200">
-          Save Product
-        </button>
       </div>
     </>
   );

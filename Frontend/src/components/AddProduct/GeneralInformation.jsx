@@ -1,4 +1,8 @@
+import { useFormContext } from "react-hook-form";
+
 const GeneralInformation = () => {
+  const { register } = useFormContext();
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
       <div className="flex items-center gap-2 mb-6">
@@ -18,6 +22,7 @@ const GeneralInformation = () => {
               Product Name
             </label>
             <input
+              {...register("name")}
               type="text"
               placeholder="e.g. Silk Evening Gown"
               className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
@@ -28,6 +33,7 @@ const GeneralInformation = () => {
               SKU
             </label>
             <input
+              {...register("sku")}
               type="text"
               defaultValue="LA-2023-001"
               className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
@@ -42,11 +48,14 @@ const GeneralInformation = () => {
               Category
             </label>
             <div className="relative">
-              <select className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent appearance-none cursor-pointer">
-                <option>Select Category</option>
-                <option>Clothing</option>
-                <option>Accessories</option>
-                <option>Footwear</option>
+              <select
+                {...register("category")}
+                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent appearance-none cursor-pointer"
+              >
+                <option value="">Select Category</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Accessories">Accessories</option>
+                <option value="Footwear">Footwear</option>
               </select>
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                 <svg
@@ -70,6 +79,7 @@ const GeneralInformation = () => {
               Brand
             </label>
             <input
+              {...register("brand")}
               type="text"
               placeholder="e.g. LuxeAura Signature"
               className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
@@ -124,6 +134,7 @@ const GeneralInformation = () => {
             </div>
             {/* Text Area */}
             <textarea
+              {...register("description")}
               placeholder="Describe your product in detail..."
               rows={6}
               className="w-full px-4 py-3 bg-white focus:outline-none resize-none text-gray-700"

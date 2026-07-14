@@ -2,8 +2,10 @@ import asyncHandler from "express-async-handler";
 import {
   uploadToCloudinary,
   deleteFromCloudinary,
-} from "../utils/uploadToCloudinary.js";
+} from "../../utils/uploadToCloudinary.js";
 import { success } from "zod";
+
+//Upload Main Image to Cloudinary
 export const uploadImage = asyncHandler(async (req, res) => {
   if (!req.file) {
     return res.status(400).json({
@@ -24,6 +26,7 @@ export const uploadImage = asyncHandler(async (req, res) => {
   });
 });
 
+//Delete Main Image from Cloudinary
 export const deleteImage = asyncHandler(async (req, res) => {
   const { public_id } = req.body;
 
@@ -34,6 +37,7 @@ export const deleteImage = asyncHandler(async (req, res) => {
   });
 });
 
+//Upload Sub Images from Cloudinary
 export const uploadSubImages = asyncHandler(async (req, res) => {
   const files = req.files;
   const uploadPromises = files.map((file) => {
@@ -56,6 +60,7 @@ export const uploadSubImages = asyncHandler(async (req, res) => {
   });
 });
 
+//Delete Sub Image from Cloudinary
 export const deleteSubImage = asyncHandler(async (req, res) => {
   const { public_id } = req.body;
   const result = await deleteFromCloudinary(public_id);

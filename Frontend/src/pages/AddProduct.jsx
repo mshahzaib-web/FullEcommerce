@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { productSchema } from "../validation/productSchema";
-import { useForm, FormProvider, Form } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -15,6 +15,8 @@ import Inventory from "../components/AddProduct/Inventory";
 import Variants from "../components/AddProduct/Variants";
 import SubImages from "../components/AddProduct/SubImages";
 
+import { addProduct } from "../api/Admin/admin";
+
 export default function AddProduct() {
   const [mainImageData, setMainImageData] = useState({});
   const [subImageData, setSubImageData] = useState([]);
@@ -24,12 +26,15 @@ export default function AddProduct() {
   });
   const { handleSubmit } = methods;
 
-  // const addProductMutation = useMutation({
-  //   mutationFn: addProduct,
-  //   onSuccess: (data) => {
-  //     alert(data.message);
-  //   },
-  // });
+  const addProductMutation = useMutation({
+    mutationFn: addProduct,
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+  });
 
   const onSubmit = (data) => {
     if (mainImageData.url == null) {
@@ -42,11 +47,6 @@ export default function AddProduct() {
       return;
     }
 
-    console.log("Form Data:", data);
-
-    console.log("Main Image:", mainImageData);
-    console.log("Sub Images:", subImageData);
-
     const finalData = {
       ...data,
       mainImage: mainImageData,
@@ -54,6 +54,7 @@ export default function AddProduct() {
     };
 
     console.log("Final Data:", finalData);
+    addProductMutation.mutate(finalData);
   };
 
   //Error

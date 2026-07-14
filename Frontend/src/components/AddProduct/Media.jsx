@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { uploadImage, deleteImage } from "../../api/product";
+import { uploadImage, deleteImage } from "../../api/Admin/admin";
 import { MdDeleteForever } from "react-icons/md";
 
 const Media = ({ onSendData }) => {

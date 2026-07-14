@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { uploadSubImages, deleteSubImage } from "../../api/product";
+import { uploadSubImages, deleteSubImage } from "../../api/Admin/admin";
 
 export default function SubImages({ sendData }) {
   const inputRef = useRef(null);

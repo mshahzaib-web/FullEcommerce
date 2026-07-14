@@ -11,9 +11,9 @@ export const productSchema = z.object({
 
   description: z.string().min(10, "Description must be at least 10 characters"),
 
-  price: z.string().min(1, "Price is required"),
+  price: z.string().min(1, "Price is required").transform(Number),
 
-  stock: z.string().min(1, "Stock is required"),
+  stock: z.string().min(1, "Stock is required").transform(Number),
 
   color: z.array(z.string()).optional(),
 

@@ -1,11 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { getProducts } from "../../api/Product/product";
+import { useNavigate } from "react-router-dom";
 
 /**
  * ProductGrid Component
  * Coordinates the filtering controls row alongside structural listing arrays.
  */
 export default function ProductGrid() {
+  const navigate = useNavigate();
+
   const { data, isPending, error } = useQuery({
     queryKey: ["products"],
     queryFn: getProducts,
@@ -127,8 +130,11 @@ export default function ProductGrid() {
 
                 {/* Addition Controls buttons bar wrapper layout */}
                 <div className="flex items-center gap-1.5">
-                  <button className="flex-1 bg-[#4F46E5] text-white font-bold text-[11px] py-2.5 px-3 rounded-xl hover:bg-[#4338CA] transition-colors flex items-center justify-center">
-                    Add to Cart
+                  <button
+                    onClick={() => navigate(`/product/${product._id}`)}
+                    className="flex-1 bg-[#4F46E5] text-white font-bold text-[11px] py-2.5 px-3 rounded-xl hover:bg-[#4338CA] transition-colors flex items-center justify-center hover:cursor-pointer"
+                  >
+                    Buy Now
                   </button>
                   <button className="p-2.5 rounded-xl bg-indigo-50 text-[#4F46E5] hover:bg-indigo-100 transition-colors">
                     <svg

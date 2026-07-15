@@ -1,6 +1,8 @@
-import React from "react";
+import { useProductDetails } from "../../context/productDetailsContext";
 
 export default function ProductDescription() {
+  const data = useProductDetails();
+
   return (
     <>
       <div className="mt-16 max-w-3xl mx-auto">
@@ -14,18 +16,7 @@ export default function ProductDescription() {
         </div>
 
         <div className="prose prose-sm text-gray-600">
-          <p className="mb-4 leading-relaxed">
-            Elevate your daily rotation with the LuxeAura Minimalist Silk Shirt.
-            Crafted from our signature 22-momme mulberry silk, this piece offers
-            a weightless feel and a luminous finish that transitions
-            effortlessly from day to night.
-          </p>
-          <ul className="list-disc pl-5 space-y-2">
-            <li>Relaxed fit for modern comfort</li>
-            <li>Concealed button placket</li>
-            <li>Curved hem for versatile styling</li>
-            <li>Oeko-Tex Standard 100 Certified</li>
-          </ul>
+          <p className="mb-4 leading-relaxed">{data.product.description}</p>
         </div>
       </div>
     </>

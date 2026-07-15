@@ -2,7 +2,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { productSchema } from "../validation/productSchema";
 import { useForm, FormProvider } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import Heading from "../components/AddProduct/Heading";
@@ -18,6 +18,8 @@ import SubImages from "../components/AddProduct/SubImages";
 import { addProduct } from "../api/Admin/admin";
 
 export default function AddProduct() {
+  const queryClient = useQueryClient();
+
   const [mainImageData, setMainImageData] = useState({});
   const [subImageData, setSubImageData] = useState([]);
 
@@ -30,6 +32,7 @@ export default function AddProduct() {
     mutationFn: addProduct,
     onSuccess: (data) => {
       toast.success(data.message);
+      queryClient.invalidateQueries({ queryKey: ["products"] });
     },
     onError: (error) => {
       toast.error(error.response.data.message);
@@ -49,6 +52,7 @@ export default function AddProduct() {
 
     const finalData = {
       ...data,
+      brand: data.brand?.trim() || "No Brand",
       mainImage: mainImageData,
       subImages: subImageData,
     };
@@ -75,7 +79,7 @@ export default function AddProduct() {
           <div>
             <Header />
             <div className="grid grid-cols-12 gap-3 py-6">
-              <div className="hidden md:block md:col-span-4 lg:col-span-3">
+              <div className="col-span-12 lg:col-span-3">
                 <Sidebar />
               </div>
 

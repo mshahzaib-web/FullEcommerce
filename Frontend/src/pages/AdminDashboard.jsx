@@ -10,11 +10,11 @@ export default function AdminDashboard() {
           <Header />
         </div>
         <div className="grid grid-cols-12">
-          <div className="col-span-12 md:col-span-4 lg:col-span-3">
+          <div className="col-span-12  lg:col-span-3">
             <Sidebar />
           </div>
-          <div className="col-span-12 md:col-span-7 lg:col-span-8 gap-4 ps-13 md:ps-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="col-span-12 md:col-span-12 lg:col-span-8 gap-4 ps-13 md:ps-0">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4">
               <Card />
               <Card />
               <Card />

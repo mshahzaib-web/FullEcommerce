@@ -14,8 +14,8 @@ export default function OrderDetails() {
       <div className="px-4">
         <Header />
       </div>
-      <div className="grid grid-cols-1  md:grid-cols-12">
-        <div className="hidden md:block md:col-span-4 lg:col-span-3">
+      <div className="grid grid-cols-1  lg:grid-cols-12">
+        <div className="  lg:col-span-3">
           <Sidebar />
         </div>
         <div className="col-span-1 md:col-span-8 lg:col-span-9 min-h-screen bg-[#f5f3ff]">

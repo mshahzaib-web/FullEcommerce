@@ -24,12 +24,12 @@ const Header = () => {
         </div>
 
         {/* Create New Button */}
-        <button className="bg-indigo-600 text-white px-6 py-2.5 rounded-full font-medium hover:bg-indigo-700 transition-colors">
+        {/* <button className="bg-indigo-600 text-white px-6 py-2.5 rounded-full font-medium hover:bg-indigo-700 transition-colors">
           Create New
-        </button>
+        </button> */}
 
         {/* Divider */}
-        <div className="hidden md:block w-px h-10 bg-gray-300 mx-6"></div>
+        {/* <div className="hidden md:block w-px h-10 bg-gray-300 mx-6"></div> */}
 
         {/* User Profile */}
         <div className="hidden md:block flex items-center gap-4">

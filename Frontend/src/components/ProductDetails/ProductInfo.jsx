@@ -1,19 +1,23 @@
+import { useState } from "react";
+import { useProductDetails } from "../../context/productDetailsContext";
+
 export default function ProductInfo() {
-  const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
-  const colors = [
-    { name: "Pearl White", class: "bg-white border-gray-300" },
-    { name: "Midnight Black", class: "bg-gray-900" },
-    { name: "Sage Green", class: "bg-gray-500" },
-  ];
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+
+  const data = useProductDetails();
+  const { product } = data;
+
   return (
     <>
       <div className="flex flex-col gap-5">
         <div>
           <p className="text-xs font-bold text-amber-700 tracking-widest uppercase mb-2">
-            LUXE ESSENTIALS
+            {product.brand}
           </p>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Minimalist Silk Shirt
+            {product.name}
           </h1>
           <div className="flex items-center gap-2 mb-4">
             <div className="flex text-yellow-400">
@@ -39,33 +43,47 @@ export default function ProductInfo() {
           </span>
         </div>
 
-        <div className="flex items-center gap-1 text-sm text-red-600">
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          Low Stock: Only 4 items left in Sage
-        </div>
+        {product.stock <= 10 ? (
+          <div className="flex items-center gap-1 text-sm text-red-600">
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            Low Stock: Only {product.stock} items left in Sage
+          </div>
+        ) : (
+          ""
+        )}
 
         <div>
           <p className="text-sm text-gray-700 mb-2">
-            Color: <span className="text-gray-500">Pearl White</span>
+            Color: <span className="text-gray-500"></span>
           </p>
-          <div className="flex gap-3">
-            {colors.map((color, idx) => (
-              <button
+          <div className="flex flex-wrap gap-3">
+            {product.color.map((color, idx) => (
+              <input
                 key={idx}
-                className={`w-8 h-8 rounded-full border-2 ${color.class} ${idx === 0 ? "ring-2 ring-indigo-500 ring-offset-2" : ""} focus:outline-none`}
-              ></button>
+                size={color.length}
+                readOnly
+                value={color}
+                onClick={() => setSelectedColor(idx)}
+                className={`flex items-center text-center px-1 h-8 rounded-lg border text-sm font-medium transition-colors border-gray-200 text-gray-700 hover:border-gray-400 hover:cursor-pointer outline-none
+            ${
+              selectedColor === idx
+                ? "border-indigo-600 border-2 text-indigo-700"
+                : "border-gray-300 text-black"
+            }
+          `}
+              />
             ))}
           </div>
         </div>
@@ -73,21 +91,24 @@ export default function ProductInfo() {
         <div>
           <div className="flex justify-between items-center mb-2">
             <p className="text-sm text-gray-700">Size</p>
-            <a
-              href="#"
-              className="text-sm text-indigo-600 underline hover:text-indigo-800"
-            >
-              Size Guide
-            </a>
           </div>
           <div className="flex flex-wrap gap-2">
-            {sizes.map((size) => (
-              <button
-                key={size}
-                className={`px-4 py-2 rounded-lg border text-sm font-medium transition-colors ${size === "S" ? "border-indigo-600 bg-indigo-50 text-indigo-700" : "border-gray-200 text-gray-700 hover:border-gray-400"}`}
-              >
-                {size}
-              </button>
+            {product.size.map((size, index) => (
+              <div key={index}>
+                <input
+                  size={size.length}
+                  readOnly
+                  defaultValue={size}
+                  onClick={() => setSelectedSize(index)}
+                  className={`w-auto px-2 py-2 rounded-lg border text-center text-sm font-medium transition-colors border-gray-200 text-gray-700 hover:border-gray-400 cursor-pointer outline-none
+                  ${
+                    selectedSize === index
+                      ? "border-indigo-600 border-2 text-indigo-700"
+                      : "border-gray-300 text-black"
+                  } 
+                  `}
+                />
+              </div>
             ))}
           </div>
         </div>
@@ -95,13 +116,24 @@ export default function ProductInfo() {
         <div className="flex items-center gap-4">
           <p className="text-sm text-gray-700">Quantity</p>
           <div className="flex items-center border border-gray-300 rounded-lg">
-            <button className="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-l-lg">
+            <button
+              disabled={quantity == 1}
+              onClick={() => setQuantity((prev) => prev - 1)}
+              className="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-l-lg"
+            >
               -
             </button>
-            <span className="px-3 py-1 text-sm font-medium border-x border-gray-300">
-              1
-            </span>
-            <button className="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-r-lg">
+            <input
+              value={quantity}
+              readOnly
+              className="text-center px-1 py-1 text-sm font-medium border-x border-gray-300"
+              style={{ width: "40px" }}
+            />
+
+            <button
+              onClick={() => setQuantity((prev) => prev + 1)}
+              className="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-r-lg"
+            >
               +
             </button>
           </div>

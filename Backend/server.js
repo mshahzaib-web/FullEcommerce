@@ -13,7 +13,7 @@ import connectDB from "./config/db.js";
 import errorHandler from "./middleware/errorHandler.js";
 
 import adminRoutes from "./routes/Admin/adminRoutes.js";
-import productRoures from "./routes/Product/productRoutes.js";
+import productRoutes from "./routes/Product/productRoutes.js";
 
 connectDB();
 
@@ -36,7 +36,7 @@ app.use(
 // Routes
 
 app.use("/admin", adminRoutes);
-app.use("/product", productRoures);
+app.use("/product", productRoutes);
 
 // app.use("/api/users", userRoutes);
 

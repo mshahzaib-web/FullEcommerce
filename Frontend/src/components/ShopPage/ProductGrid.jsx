@@ -136,9 +136,9 @@ export default function ProductGrid() {
                   >
                     Buy Now
                   </button>
-                  <button className="p-2.5 rounded-xl bg-indigo-50 text-[#4F46E5] hover:bg-indigo-100 transition-colors">
+                  <button className="p-2 rounded-xl bg-indigo-50 text-[#4F46E5] hover:bg-indigo-600 hover:text-white transition-colors hover:cursor-pointer">
                     <svg
-                      className="w-3.5 h-3.5"
+                      className="w-5 h-5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"

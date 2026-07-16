@@ -1,8 +1,12 @@
+import { useState } from "react";
+
 import LeftPanel from "./LeftPanel";
 // import SocialAuthButtons from "./SocialAuthButtons";
 import TrustBadges from "./TrustBadges";
 
 export default function LogInForm() {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="min-h-screen w-full bg-slate-50/50 flex items-center justify-center font-sans antialiased lg:p-8">
       {/* Main Structural Wrapper Layout Container */}
@@ -54,16 +58,17 @@ export default function LogInForm() {
                 </label>
                 <div className="relative">
                   <input
-                    type="password"
+                    type={showPassword == false ? "password" : "text"}
                     placeholder="Enter your password"
                     className="w-full px-4 py-3 rounded-xl border-0 bg-[#f3f4fd] text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/50 focus:ring-2 focus:ring-[#4c3ce6] transition duration-150 outline-none pr-10"
                   />
                   <button
+                    onClick={() => setShowPassword((prev) => !prev)}
                     type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 hover:cursor-pointer"
                   >
                     <svg
-                      className="w-4 h-4"
+                      className={`w-4 h-4 ${showPassword == false ? "" : "text-indigo-700"}`}
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"

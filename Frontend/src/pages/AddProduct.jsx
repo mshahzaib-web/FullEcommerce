@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { productSchema } from "../validation/productSchema";
+import { productValidation } from "../validation/productValidation";
 import { useForm, FormProvider } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -24,7 +24,7 @@ export default function AddProduct() {
   const [subImageData, setSubImageData] = useState([]);
 
   const methods = useForm({
-    resolver: zodResolver(productSchema),
+    resolver: zodResolver(productValidation),
   });
   const { handleSubmit } = methods;
 

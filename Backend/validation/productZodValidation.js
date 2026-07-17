@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const productSchema = z.object({
+export const productValidation = z.object({
   name: z.string().min(1, "Product name must be at least 3 characters"),
 
   sku: z.string().min(1, "SKU is required"),

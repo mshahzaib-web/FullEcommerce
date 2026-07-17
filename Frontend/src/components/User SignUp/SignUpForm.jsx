@@ -1,7 +1,47 @@
+import { useRef } from "react";
+import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { userSignUpValidation } from "../../validation/userValidation";
+
+import { userSignUp } from "../../api/User/user";
+
 // import SocialAuthButtons from "./SocialAuthButtons";
 import TrustBadges from "./TrustBadges";
 import LeftPanel from "./LeftPanel";
 export default function SignUpForm() {
+  const inputPasswordRef = useRef();
+
+  const userSignupMutation = useMutation({
+    mutationFn: userSignUp,
+    onSuccess: (data) => {
+      reset();
+      toast.success(data.message);
+    },
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const { register, handleSubmit, reset } = useForm({
+    resolver: zodResolver(userSignUpValidation),
+  });
+
+  const onSubmit = (data) => {
+    if (inputPasswordRef.current.value == data.password) {
+      userSignupMutation.mutate(data);
+    } else {
+      toast.error("Password Cannot Match");
+    }
+  };
+
+  const onError = (errors) => {
+    const error = Object.values(errors)[0];
+    toast.error(error.message);
+  };
+
   return (
     <>
       <div className="min-h-screen w-full bg-gray-50 flex items-center justify-center font-sans antialiased lg:p-6">
@@ -38,7 +78,10 @@ export default function SignUpForm() {
               </div>
 
               {/* Interactive Registration Form Shell */}
-              <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+              <form
+                onSubmit={handleSubmit(onSubmit, onError)}
+                className="space-y-4"
+              >
                 {/* Row: First & Last Name */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
@@ -46,6 +89,7 @@ export default function SignUpForm() {
                       First Name
                     </label>
                     <input
+                      {...register("firstName")}
                       type="text"
                       placeholder="John"
                       className="w-full px-4 py-2.5 rounded-xl border-0 bg-indigo-50/40 text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/70 focus:ring-2 focus:ring-[#3222d4] transition duration-150 outline-none"
@@ -56,6 +100,7 @@ export default function SignUpForm() {
                       Last Name
                     </label>
                     <input
+                      {...register("lastName")}
                       type="text"
                       placeholder="Doe"
                       className="w-full px-4 py-2.5 rounded-xl border-0 bg-indigo-50/40 text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/70 focus:ring-2 focus:ring-[#3222d4] transition duration-150 outline-none"
@@ -69,6 +114,7 @@ export default function SignUpForm() {
                     Email Address
                   </label>
                   <input
+                    {...register("email")}
                     type="email"
                     placeholder="name@example.com"
                     className="w-full px-4 py-2.5 rounded-xl border-0 bg-indigo-50/40 text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/70 focus:ring-2 focus:ring-[#3222d4] transition duration-150 outline-none"
@@ -95,8 +141,9 @@ export default function SignUpForm() {
                     </label>
                     <div className="relative">
                       <input
+                        {...register("password")}
+                        ref={inputPasswordRef}
                         type="password"
-                        defaultValue="hiddentext"
                         className="w-full px-4 py-2.5 rounded-xl border-0 bg-indigo-50/40 text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/70 focus:ring-2 focus:ring-[#3222d4] transition duration-150 outline-none pr-10"
                       />
                       <button
@@ -138,8 +185,8 @@ export default function SignUpForm() {
                       Confirm Password
                     </label>
                     <input
+                      {...register("password")}
                       type="password"
-                      defaultValue="hiddentext"
                       className="w-full px-4 py-2.5 rounded-xl border-0 bg-indigo-50/40 text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/70 focus:ring-2 focus:ring-[#3222d4] transition duration-150 outline-none"
                     />
                   </div>
@@ -177,7 +224,7 @@ export default function SignUpForm() {
                 {/* Main Submit Action Button */}
                 <button
                   type="submit"
-                  className="w-full py-3 px-4 bg-[#3222d4] hover:bg-[#2819b8] text-white rounded-xl text-sm font-semibold shadow-lg shadow-indigo-600/20 active:scale-[0.99] transition duration-150 text-center"
+                  className="w-full py-3 px-4 bg-[#3222d4] hover:bg-[#2819b8] text-white rounded-xl text-sm font-semibold shadow-lg shadow-indigo-600/20 active:scale-[0.99] transition duration-150 text-center hover:cursor-pointer"
                 >
                   Create Account
                 </button>
@@ -186,12 +233,12 @@ export default function SignUpForm() {
               {/* Account Redirection Link */}
               <div className="text-center text-xs sm:text-sm text-gray-500">
                 Already have an account?{" "}
-                <a
-                  href="#"
+                <Link
+                  to="/user/login"
                   className="text-[#3222d4] font-bold hover:underline"
                 >
                   Sign In
-                </a>
+                </Link>
               </div>
 
               {/* Footer Trust Markers */}

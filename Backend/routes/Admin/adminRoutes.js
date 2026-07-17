@@ -1,7 +1,7 @@
 import express from "express";
 import { upload } from "../../middleware/multer.js";
 import { validate } from "../../middleware/validate.js";
-import { productSchema } from "../../validation/productZodValidation.js";
+import { productValidation } from "../../validation/productZodValidation.js";
 import {
   uploadImage,
   deleteImage,
@@ -30,6 +30,6 @@ router.post(
 router.post("/product/delete-sub-image", deleteSubImage);
 
 // Add New Product
-router.post("/add-product", validate(productSchema), addProduct);
+router.post("/add-product", validate(productValidation), addProduct);
 
 export default router;

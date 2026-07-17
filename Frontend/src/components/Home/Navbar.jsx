@@ -1,10 +1,42 @@
 import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+
+import { userLogout } from "../../api/User/user";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Navbar() {
-  const [userStatus, setUserStatus] = useState(1);
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  // const [userStatus, setUserStatus] = useState(1);
   const [showLogout, setShowLogout] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
+  const { data: user } = useAuth();
+
+  console.log(user);
+
+  const logoutMutation = useMutation({
+    mutationFn: userLogout,
+    onSuccess: (data) => {
+      toast.success(data.message);
+      queryClient.setQueryData(["user"], null);
+      navigate("/");
+    },
+
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const handleLogout = () => {
+    // setUserStatus(2); // Logout
+    setShowLogout(false);
+    logoutMutation.mutate();
+  };
 
   const navLinkClass = ({ isActive }) =>
     isActive
@@ -67,7 +99,7 @@ export default function Navbar() {
             </div>
 
             {/* Wishlist */}
-            {userStatus === 1 ? (
+            {user ? (
               <>
                 {/* Wishlist */}
                 <button className="text-gray-600 hover:text-indigo-700">
@@ -132,10 +164,7 @@ export default function Navbar() {
                   {showLogout && (
                     <div className="absolute right-0 mt-2 w-28 bg-white shadow-lg rounded-md border-indigo-700 border-2 hover:cursor-pointer hover:border-red-500 hover-border-2">
                       <button
-                        onClick={() => {
-                          setUserStatus(2); // Logout
-                          setShowLogout(false);
-                        }}
+                        onClick={handleLogout}
                         className="text-indigo-700 hover:text-red-500 hover:cursor-pointer hover:border-red-500 text-center font-bold w-full px-4 py-2 hover:bg-gray-100 outline-none"
                       >
                         Logout
@@ -268,7 +297,7 @@ export default function Navbar() {
                 Cart
               </NavLink>
             </div>
-            {userStatus == 1 ? (
+            {user ? (
               <></>
             ) : (
               <div className="md:hidden flex justify-between mt-3">

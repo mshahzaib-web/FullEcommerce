@@ -4,11 +4,11 @@ const HeroBanner = () => {
       <div className="relative rounded-2xl overflow-hidden bg-linear-to-r from-indigo-700 to-indigo-500 h-64 flex items-center">
         {/* Background overlay image simulation */}
         <div className="absolute inset-0 opacity-30">
-          <img
+          {/* <img
             src="https://shorturl.at/IKOTl"
             alt="Fashion models"
             className="w-full h-full object-cover"
-          />
+          /> */}
         </div>
         <div className="absolute inset-0 bg-linear-to-r from-indigo-800/80 to-indigo-600/40"></div>
 

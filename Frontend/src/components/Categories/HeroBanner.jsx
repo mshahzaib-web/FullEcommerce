@@ -2,11 +2,11 @@ const HeroBanner = () => {
   return (
     <div className="max-w-7xl mx-auto px-6 lg:px-8 mt-8">
       <div className="relative rounded-2xl overflow-hidden h-80 md:h-96">
-        <img
+        {/* <img
           src="https://shorturl.at/EHY0E"
           alt="People shopping"
           className="w-full h-full object-cover"
-        />
+        /> */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent"></div>
 
         <div className="absolute inset-0 flex items-center px-8 md:px-16">

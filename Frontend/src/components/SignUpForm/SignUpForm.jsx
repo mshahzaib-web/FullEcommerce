@@ -1,7 +1,45 @@
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { adminSignUpValidation } from "../../validation/adminValidation";
+import { adminSignUp } from "../../api/Admin/admin";
+
 // import SocialAuthButtons from "./SocialAuthButtons";
 import TrustBadges from "./TrustBadges";
 import LeftPanel from "./LeftPanel";
+import { toast } from "sonner";
 export default function SignUpForm() {
+  const navigate = useNavigate();
+  const [inputPassword, setInputPassword] = useState("");
+
+  const { register, handleSubmit } = useForm({
+    resolver: zodResolver(adminSignUpValidation),
+  });
+
+  const adminSignUpMutation = useMutation({
+    mutationFn: adminSignUp,
+    onSuccess: (data) => {
+      navigate("/admin/dashboard");
+      toast.success(data.message);
+    },
+
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const onSubmit = (data) => {
+    if (inputPassword != data.password)
+      return toast.error("Password Cannot Match");
+    adminSignUpMutation.mutate(data);
+  };
+
+  const onError = (errors) => {
+    const error = Object.values(errors)[0];
+    toast.error(error.message);
+  };
   return (
     <>
       <div className="min-h-screen w-full bg-gray-50 flex items-center justify-center font-sans antialiased lg:p-6">
@@ -18,10 +56,10 @@ export default function SignUpForm() {
                   LuxeAura
                 </div>
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-900 pt-3">
-                  Create Your Account
+                  Create Admin Account
                 </h2>
                 <p className="text-sm text-gray-500 font-normal">
-                  Start shopping in less than a minute.
+                  Start selling in less than a minute.
                 </p>
               </div>
 
@@ -38,7 +76,10 @@ export default function SignUpForm() {
               </div>
 
               {/* Interactive Registration Form Shell */}
-              <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
+              <form
+                onSubmit={handleSubmit(onSubmit, onError)}
+                className="space-y-4"
+              >
                 {/* Row: First & Last Name */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
@@ -46,6 +87,7 @@ export default function SignUpForm() {
                       First Name
                     </label>
                     <input
+                      {...register("firstName")}
                       type="text"
                       placeholder="John"
                       className="w-full px-4 py-2.5 rounded-xl border-0 bg-indigo-50/40 text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/70 focus:ring-2 focus:ring-[#3222d4] transition duration-150 outline-none"
@@ -56,6 +98,7 @@ export default function SignUpForm() {
                       Last Name
                     </label>
                     <input
+                      {...register("lastName")}
                       type="text"
                       placeholder="Doe"
                       className="w-full px-4 py-2.5 rounded-xl border-0 bg-indigo-50/40 text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/70 focus:ring-2 focus:ring-[#3222d4] transition duration-150 outline-none"
@@ -69,6 +112,7 @@ export default function SignUpForm() {
                     Email Address
                   </label>
                   <input
+                    {...register("email")}
                     type="email"
                     placeholder="name@example.com"
                     className="w-full px-4 py-2.5 rounded-xl border-0 bg-indigo-50/40 text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/70 focus:ring-2 focus:ring-[#3222d4] transition duration-150 outline-none"
@@ -95,8 +139,9 @@ export default function SignUpForm() {
                     </label>
                     <div className="relative">
                       <input
+                        value={inputPassword}
+                        onChange={(e) => setInputPassword(e.target.value)}
                         type="password"
-                        defaultValue="hiddentext"
                         className="w-full px-4 py-2.5 rounded-xl border-0 bg-indigo-50/40 text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/70 focus:ring-2 focus:ring-[#3222d4] transition duration-150 outline-none pr-10"
                       />
                       <button
@@ -138,8 +183,8 @@ export default function SignUpForm() {
                       Confirm Password
                     </label>
                     <input
+                      {...register("password")}
                       type="password"
-                      defaultValue="hiddentext"
                       className="w-full px-4 py-2.5 rounded-xl border-0 bg-indigo-50/40 text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/70 focus:ring-2 focus:ring-[#3222d4] transition duration-150 outline-none"
                     />
                   </div>

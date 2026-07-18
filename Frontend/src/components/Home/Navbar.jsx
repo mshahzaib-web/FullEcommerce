@@ -6,7 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 import { userLogout } from "../../api/User/user";
-import { useAuth } from "../../hooks/useAuth";
+import { useUserAuth } from "../../hooks/useAuth";
 
 export default function Navbar() {
   const queryClient = useQueryClient();
@@ -15,7 +15,7 @@ export default function Navbar() {
   const [showLogout, setShowLogout] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const { data: user } = useAuth();
+  const { data: user } = useUserAuth();
 
   console.log(user);
 

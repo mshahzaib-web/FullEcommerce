@@ -1,19 +1,19 @@
 import jwt from "jsonwebtoken";
 
-export const userIsLogIn = async (req, res, next) => {
+export const adminIsLogin = async (req, res, next) => {
   try {
-    const userToken = req.cookies.userToken;
+    const adminToken = req.cookies.adminToken;
 
-    if (!userToken) {
+    if (!adminToken) {
       return res.status(401).json({
         success: false,
         message: "Please Login First",
       });
     }
 
-    const decode = jwt.verify(userToken, process.env.JWT_SECRET);
+    const decoded = jwt.verify(adminToken, process.env.JWT_SECRET);
 
-    req.user = decode;
+    req.admin = decoded;
 
     next();
   } catch (error) {

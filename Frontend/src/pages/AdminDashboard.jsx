@@ -6,7 +6,7 @@ export default function AdminDashboard() {
   return (
     <>
       <div>
-        <div>
+        <div className="px-4">
           <Header />
         </div>
         <div className="grid grid-cols-12">

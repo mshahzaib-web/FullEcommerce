@@ -1,8 +1,45 @@
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { adminLogInValidation } from "../../validation/adminValidation";
+import { adminLogIn } from "../../api/Admin/admin";
+
 import LeftPanel from "./LeftPanel";
 // import SocialAuthButtons from "./SocialAuthButtons";
 import TrustBadges from "./TrustBadges";
+import { toast } from "sonner";
 
 export default function LogInForm() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const { register, handleSubmit } = useForm({
+    resolver: zodResolver(adminLogInValidation),
+  });
+
+  const adminLogInMutation = useMutation({
+    mutationFn: adminLogIn,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["admin"] });
+      navigate("/admin/dashboard");
+      toast.success(data.message);
+    },
+
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const onSubmit = (data) => {
+    adminLogInMutation.mutate(data);
+  };
+
+  const onError = (errors) => {
+    const error = Object.values(errors)[0];
+    toast.error(error.message);
+  };
+
   return (
     <div className="min-h-screen w-full bg-slate-50/50 flex items-center justify-center font-sans antialiased lg:p-8">
       {/* Main Structural Wrapper Layout Container */}
@@ -36,12 +73,16 @@ export default function LogInForm() {
             </div>
 
             {/* Standard Sign-In Input Collection */}
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-5">
+            <form
+              onSubmit={handleSubmit(onSubmit, onError)}
+              className="space-y-5"
+            >
               <div className="space-y-2">
                 <label className="text-xs sm:text-sm font-semibold text-gray-700">
                   Email Address
                 </label>
                 <input
+                  {...register("email")}
                   type="email"
                   placeholder="name@example.com"
                   className="w-full px-4 py-3 rounded-xl border-0 bg-[#f3f4fd] text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/50 focus:ring-2 focus:ring-[#4c3ce6] transition duration-150 outline-none"
@@ -54,6 +95,7 @@ export default function LogInForm() {
                 </label>
                 <div className="relative">
                   <input
+                    {...register("password")}
                     type="password"
                     placeholder="Enter your password"
                     className="w-full px-4 py-3 rounded-xl border-0 bg-[#f3f4fd] text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/50 focus:ring-2 focus:ring-[#4c3ce6] transition duration-150 outline-none pr-10"

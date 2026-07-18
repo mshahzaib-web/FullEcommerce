@@ -58,7 +58,7 @@ export const userLogIn = asyncHandler(async (req, res) => {
     expiresIn: "7d",
   });
 
-  res.cookie("token", token, {
+  res.cookie("userToken", token, {
     httpOnly: true,
     secure: false,
     sameSite: "lax",
@@ -73,7 +73,7 @@ export const userLogIn = asyncHandler(async (req, res) => {
 
 // User Logout
 export const userLogout = asyncHandler(async (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("userToken");
 
   res.status(200).json({
     success: true,

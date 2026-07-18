@@ -1,7 +1,9 @@
 import express from "express";
 import { upload } from "../../middleware/multer.js";
 import { validate } from "../../middleware/validate.js";
+import { adminSignUpZodValidation } from "../../validation/adminZodValidation.js";
 import { productValidation } from "../../validation/productZodValidation.js";
+import { adminSignUp, adminLogIn } from "../../controllers/Admin/admin.js";
 import {
   uploadImage,
   deleteImage,
@@ -12,6 +14,12 @@ import {
 import { addProduct } from "../../controllers/Admin/product.js";
 
 const router = express.Router();
+
+//Admin SignUp
+router.post("/signup", validate(adminSignUpZodValidation), adminSignUp);
+
+//Admin Login
+router.post("/login", adminLogIn);
 
 //Uplad Main image
 router.post("/product/upload-image", upload.single("image"), uploadImage);

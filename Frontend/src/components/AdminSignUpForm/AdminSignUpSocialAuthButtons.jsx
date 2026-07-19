@@ -1,4 +1,4 @@
-const SocialAuthButtons = () => {
+const AdminSignUpSocialAuthButtons = () => {
   const providers = [
     { name: "Google", icon: "https://www.svgrepo.com/show/355037/google.svg" },
     {
@@ -28,4 +28,4 @@ const SocialAuthButtons = () => {
   );
 };
 
-export default SocialAuthButtons;
+export default AdminSignUpSocialAuthButtons;

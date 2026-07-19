@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
@@ -9,15 +9,17 @@ import { userSignUpValidation } from "../../validation/userValidation";
 import { userSignUp } from "../../api/User/user";
 
 // import SocialAuthButtons from "./SocialAuthButtons";
-import TrustBadges from "./TrustBadges";
-import LeftPanel from "./LeftPanel";
-export default function SignUpForm() {
-  const inputPasswordRef = useRef();
+import UserSignUpTrustBadges from "./UserSignUpTrustBadges";
+import UserSignUpLeftPanel from "./UserSignUpLeftPanel";
+export default function UserSignUpForm() {
+  const [userInputPassword, setUserInputPassword] = useState("");
+  const navigate = useNavigate();
 
   const userSignupMutation = useMutation({
     mutationFn: userSignUp,
     onSuccess: (data) => {
       reset();
+      navigate("/user/login");
       toast.success(data.message);
     },
     onError: (error) => {
@@ -30,7 +32,7 @@ export default function SignUpForm() {
   });
 
   const onSubmit = (data) => {
-    if (inputPasswordRef.current.value == data.password) {
+    if (userInputPassword == data.password) {
       userSignupMutation.mutate(data);
     } else {
       toast.error("Password Cannot Match");
@@ -47,7 +49,7 @@ export default function SignUpForm() {
       <div className="min-h-screen w-full bg-gray-50 flex items-center justify-center font-sans antialiased lg:p-6">
         <div className="w-full max-w-7xl bg-white lg:rounded-3xl lg:shadow-xl lg:border lg:border-gray-100 min-h-[90vh] grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
           {/* Left Side Section */}
-          <LeftPanel />
+          <UserSignUpLeftPanel />
 
           {/* Right Side Section (Form Wrapper) */}
           <div className="col-span-1 lg:col-span-7 flex flex-col justify-center items-center p-6 sm:p-12 md:p-16 bg-white">
@@ -141,8 +143,8 @@ export default function SignUpForm() {
                     </label>
                     <div className="relative">
                       <input
-                        {...register("password")}
-                        ref={inputPasswordRef}
+                        value={userInputPassword}
+                        onChange={(e) => setUserInputPassword(e.target.value)}
                         type="password"
                         className="w-full px-4 py-2.5 rounded-xl border-0 bg-indigo-50/40 text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/70 focus:ring-2 focus:ring-[#3222d4] transition duration-150 outline-none pr-10"
                       />
@@ -242,7 +244,7 @@ export default function SignUpForm() {
               </div>
 
               {/* Footer Trust Markers */}
-              <TrustBadges />
+              <UserSignUpTrustBadges />
             </div>
           </div>
         </div>

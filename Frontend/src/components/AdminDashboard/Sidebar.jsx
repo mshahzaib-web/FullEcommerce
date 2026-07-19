@@ -1,14 +1,35 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAdminAuth } from "../../hooks/useAuth";
-// import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { adminLogout } from "../../api/Admin/admin";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
-  // const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: admin } = useAdminAuth();
   console.log(admin);
+
+  const adminLogoutMutation = useMutation({
+    mutationFn: adminLogout,
+    onSuccess: (data) => {
+      toast.success(data.message);
+      navigate("/admin/login");
+
+      queryClient.setQueriesData(["admin"], null);
+    },
+
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const handleLogout = () => {
+    adminLogoutMutation.mutate();
+  };
   return (
     <>
       {/* Mobile Header */}
@@ -143,7 +164,11 @@ const Sidebar = () => {
         {/* Logout */}
         {admin ? (
           <div className="p-4 border-t border-gray-200">
-            <button className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors">
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+            >
               <svg
                 className="w-5 h-5"
                 fill="none"

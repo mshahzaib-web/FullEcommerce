@@ -1,4 +1,4 @@
-export default function SocialAuthButtons() {
+export default function AdminLoginSocialAuthButtons() {
   const socialIcons = [
     { name: "Google", icon: "https://www.svgrepo.com/show/355037/google.svg" },
     {
@@ -7,6 +7,9 @@ export default function SocialAuthButtons() {
     },
     { name: "Apple", icon: "https://www.svgrepo.com/show/475636/apple.svg" },
   ];
+
+  console.log("thwhe");
+  alert("pakistan");
 
   return (
     <div className="grid grid-cols-3 gap-3 w-full">

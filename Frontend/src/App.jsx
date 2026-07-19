@@ -15,8 +15,10 @@ import AddProduct from "./pages/AddProduct";
 import ProductManage from "./pages/ProductManage";
 import OrdersManage from "./pages/OrdersManage";
 import OrderDetails from "./pages/OrderDetails";
-import SignUp from "./pages/SignUp";
-import LogIn from "./pages/LogIn";
+import AdminSignUp from "./pages/AdminSignUp";
+import AdminLogIn from "./pages/AdminLogIn";
+
+import AdminRoutesProtect from "./ProtectRoutes/AdminRoutesProtect";
 
 const queryClient = new QueryClient();
 
@@ -36,16 +38,22 @@ function App() {
             <Route path="/wishlist" element={<WishList />}></Route>
             <Route path="/cart" element={<ShoppingCart />}></Route>
             <Route path="/checkout" element={<CheckOut />}></Route>
-            <Route path="/admin/dashboard" element={<AdminDashboard />}></Route>
-            <Route path="/admin/add-product" element={<AddProduct />}></Route>
-            <Route path="/admin/products" element={<ProductManage />}></Route>
-            <Route path="/admin/orders" element={<OrdersManage />}></Route>
-            <Route
-              path="/admin/order-details"
-              element={<OrderDetails />}
-            ></Route>
-            <Route path="/admin/signup" element={<SignUp />}></Route>
-            <Route path="/admin/login" element={<LogIn />}></Route>
+
+            <Route element={<AdminRoutesProtect />}>
+              <Route
+                path="/admin/dashboard"
+                element={<AdminDashboard />}
+              ></Route>
+              <Route path="/admin/add-product" element={<AddProduct />}></Route>
+              <Route path="/admin/products" element={<ProductManage />}></Route>
+              <Route path="/admin/orders" element={<OrdersManage />}></Route>
+              <Route
+                path="/admin/order-details"
+                element={<OrderDetails />}
+              ></Route>
+            </Route>
+            <Route path="/admin/signup" element={<AdminSignUp />}></Route>
+            <Route path="/admin/login" element={<AdminLogIn />}></Route>
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>

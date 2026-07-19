@@ -4,9 +4,26 @@ import jwt from "jsonwebtoken";
 import Admin from "../../models/admin.js";
 import User from "../../models/user.js";
 
+//Get Current Admin
+export const getCurrentAdmin = asyncHandler(async (req, res) => {
+  res.status(200).json({
+    success: true,
+    admin: req.admin,
+  });
+});
+
 //Admin SignUp
 export const adminSignUp = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
+
+  const existAdmin = await Admin.findOne({ email });
+  if (existAdmin) {
+    return res.status(409).json({
+      success: false,
+      message:
+        "An account with this email already exists. Please log in instead.",
+    });
+  }
 
   const hashPassword = await bcrypt.hash(password, 10);
 
@@ -61,5 +78,15 @@ export const adminLogIn = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Admin Login Successfully",
+  });
+});
+
+//Admin Logout
+export const adminLogout = asyncHandler(async (req, res) => {
+  res.clearCookie("adminToken");
+
+  res.status(200).json({
+    success: true,
+    message: "Admin Logout Successfully",
   });
 });

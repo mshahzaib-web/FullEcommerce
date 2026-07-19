@@ -1,4 +1,4 @@
-const TrustBadges = () => {
+const UserSignUpTrustBadges = () => {
   return (
     <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 pt-6 border-t border-gray-100 text-xs text-gray-400 font-medium">
       <div className="flex items-center gap-1.5">
@@ -53,4 +53,4 @@ const TrustBadges = () => {
   );
 };
 
-export default TrustBadges;
+export default UserSignUpTrustBadges;

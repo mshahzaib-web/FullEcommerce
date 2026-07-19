@@ -1,4 +1,4 @@
-export default function LeftPanel() {
+export default function AdminLoginLeftPanel() {
   return (
     <div className="hidden lg:flex lg:col-span-5 bg-[#4c3ce6] text-white flex-col justify-between p-16 relative overflow-hidden">
       {/* Subtle decorative radial light reflection */}

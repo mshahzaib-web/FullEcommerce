@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { adminSignUpValidation } from "../../validation/adminValidation";
 import { adminSignUp } from "../../api/Admin/admin";
 
 // import SocialAuthButtons from "./SocialAuthButtons";
-import TrustBadges from "./TrustBadges";
-import LeftPanel from "./LeftPanel";
+import AdminSignUpTrustBadges from "./AdminSignUpTrustBadges";
+import AdminSignUpLeftPanel from "./AdminSignUpLeftPanel";
 import { toast } from "sonner";
-export default function SignUpForm() {
+export default function AdminSignUpForm() {
   const navigate = useNavigate();
   const [inputPassword, setInputPassword] = useState("");
 
@@ -21,7 +21,7 @@ export default function SignUpForm() {
   const adminSignUpMutation = useMutation({
     mutationFn: adminSignUp,
     onSuccess: (data) => {
-      navigate("/admin/dashboard");
+      navigate("/admin/login");
       toast.success(data.message);
     },
 
@@ -45,7 +45,7 @@ export default function SignUpForm() {
       <div className="min-h-screen w-full bg-gray-50 flex items-center justify-center font-sans antialiased lg:p-6">
         <div className="w-full max-w-7xl bg-white lg:rounded-3xl lg:shadow-xl lg:border lg:border-gray-100 min-h-[90vh] grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
           {/* Left Side Section */}
-          <LeftPanel />
+          <AdminSignUpLeftPanel />
 
           {/* Right Side Section (Form Wrapper) */}
           <div className="col-span-1 lg:col-span-7 flex flex-col justify-center items-center p-6 sm:p-12 md:p-16 bg-white">
@@ -68,11 +68,11 @@ export default function SignUpForm() {
 
               {/* Structured Section Divider */}
               <div className="relative flex py-2 items-center">
-                <div className="flex-grow border-t border-gray-200"></div>
+                <div className="grow border-t border-gray-200"></div>
                 {/* <span className="flex-shrink mx-4 text-[10px] sm:text-xs font-semibold tracking-wider text-gray-400 uppercase">
                   Or Continue With
                 </span> */}
-                <div className="flex-grow border-t border-gray-200"></div>
+                <div className="grow border-t border-gray-200"></div>
               </div>
 
               {/* Interactive Registration Form Shell */}
@@ -231,16 +231,16 @@ export default function SignUpForm() {
               {/* Account Redirection Link */}
               <div className="text-center text-xs sm:text-sm text-gray-500">
                 Already have an account?{" "}
-                <a
-                  href="#"
+                <Link
+                  to="/admin/login"
                   className="text-[#3222d4] font-bold hover:underline"
                 >
                   Sign In
-                </a>
+                </Link>
               </div>
 
               {/* Footer Trust Markers */}
-              <TrustBadges />
+              <AdminSignUpTrustBadges />
             </div>
           </div>
         </div>

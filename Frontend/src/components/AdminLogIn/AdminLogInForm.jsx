@@ -1,40 +1,48 @@
-import { useState } from "react";
-import { toast } from "sonner";
-import { Link, useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { userLogInValidation } from "../../validation/userValidation";
-import { userLogIn } from "../../api/User/user";
+import { adminLogInValidation } from "../../validation/adminValidation";
+import { adminLogIn } from "../../api/Admin/admin";
+import { getCurrentAdmin } from "../../api/Admin/admin";
 
-import LeftPanel from "./LeftPanel";
+import AdminLoginLeftPanel from "./AdminLoginLeftPanel";
 // import SocialAuthButtons from "./SocialAuthButtons";
-import TrustBadges from "./TrustBadges";
+import AdminLoginTrustBadges from "./AdminLoginTrustBadges";
+import { toast } from "sonner";
 
-export default function LogInForm() {
-  const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
+export default function AdminLogInForm() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const { register, handleSubmit, reset } = useForm({
-    resolver: zodResolver(userLogInValidation),
+  const { register, handleSubmit } = useForm({
+    resolver: zodResolver(adminLogInValidation),
   });
 
-  const userLogInMutation = useMutation({
-    mutationFn: userLogIn,
-    onSuccess: (data) => {
-      reset();
+  const from = location.state?.from?.pathname || "/admin/dashboard";
+
+  const adminLogInMutation = useMutation({
+    mutationFn: adminLogIn,
+    onSuccess: async (data) => {
+      console.log(data);
+      const admin = await queryClient.fetchQuery({
+        queryKey: ["admin"],
+        queryFn: getCurrentAdmin, // your API function that calls /admin/auth/me
+      });
+      console.log(admin);
+      console.log(from);
+      navigate(from, { replace: true });
       toast.success(data.message);
-      queryClient.invalidateQueries({ queryKey: ["user"] });
-      navigate("/shop");
     },
+
     onError: (error) => {
       toast.error(error.response.data.message);
     },
   });
 
   const onSubmit = (data) => {
-    userLogInMutation.mutate(data);
+    adminLogInMutation.mutate(data);
   };
 
   const onError = (errors) => {
@@ -47,7 +55,7 @@ export default function LogInForm() {
       {/* Main Structural Wrapper Layout Container */}
       <div className="w-full max-w-md lg:max-w-6xl bg-white lg:rounded-3xl lg:shadow-xl lg:border lg:border-gray-100 min-h-[85vh] grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
         {/* Left Side Static Promotion View */}
-        <LeftPanel />
+        <AdminLoginLeftPanel />
 
         {/* Right Side Input Submission View */}
         <div className="col-span-1 lg:col-span-7 flex flex-col justify-center items-center p-8 sm:p-14 md:p-20 bg-white">
@@ -67,11 +75,11 @@ export default function LogInForm() {
 
             {/* Visual Section Boundary Break */}
             <div className="relative flex py-1 items-center">
-              <div className="flex-grow border-t border-gray-200"></div>
+              <div className="grow border-t border-gray-200"></div>
               {/* <span className="flex-shrink mx-4 text-[11px] font-bold tracking-widest text-gray-400 uppercase">
                 OR
               </span> */}
-              <div className="flex-grow border-t border-gray-200"></div>
+              <div className="grow border-t border-gray-200"></div>
             </div>
 
             {/* Standard Sign-In Input Collection */}
@@ -98,17 +106,16 @@ export default function LogInForm() {
                 <div className="relative">
                   <input
                     {...register("password")}
-                    type={showPassword == false ? "password" : "text"}
+                    type="password"
                     placeholder="Enter your password"
                     className="w-full px-4 py-3 rounded-xl border-0 bg-[#f3f4fd] text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/50 focus:ring-2 focus:ring-[#4c3ce6] transition duration-150 outline-none pr-10"
                   />
                   <button
-                    onClick={() => setShowPassword((prev) => !prev)}
                     type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 hover:cursor-pointer"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                   >
                     <svg
-                      className={`w-4 h-4 ${showPassword == false ? "" : "text-indigo-700"}`}
+                      className="w-4 h-4"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
@@ -144,12 +151,12 @@ export default function LogInForm() {
                     Remember Me
                   </label>
                 </div>
-                {/* <a
+                <a
                   href="#"
                   className="text-xs font-bold text-[#4c3ce6] hover:underline"
                 >
                   Forgot Password?
-                </a> */}
+                </a>
               </div>
 
               {/* Primary Call To Action Button */}
@@ -165,7 +172,7 @@ export default function LogInForm() {
             <div className="text-center text-sm text-gray-500">
               Don't have an account?{" "}
               <Link
-                to="/user/signup"
+                to="/admin/signup"
                 className="text-[#4c3ce6] font-extrabold hover:underline"
               >
                 Create Account
@@ -174,7 +181,7 @@ export default function LogInForm() {
 
             {/* Bottom Content Security Line breaks */}
             <div className="border-t border-gray-100 pt-1">
-              <TrustBadges />
+              <AdminLoginTrustBadges />
             </div>
           </div>
         </div>

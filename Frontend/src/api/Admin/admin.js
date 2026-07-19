@@ -55,3 +55,9 @@ export const adminLogIn = async (data) => {
   const res = await api.post("/admin/login", data);
   return res.data;
 };
+
+//Admin logout
+export const adminLogout = async () => {
+  const res = await api.post("/admin/logout");
+  return res.data;
+};

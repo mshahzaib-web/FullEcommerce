@@ -1,38 +1,40 @@
-import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { adminLogInValidation } from "../../validation/adminValidation";
-import { adminLogIn } from "../../api/Admin/admin";
-
-import LeftPanel from "./LeftPanel";
-// import SocialAuthButtons from "./SocialAuthButtons";
-import TrustBadges from "./TrustBadges";
+import { useState } from "react";
 import { toast } from "sonner";
+import { Link, useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { userLogInValidation } from "../../validation/userValidation";
+import { userLogIn } from "../../api/User/user";
 
-export default function LogInForm() {
+import UserLoginLeftPanel from "./UserLoginLeftPanel";
+// import SocialAuthButtons from "./SocialAuthButtons";
+import UserLoginTrustBadges from "./UserLoginTrustBadges";
+
+export default function UserLogInForm() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
   const queryClient = useQueryClient();
 
-  const { register, handleSubmit } = useForm({
-    resolver: zodResolver(adminLogInValidation),
+  const { register, handleSubmit, reset } = useForm({
+    resolver: zodResolver(userLogInValidation),
   });
 
-  const adminLogInMutation = useMutation({
-    mutationFn: adminLogIn,
+  const userLogInMutation = useMutation({
+    mutationFn: userLogIn,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["admin"] });
-      navigate("/admin/dashboard");
+      reset();
       toast.success(data.message);
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      navigate("/shop");
     },
-
     onError: (error) => {
       toast.error(error.response.data.message);
     },
   });
 
   const onSubmit = (data) => {
-    adminLogInMutation.mutate(data);
+    userLogInMutation.mutate(data);
   };
 
   const onError = (errors) => {
@@ -45,7 +47,7 @@ export default function LogInForm() {
       {/* Main Structural Wrapper Layout Container */}
       <div className="w-full max-w-md lg:max-w-6xl bg-white lg:rounded-3xl lg:shadow-xl lg:border lg:border-gray-100 min-h-[85vh] grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
         {/* Left Side Static Promotion View */}
-        <LeftPanel />
+        <UserLoginLeftPanel />
 
         {/* Right Side Input Submission View */}
         <div className="col-span-1 lg:col-span-7 flex flex-col justify-center items-center p-8 sm:p-14 md:p-20 bg-white">
@@ -96,16 +98,17 @@ export default function LogInForm() {
                 <div className="relative">
                   <input
                     {...register("password")}
-                    type="password"
+                    type={showPassword == false ? "password" : "text"}
                     placeholder="Enter your password"
                     className="w-full px-4 py-3 rounded-xl border-0 bg-[#f3f4fd] text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/50 focus:ring-2 focus:ring-[#4c3ce6] transition duration-150 outline-none pr-10"
                   />
                   <button
+                    onClick={() => setShowPassword((prev) => !prev)}
                     type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 hover:cursor-pointer"
                   >
                     <svg
-                      className="w-4 h-4"
+                      className={`w-4 h-4 ${showPassword == false ? "" : "text-indigo-700"}`}
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
@@ -141,12 +144,12 @@ export default function LogInForm() {
                     Remember Me
                   </label>
                 </div>
-                <a
+                {/* <a
                   href="#"
                   className="text-xs font-bold text-[#4c3ce6] hover:underline"
                 >
                   Forgot Password?
-                </a>
+                </a> */}
               </div>
 
               {/* Primary Call To Action Button */}
@@ -161,17 +164,17 @@ export default function LogInForm() {
             {/* Alternate Redirection Prompt */}
             <div className="text-center text-sm text-gray-500">
               Don't have an account?{" "}
-              <a
-                href="#"
+              <Link
+                to="/user/signup"
                 className="text-[#4c3ce6] font-extrabold hover:underline"
               >
                 Create Account
-              </a>
+              </Link>
             </div>
 
             {/* Bottom Content Security Line breaks */}
             <div className="border-t border-gray-100 pt-1">
-              <TrustBadges />
+              <UserLoginTrustBadges />
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-const LeftPanel = () => {
+const UserSignUpLeftPanel = () => {
   return (
     <>
       <div className="hidden lg:flex lg:col-span-5 bg-gradient-to-b from-[#4c3ce6] to-[#2f21b5] text-white flex-col justify-center items-center p-12 relative overflow-hidden">
@@ -44,4 +44,4 @@ const LeftPanel = () => {
   );
 };
 
-export default LeftPanel;
+export default UserSignUpLeftPanel;

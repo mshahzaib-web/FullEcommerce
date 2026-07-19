@@ -1,4 +1,4 @@
-export default function TrustBadges() {
+export default function AdminLoginTrustBadges() {
   return (
     <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 pt-6 text-[11px] text-gray-400 font-medium tracking-wide">
       <div className="flex items-center gap-1.5">

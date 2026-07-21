@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const wishlistSchema = new mongoose.Schema({
   userId: String,
 
-  cart: [
+  wishlist: [
     {
       product: {
         type: mongoose.Schema.Types.ObjectId,

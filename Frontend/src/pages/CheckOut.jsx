@@ -12,7 +12,7 @@ export default function CheckOut() {
     <>
       <Navbar />
       <div className="flex justify-center">
-        <div>
+        <div className="w-full lg:w-3xl">
           <SelectionCard />
           <PromoCard />
           <CustomerInfoCard />

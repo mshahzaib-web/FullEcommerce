@@ -88,16 +88,16 @@ export const wishlistProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { userId } = req.user;
 
-  const wishlist = await Wishlist.findOne({ userId });
+  const wishlistFind = await Wishlist.findOne({ userId });
 
-  if (!wishlist) {
+  if (!wishlistFind) {
     const newWishlistProduct = await Wishlist.create({
       userId,
-      cart: [{ product: id }],
+      wishlist: [{ product: id }],
     });
   } else {
-    wishlist.cart.push({ product: id });
-    await wishlist.save();
+    wishlistFind.wishlist.push({ product: id });
+    await wishlistFind.save();
   }
 
   res.status(200).json({
@@ -110,15 +110,15 @@ export const wishlistProduct = asyncHandler(async (req, res) => {
 export const getWishlistProduct = asyncHandler(async (req, res) => {
   const { userId } = req.user;
 
-  const wishlist = await Wishlist.findOne({ userId }).populate({
-    path: "cart.product",
+  const wishlists = await Wishlist.findOne({ userId }).populate({
+    path: "wishlist.product",
   });
 
-  if (!wishlist) {
+  if (!wishlists) {
     return res.json([]);
   }
 
-  const userWishlistProduct = [...wishlist.cart].sort(
+  const userWishlistProduct = [...wishlists.wishlist].sort(
     (a, b) => b.addedAt - a.addedAt,
   );
 
@@ -138,15 +138,13 @@ export const removeWishlistProduct = asyncHandler(async (req, res) => {
     { userId },
     {
       $pull: {
-        cart: {
+        wishlist: {
           product: id,
         },
       },
     },
     { new: true },
   );
-
-  console.log(wishlist);
 
   if (!wishlist) {
     return res.status(404).json({

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Link } from "react-router-dom";
 import { getWishlistProduct, removeWishlistProduct } from "../../api/User/user";
@@ -7,8 +8,24 @@ import { getWishlistProduct, removeWishlistProduct } from "../../api/User/user";
 const WishListCom = () => {
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState({});
   const queryClient = useQueryClient();
+
+  const increaseQuantity = (id) => {
+    setQuantity((prev) => ({
+      ...prev,
+      [id]: (prev[id] || 1) + 1,
+    }));
+  };
+
+  const decreaseQuantity = (id) => {
+    setQuantity((prev) => ({
+      ...prev,
+      [id]: Math.max((prev[id] || 1) - 1, 1),
+    }));
+  };
+
+  const { register, handleSubmit } = useForm();
 
   const { data, isPending, error } = useQuery({
     queryKey: ["wishlist"],
@@ -30,7 +47,15 @@ const WishListCom = () => {
     removeWishlistMutation.mutate(id);
   };
 
-  console.log(data);
+  const onSubmit = (data) => {
+    console.log(data);
+    console.log(quantity[data.product]);
+  };
+
+  const onError = (errors) => {
+    const error = Object.values(errors)[0];
+    toast.error(error.message);
+  };
 
   if (isPending) return <p>loading...</p>;
 
@@ -88,8 +113,17 @@ const WishListCom = () => {
                 key={item.product._id}
                 className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-600"
               >
-                <form className="p-4 sm:p-6 lg:p-8">
+                <form
+                  onSubmit={handleSubmit(onSubmit, onError)}
+                  className="p-4 sm:p-6 lg:p-8"
+                >
                   <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                    <input
+                      {...register("product")}
+                      value={item.product._id}
+                      type="text"
+                      className="hidden"
+                    />
                     {/* Product Image */}
                     <div className="relative w-full lg:w-64 shrink-0">
                       <div className="aspect-square rounded-xl overflow-hidden bg-gray-100">
@@ -118,6 +152,7 @@ const WishListCom = () => {
                         <span className="text-xs font-semibold text-indigo-600 uppercase tracking-wide">
                           {item.product.category}
                         </span>
+
                         <h2 className="text-sm md:text-md  font-bold text-gray-900 mt-1">
                           {item.product.name}
                         </h2>
@@ -144,20 +179,31 @@ const WishListCom = () => {
                           <div className="flex gap-2 flex-wrap">
                             {item.product.color.map((color) => (
                               <button
-                                key={`${color}${item.product._id}`}
+                                key={`${color}-${item.product._id}`}
                                 type="button"
                                 onClick={() =>
                                   setSelectedColor(
-                                    `${color}${item.product._id}`,
+                                    `${color}-${item.product._id}`,
                                   )
                                 }
                                 className={`px-4 py-2 rounded-full border-2 text-sm font-medium transition-all hover:cursor-pointer ${
-                                  selectedColor == `${color}${item.product._id}`
+                                  selectedColor ==
+                                  `${color}-${item.product._id}`
                                     ? "border-indigo-600 bg-indigo-600 text-white"
                                     : "border-gray-300 text-gray-700 hover:border-gray-400"
                                 }`}
                               >
                                 {color}
+                                {selectedColor != null ? (
+                                  <input
+                                    {...register("color")}
+                                    value={selectedColor.split("-")[0]}
+                                    type="text"
+                                    className="hidden"
+                                  />
+                                ) : (
+                                  ""
+                                )}
                               </button>
                             ))}
                           </div>
@@ -172,18 +218,28 @@ const WishListCom = () => {
                           <div className="flex gap-2 flex-wrap">
                             {item.product.size.map((size) => (
                               <button
-                                key={`${size}${item.product._id}`}
+                                key={`${size}-${item.product._id}`}
                                 type="button"
                                 onClick={() =>
-                                  setSelectedSize(`${size}${item.product._id}`)
+                                  setSelectedSize(`${size}-${item.product._id}`)
                                 }
                                 className={`px-4 py-2 rounded-full border-2 text-sm font-medium transition-all hover:cursor-pointer ${
-                                  selectedSize == `${size}${item.product._id}`
+                                  selectedSize == `${size}-${item.product._id}`
                                     ? "border-indigo-600 bg-indigo-600 text-white"
                                     : "border-gray-300 text-gray-700 hover:border-gray-400"
                                 }`}
                               >
                                 {size}
+                                {selectedSize != null ? (
+                                  <input
+                                    {...register("size")}
+                                    value={selectedColor.split("-")[0]}
+                                    type="text"
+                                    className="hidden"
+                                  />
+                                ) : (
+                                  ""
+                                )}
                               </button>
                             ))}
                           </div>
@@ -193,22 +249,30 @@ const WishListCom = () => {
                       <div className="flex items-center gap-6">
                         <div className="flex items-center border border-gray-300 rounded-lg">
                           <button
-                            disabled={quantity == 1}
+                            onClick={() => decreaseQuantity(item.product._id)}
+                            disabled={(quantity[item.product._id] || 1) === 1}
                             type="button"
-                            onClick={() => setQuantity(quantity - 1)}
                             className="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-l-lg transition-colors hover:cursor-pointer"
                           >
                             −
                           </button>
                           <input
+                            // {...register("quantity")}
                             type="number"
-                            value={quantity}
+                            value={quantity[item.product._id] || 1}
                             readOnly
                             className="w-12 text-center border-x border-gray-300 py-2 text-sm font-medium"
                           />
+                          {/* <input
+                            {...register(`quantity.${item.product._id}`)}
+                            value={quantity[item.product._id] || 1}
+                            readOnly
+                            hidden
+                          /> */}
+                          {/* {console.log(quantity[item.product._id] || 1)} */}
                           <button
                             type="button"
-                            onClick={() => setQuantity(quantity + 1)}
+                            onClick={() => increaseQuantity(item.product._id)}
                             className="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-r-lg transition-colors hover:cursor-pointer"
                           >
                             +
@@ -263,7 +327,7 @@ const WishListCom = () => {
 
                       <div className="space-y-2 pt-2">
                         <button
-                          type="button"
+                          type="submit"
                           className="w-full bg-indigo-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200 hover:cursor-pointer"
                         >
                           Add to Cart

@@ -2,6 +2,8 @@ import asyncHandler from "express-async-handler";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../../models/user.js";
+import Wishlist from "../../models/wishlist.js";
+import { success } from "zod";
 
 //Check current user
 export const getCurrentUser = (req, res) => {
@@ -78,5 +80,83 @@ export const userLogout = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "User Logout Successfully",
+  });
+});
+
+//Add Wishlist Products
+export const wishlistProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.user;
+
+  const wishlist = await Wishlist.findOne({ userId });
+
+  if (!wishlist) {
+    const newWishlistProduct = await Wishlist.create({
+      userId,
+      cart: [{ product: id }],
+    });
+  } else {
+    wishlist.cart.push({ product: id });
+    await wishlist.save();
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Product add in WishList",
+  });
+});
+
+//Get wishlist product
+export const getWishlistProduct = asyncHandler(async (req, res) => {
+  const { userId } = req.user;
+
+  const wishlist = await Wishlist.findOne({ userId }).populate({
+    path: "cart.product",
+  });
+
+  if (!wishlist) {
+    return res.json([]);
+  }
+
+  const userWishlistProduct = [...wishlist.cart].sort(
+    (a, b) => b.addedAt - a.addedAt,
+  );
+
+  res.status(200).json({
+    success: true,
+    message: "Get all wishlit product",
+    userWishlistProduct,
+  });
+});
+
+// Remove Wish list product
+export const removeWishlistProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.user;
+
+  const wishlist = await Wishlist.findOneAndUpdate(
+    { userId },
+    {
+      $pull: {
+        cart: {
+          product: id,
+        },
+      },
+    },
+    { new: true },
+  );
+
+  console.log(wishlist);
+
+  if (!wishlist) {
+    return res.status(404).json({
+      success: false,
+      message: "Wishlist not found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Product Remove from Wishlist Successfully",
   });
 });

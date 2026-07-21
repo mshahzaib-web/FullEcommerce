@@ -1,6 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "../../api/Product/product";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+
+import { getProducts } from "../../api/Product/product";
+import { wishlistProduct } from "../../api/User/user";
+import { toast } from "sonner";
 
 /**
  * ProductGrid Component
@@ -13,6 +16,21 @@ export default function ProductGrid() {
     queryKey: ["products"],
     queryFn: getProducts,
   });
+
+  const wishlistMutation = useMutation({
+    mutationFn: wishlistProduct,
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const handleWishList = (id) => {
+    console.log(id);
+    wishlistMutation.mutate(id);
+  };
 
   if (isPending) return <p>Loading...</p>;
 
@@ -136,7 +154,11 @@ export default function ProductGrid() {
                   >
                     Buy Now
                   </button>
-                  <button className="p-2 rounded-xl bg-indigo-50 text-[#4F46E5] hover:bg-indigo-600 hover:text-white transition-colors hover:cursor-pointer">
+                  <button
+                    type="button"
+                    onClick={() => handleWishList(product._id)}
+                    className="p-2 rounded-xl bg-indigo-50 text-[#4F46E5] hover:bg-indigo-600 hover:text-white transition-colors hover:cursor-pointer"
+                  >
                     <svg
                       className="w-5 h-5"
                       fill="none"

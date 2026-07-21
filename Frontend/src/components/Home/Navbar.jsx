@@ -102,24 +102,35 @@ export default function Navbar() {
             {user ? (
               <>
                 {/* Wishlist */}
-                <button className="text-gray-600 hover:text-indigo-700">
+                <Link
+                  to="/user/wishlist"
+                  className="relative text-gray-600 hover:text-indigo-700"
+                >
                   <svg
                     className="w-5 h-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
+                    {" "}
                     <path
                       strokeWidth={2}
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                    />
+                    />{" "}
                   </svg>
-                </button>
+
+                  <span className="absolute -top-2 -right-2 bg-indigo-700 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                    3
+                  </span>
+                </Link>
 
                 {/* Cart */}
-                <button className="relative text-gray-600 hover:text-indigo-700">
+                <Link
+                  to="/user/cart"
+                  className="relative text-gray-600 hover:text-indigo-700"
+                >
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -134,16 +145,16 @@ export default function Navbar() {
                     />
                   </svg>
 
-                  <span className="absolute -top-1 -right-1 bg-indigo-700 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 bg-indigo-700 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
                     0
                   </span>
-                </button>
+                </Link>
 
                 {/* Profile */}
-                <div className="relative">
+                <div className="relative hover:cursor-pointer">
                   <button
                     onClick={() => setShowLogout(!showLogout)}
-                    className="text-gray-600 hover:text-indigo-700"
+                    className="text-gray-600 hover:text-indigo-700 hover:cursor-pointer"
                   >
                     <svg
                       className="w-5 h-5"
@@ -165,7 +176,7 @@ export default function Navbar() {
                     <div className="absolute right-0 mt-2 w-28 bg-white shadow-lg rounded-md border-indigo-700 border-2 hover:cursor-pointer hover:border-red-500 hover-border-2">
                       <button
                         onClick={handleLogout}
-                        className="text-indigo-700 hover:text-red-500 hover:cursor-pointer hover:border-red-500 text-center font-bold w-full px-4 py-2 hover:bg-gray-100 outline-none"
+                        className="text-indigo-700 rounded-md hover:text-red-500 hover:cursor-pointer hover:border-red-500 text-center font-bold w-full px-4 py-2 hover:bg-gray-100 outline-none "
                       >
                         Logout
                       </button>

@@ -69,16 +69,16 @@ export default function ProductInfo() {
             Color: <span className="text-gray-500"></span>
           </p>
           <div className="flex flex-wrap gap-3">
-            {product.color.map((color, idx) => (
+            {product.color.map((color, index) => (
               <input
-                key={idx}
+                key={`${color}-${index}`}
                 size={color.length}
                 readOnly
                 value={color}
-                onClick={() => setSelectedColor(idx)}
+                onClick={() => setSelectedColor(`${color}-${index}`)}
                 className={`flex items-center text-center px-1 h-8 rounded-lg border text-sm font-medium transition-colors border-gray-200 text-gray-700 hover:border-gray-400 hover:cursor-pointer outline-none
             ${
-              selectedColor === idx
+              selectedColor === `${color}-${index}`
                 ? "border-indigo-600 border-2 text-indigo-700"
                 : "border-gray-300 text-black"
             }
@@ -94,15 +94,15 @@ export default function ProductInfo() {
           </div>
           <div className="flex flex-wrap gap-2">
             {product.size.map((size, index) => (
-              <div key={index}>
+              <div key={`${size}-${index}`}>
                 <input
                   size={size.length}
                   readOnly
                   defaultValue={size}
-                  onClick={() => setSelectedSize(index)}
+                  onClick={() => setSelectedSize(`${size}-${index}`)}
                   className={`w-auto px-2 py-2 rounded-lg border text-center text-sm font-medium transition-colors border-gray-200 text-gray-700 hover:border-gray-400 cursor-pointer outline-none
                   ${
-                    selectedSize === index
+                    selectedSize === `${size}-${index}`
                       ? "border-indigo-600 border-2 text-indigo-700"
                       : "border-gray-300 text-black"
                   } 

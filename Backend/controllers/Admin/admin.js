@@ -21,7 +21,7 @@ export const adminSignUp = asyncHandler(async (req, res) => {
     return res.status(409).json({
       success: false,
       message:
-        "An account with this email already exists. Please log in instead.",
+        "An account with this email already exists. Please login instead.",
     });
   }
 
@@ -51,7 +51,7 @@ export const adminLogIn = asyncHandler(async (req, res) => {
   if (!admin) {
     return res.status(401).json({
       success: false,
-      message: "Email is Incorrect",
+      message: "Email is Incorrect OR SignUp First",
     });
   }
 

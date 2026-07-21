@@ -27,3 +27,18 @@ export const userLogout = async () => {
   const res = await api.post("/user/logout");
   return res.data;
 };
+
+export const wishlistProduct = async (id) => {
+  const res = await api.post(`/user/wishlist/${id}`);
+  return res.data;
+};
+
+export const getWishlistProduct = async () => {
+  const res = await api.get("/user/wishlist");
+  return res.data;
+};
+
+export const removeWishlistProduct = async (id) => {
+  const res = await api.post(`/user/wishlist/remove/${id}`);
+  return res.data;
+};

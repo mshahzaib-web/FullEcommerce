@@ -4,6 +4,9 @@ import {
   userLogIn,
   getCurrentUser,
   userLogout,
+  wishlistProduct,
+  getWishlistProduct,
+  removeWishlistProduct,
 } from "../../controllers/User/user.js";
 import { validate } from "../../middleware/validate.js";
 import { userIsLogIn } from "../../middleware/userIsLogin.js";
@@ -21,5 +24,11 @@ router.post("/signup", validate(userSignUpZodValidation), userSignUp);
 router.post("/login", validate(userLogInZodValidation), userLogIn);
 
 router.post("/logout", userLogout);
+
+router.post("/wishlist/:id", userIsLogIn, wishlistProduct);
+
+router.get("/wishlist", userIsLogIn, getWishlistProduct);
+
+router.post("/wishlist/remove/:id", userIsLogIn, removeWishlistProduct);
 
 export default router;

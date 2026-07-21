@@ -35,10 +35,11 @@ function App() {
             <Route path="/shop" element={<ShopProducts />}></Route>
             <Route path="/category" element={<Category />}></Route>
             <Route path="/product/:id" element={<ProductDetails />}></Route>
-            <Route path="/wishlist" element={<WishList />}></Route>
-            <Route path="/cart" element={<ShoppingCart />}></Route>
+            <Route path="user/wishlist" element={<WishList />}></Route>
+            <Route path="user/cart" element={<ShoppingCart />}></Route>
             <Route path="/checkout" element={<CheckOut />}></Route>
 
+            {/* Admin Protect Routes */}
             <Route element={<AdminRoutesProtect />}>
               <Route
                 path="/admin/dashboard"

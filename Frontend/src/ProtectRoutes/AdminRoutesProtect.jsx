@@ -11,7 +11,7 @@ export default function AdminRoutesProtect() {
 
   if (!admin) {
     // Redirect to login, but save the current location they were trying to go to
-    return <Navigate to="admin/signup" state={{ from: location }} replace />;
+    return <Navigate to="admin/login" state={{ from: location }} replace />;
   }
 
   // If user exists, render the nested routes

@@ -51,7 +51,7 @@ export default function AdminLogInForm() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-50/50 flex items-center justify-center font-sans antialiased lg:p-8">
+    <div className="min-h-screen w-full bg-slate-50/50 flex items-center justify-center font-sans antialiased lg:p-6">
       {/* Main Structural Wrapper Layout Container */}
       <div className="w-full max-w-md lg:max-w-6xl bg-white lg:rounded-3xl lg:shadow-xl lg:border lg:border-gray-100 min-h-[85vh] grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
         {/* Left Side Static Promotion View */}

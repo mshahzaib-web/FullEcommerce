@@ -26,6 +26,7 @@ export default function AdminSignUpForm() {
     },
 
     onError: (error) => {
+      navigate("/admin/login");
       toast.error(error.response.data.message);
     },
   });

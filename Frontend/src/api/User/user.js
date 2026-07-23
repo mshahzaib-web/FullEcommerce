@@ -42,3 +42,8 @@ export const removeWishlistProduct = async (id) => {
   const res = await api.post(`/user/wishlist/remove/${id}`);
   return res.data;
 };
+
+export const addToCart = async (data) => {
+  const res = await api.post(`user/addtocart/${data.productId}`, data);
+  return res.data;
+};

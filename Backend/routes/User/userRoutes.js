@@ -7,6 +7,7 @@ import {
   wishlistProduct,
   getWishlistProduct,
   removeWishlistProduct,
+  addToCart,
 } from "../../controllers/User/user.js";
 import { validate } from "../../middleware/validate.js";
 import { userIsLogIn } from "../../middleware/userIsLogin.js";
@@ -30,5 +31,7 @@ router.post("/wishlist/:id", userIsLogIn, wishlistProduct);
 router.get("/wishlist", userIsLogIn, getWishlistProduct);
 
 router.post("/wishlist/remove/:id", userIsLogIn, removeWishlistProduct);
+
+router.post("/addtocart/:id", userIsLogIn, addToCart);
 
 export default router;

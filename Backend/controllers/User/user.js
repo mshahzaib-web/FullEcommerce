@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../../models/user.js";
 import Wishlist from "../../models/wishlist.js";
+import Cart from "../../models/cart.js";
 import { success } from "zod";
 
 //Check current user
@@ -102,7 +103,7 @@ export const wishlistProduct = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: "Product add in WishList",
+    message: "Product add in WishList successfully",
   });
 });
 
@@ -156,5 +157,36 @@ export const removeWishlistProduct = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Product Remove from Wishlist Successfully",
+  });
+});
+
+// Add product to Cart from Wishlist
+export const addToCart = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.user;
+  const { selectedColor, selectedSize, quantity } = req.body;
+
+  const cartFind = await Cart.findOne({ userId });
+
+  if (!cartFind) {
+    const newCartProduct = await Cart.create({
+      userId,
+      cart: [
+        { product: id, color: selectedColor, size: selectedSize, quantity },
+      ],
+    });
+  } else {
+    cartFind.cart.push({
+      product: id,
+      color: selectedColor,
+      size: selectedSize,
+      quantity,
+    });
+    await cartFind.save();
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Product add in Cart successfully",
   });
 });

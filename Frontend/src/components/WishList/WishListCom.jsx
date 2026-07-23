@@ -1,31 +1,23 @@
-import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useState } from "react";
+// import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import { getWishlistProduct, removeWishlistProduct } from "../../api/User/user";
+import {
+  getWishlistProduct,
+  removeWishlistProduct,
+  addToCart,
+} from "../../api/User/user";
 
 const WishListCom = () => {
+  const queryClient = useQueryClient();
+
+  // Stores object { productId, value } so selections stay unique to a specific product
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState({});
-  const queryClient = useQueryClient();
 
-  const increaseQuantity = (id) => {
-    setQuantity((prev) => ({
-      ...prev,
-      [id]: (prev[id] || 1) + 1,
-    }));
-  };
-
-  const decreaseQuantity = (id) => {
-    setQuantity((prev) => ({
-      ...prev,
-      [id]: Math.max((prev[id] || 1) - 1, 1),
-    }));
-  };
-
-  const { register, handleSubmit } = useForm();
+  // const { register, handleSubmit } = useForm();
 
   const { data, isPending, error } = useQuery({
     queryKey: ["wishlist"],
@@ -34,12 +26,12 @@ const WishListCom = () => {
 
   const removeWishlistMutation = useMutation({
     mutationFn: removeWishlistProduct,
-    onSuccess: (data) => {
+    onSuccess: (responseData) => {
       queryClient.invalidateQueries({ queryKey: ["wishlist"] });
-      toast.success(data.message);
+      toast.success(responseData.message);
     },
-    onError: (error) => {
-      toast.error(error.response.data.message);
+    onError: (err) => {
+      toast.error(err.response?.data?.message || "An error occurred");
     },
   });
 
@@ -47,20 +39,81 @@ const WishListCom = () => {
     removeWishlistMutation.mutate(id);
   };
 
-  const onSubmit = (data) => {
-    console.log(data);
-    console.log(quantity[data.product]);
+  const handleAddToCartMutation = useMutation({
+    mutationFn: addToCart,
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const handleQuantityDecrease = (id) => {
+    setQuantity((prev) => {
+      const currentQuantity = prev[id] || 1;
+      if (currentQuantity <= 1) return prev;
+      return {
+        ...prev,
+        [id]: currentQuantity - 1,
+      };
+    });
   };
 
-  const onError = (errors) => {
-    const error = Object.values(errors)[0];
-    toast.error(error.message);
+  const handleQuantityIncrease = (id) => {
+    setQuantity((prev) => {
+      const currentQuantity = prev[id] || 1;
+      return {
+        ...prev,
+        [id]: currentQuantity + 1,
+      };
+    });
   };
 
-  if (isPending) return <p>loading...</p>;
+  // Set selected color globally bound to product ID
+  const handleSelectedColor = (productId, color) => {
+    setSelectedColor({ productId, value: color });
+  };
+
+  // Set selected size globally bound to product ID
+  const handleSelectedSize = (productId, size) => {
+    setSelectedSize({ productId, value: size });
+  };
+
+  const onAddToCart = (product, e) => {
+    e.preventDefault();
+
+    const selectedQty = quantity[product._id] || 1;
+
+    // Check if the current selection belongs to this specific product
+    const activeColor =
+      selectedColor?.productId === product._id
+        ? selectedColor.value
+        : "None selected";
+    const activeSize =
+      selectedSize?.productId === product._id
+        ? selectedSize.value
+        : "None selected";
+
+    const cartPayload = {
+      productId: product._id,
+      productName: product.name,
+      productImage: product.mainImage?.url,
+      selectedColor: activeColor,
+      selectedSize: activeSize,
+      quantity: selectedQty,
+      price: product.price,
+    };
+
+    console.log(cartPayload);
+    handleAddToCartMutation.mutate(cartPayload);
+  };
+
+  if (isPending) return <p className="text-center py-10">loading...</p>;
 
   if (error) {
-    toast.error(error);
+    toast.error(error.message || "Failed to load wishlist");
   }
 
   return (
@@ -108,27 +161,27 @@ const WishListCom = () => {
 
           {/* Products List */}
           <div className="space-y-4">
-            {data.userWishlistProduct.map((item) => (
+            {data?.userWishlistProduct?.map((item) => (
               <div
                 key={item.product._id}
                 className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-600"
               >
                 <form
-                  onSubmit={handleSubmit(onSubmit, onError)}
+                  onSubmit={(e) => onAddToCart(item.product, e)}
                   className="p-4 sm:p-6 lg:p-8"
                 >
+                  {/* <input
+                    {...register(`productId_${item.product._id}`)}
+                    value={item.product._id}
+                    type="hidden"
+                  /> */}
+
                   <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
-                    <input
-                      {...register("product")}
-                      value={item.product._id}
-                      type="text"
-                      className="hidden"
-                    />
                     {/* Product Image */}
                     <div className="relative w-full lg:w-64 shrink-0">
                       <div className="aspect-square rounded-xl overflow-hidden bg-gray-100">
                         <img
-                          src={item.product.mainImage.url}
+                          src={item.product.mainImage?.url}
                           alt={item.product.name}
                           className="w-full h-full object-cover"
                         />
@@ -152,17 +205,21 @@ const WishListCom = () => {
                         <span className="text-xs font-semibold text-indigo-600 uppercase tracking-wide">
                           {item.product.category}
                         </span>
-
-                        <h2 className="text-sm md:text-md  font-bold text-gray-900 mt-1">
+                        <h2 className="text-sm md:text-md font-bold text-gray-900 mt-1">
                           {item.product.name}
                         </h2>
                       </div>
 
+                      {/* Rating Stars */}
                       <div className="flex gap-0.5">
                         {[...Array(5)].map((_, i) => (
                           <svg
                             key={i}
-                            className={`w-4 h-4 ${i < 4 ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
+                            className={`w-4 h-4 ${
+                              i < 4
+                                ? "text-yellow-400 fill-yellow-400"
+                                : "text-gray-300"
+                            }`}
                             viewBox="0 0 20 20"
                           >
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -170,114 +227,101 @@ const WishListCom = () => {
                         ))}
                       </div>
 
-                      {/* Colors and Sizes */}
-                      {item.product.color.length > 0 && (
+                      {/* Color Selection */}
+                      {item.product.color?.length > 0 && (
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             Color
                           </label>
                           <div className="flex gap-2 flex-wrap">
-                            {item.product.color.map((color) => (
-                              <button
-                                key={`${color}-${item.product._id}`}
-                                type="button"
-                                onClick={() =>
-                                  setSelectedColor(
-                                    `${color}-${item.product._id}`,
-                                  )
-                                }
-                                className={`px-4 py-2 rounded-full border-2 text-sm font-medium transition-all hover:cursor-pointer ${
-                                  selectedColor ==
-                                  `${color}-${item.product._id}`
-                                    ? "border-indigo-600 bg-indigo-600 text-white"
-                                    : "border-gray-300 text-gray-700 hover:border-gray-400"
-                                }`}
-                              >
-                                {color}
-                                {selectedColor != null ? (
-                                  <input
-                                    {...register("color")}
-                                    value={selectedColor.split("-")[0]}
-                                    type="text"
-                                    className="hidden"
-                                  />
-                                ) : (
-                                  ""
-                                )}
-                              </button>
-                            ))}
+                            {item.product.color.map((color) => {
+                              const isColorSelected =
+                                selectedColor?.productId === item.product._id &&
+                                selectedColor?.value === color;
+
+                              return (
+                                <button
+                                  key={`${color}^${item.product._id}`}
+                                  type="button"
+                                  onClick={() =>
+                                    handleSelectedColor(item.product._id, color)
+                                  }
+                                  className={`px-4 py-2 rounded-full border-2 text-sm font-medium transition-all hover:cursor-pointer ${
+                                    isColorSelected
+                                      ? "border-indigo-600 bg-indigo-50 text-indigo-600"
+                                      : "border-gray-200 text-gray-600 hover:border-gray-300"
+                                  }`}
+                                >
+                                  {color}
+                                </button>
+                              );
+                            })}
                           </div>
                         </div>
                       )}
 
-                      {item.product.size.length > 0 && (
+                      {/* Size Selection */}
+                      {item.product.size?.length > 0 && (
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             Sizes
                           </label>
                           <div className="flex gap-2 flex-wrap">
-                            {item.product.size.map((size) => (
-                              <button
-                                key={`${size}-${item.product._id}`}
-                                type="button"
-                                onClick={() =>
-                                  setSelectedSize(`${size}-${item.product._id}`)
-                                }
-                                className={`px-4 py-2 rounded-full border-2 text-sm font-medium transition-all hover:cursor-pointer ${
-                                  selectedSize == `${size}-${item.product._id}`
-                                    ? "border-indigo-600 bg-indigo-600 text-white"
-                                    : "border-gray-300 text-gray-700 hover:border-gray-400"
-                                }`}
-                              >
-                                {size}
-                                {selectedSize != null ? (
-                                  <input
-                                    {...register("size")}
-                                    value={selectedColor.split("-")[0]}
-                                    type="text"
-                                    className="hidden"
-                                  />
-                                ) : (
-                                  ""
-                                )}
-                              </button>
-                            ))}
+                            {item.product.size.map((size) => {
+                              const isSizeSelected =
+                                selectedSize?.productId === item.product._id &&
+                                selectedSize?.value === size;
+
+                              return (
+                                <button
+                                  key={`${size}^${item.product._id}`}
+                                  type="button"
+                                  onClick={() =>
+                                    handleSelectedSize(item.product._id, size)
+                                  }
+                                  className={`px-4 py-2 rounded-full border-2 text-sm font-medium transition-all hover:cursor-pointer ${
+                                    isSizeSelected
+                                      ? "border-indigo-600 bg-indigo-50 text-indigo-600"
+                                      : "border-gray-200 text-gray-600 hover:border-gray-300"
+                                  }`}
+                                >
+                                  {size}
+                                </button>
+                              );
+                            })}
                           </div>
                         </div>
                       )}
+
                       {/* Quantity and Stock */}
                       <div className="flex items-center gap-6">
                         <div className="flex items-center border border-gray-300 rounded-lg">
                           <button
-                            onClick={() => decreaseQuantity(item.product._id)}
-                            disabled={(quantity[item.product._id] || 1) === 1}
                             type="button"
+                            onClick={() =>
+                              handleQuantityDecrease(item.product._id)
+                            }
                             className="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-l-lg transition-colors hover:cursor-pointer"
                           >
                             −
                           </button>
                           <input
-                            // {...register("quantity")}
                             type="number"
                             value={quantity[item.product._id] || 1}
                             readOnly
                             className="w-12 text-center border-x border-gray-300 py-2 text-sm font-medium"
                           />
-                          {/* <input
-                            {...register(`quantity.${item.product._id}`)}
-                            value={quantity[item.product._id] || 1}
-                            readOnly
-                            hidden
-                          /> */}
-                          {/* {console.log(quantity[item.product._id] || 1)} */}
                           <button
                             type="button"
-                            onClick={() => increaseQuantity(item.product._id)}
+                            onClick={() =>
+                              handleQuantityIncrease(item.product._id)
+                            }
                             className="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-r-lg transition-colors hover:cursor-pointer"
                           >
                             +
                           </button>
                         </div>
+
                         <div
                           className={`flex items-center gap-1.5 text-sm ${
                             item.product.stock < 100
@@ -317,10 +361,9 @@ const WishListCom = () => {
                             20% OFF
                           </span>
                         </div>
-
                         <div className="flex items-center justify-end gap-2">
                           <span className="text-2xl font-bold text-indigo-600">
-                            ${item.product.price.toFixed(2)}
+                            ${item.product.price?.toFixed(2)}
                           </span>
                         </div>
                       </div>
@@ -347,7 +390,7 @@ const WishListCom = () => {
                         onClick={() =>
                           handleRemoveWishlistProduct(item.product._id)
                         }
-                        className="rounded-2xl w-full text-red-500 text-sm font-medium hover:text-white transition-colors py-2 hover:cursor-pointer hover:bg-red-400 hover:rounded-2xl"
+                        className="rounded-2xl w-full text-red-500 text-sm font-medium hover:text-white transition-colors py-2 hover:cursor-pointer hover:bg-red-400"
                       >
                         Remove from list
                       </button>
@@ -358,7 +401,7 @@ const WishListCom = () => {
             ))}
           </div>
 
-          {data.userWishlistProduct.length === 0 && (
+          {data?.userWishlistProduct?.length === 0 && (
             <div className="text-center py-16">
               <svg
                 className="w-16 h-16 text-gray-300 mx-auto mb-4"

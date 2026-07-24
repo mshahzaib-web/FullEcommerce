@@ -47,3 +47,13 @@ export const addToCart = async (data) => {
   const res = await api.post(`user/addtocart/${data.productId}`, data);
   return res.data;
 };
+
+export const getCartProduct = async () => {
+  const res = await api.get("user/cartproduct");
+  return res.data;
+};
+
+export const removeCartProduct = async (id) => {
+  const res = await api.post(`/user/cart/remove/${id}`);
+  return res.data;
+};

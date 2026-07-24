@@ -42,6 +42,7 @@ const WishListCom = () => {
   const handleAddToCartMutation = useMutation({
     mutationFn: addToCart,
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
       toast.success(data.message);
     },
 
@@ -107,6 +108,22 @@ const WishListCom = () => {
     };
 
     console.log(cartPayload);
+
+    if (
+      product.color.length > 0 &&
+      cartPayload.selectedColor == "None selected"
+    ) {
+      return toast.error("Please Select the color");
+    }
+
+    if (
+      product.size.length > 0 &&
+      cartPayload.selectedSize == "None selected"
+    ) {
+      return toast.error("Please Select the size");
+    }
+    console.log("data send");
+
     handleAddToCartMutation.mutate(cartPayload);
   };
 

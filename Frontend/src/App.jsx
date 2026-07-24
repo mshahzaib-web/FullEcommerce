@@ -1,12 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import UserSignUp from "./pages/UserSignUp";
 import UserLogIn from "./pages/UserLogIn";
 import Home from "./pages/Home";
 import ShopProducts from "./pages/ShopProducts";
 import Category from "./pages/Category";
 import ProductDetails from "./pages/ProductDetails";
+import AddReview from "./pages/AddReview";
 import WishList from "./pages/WishList";
 import ShoppingCart from "./pages/ShoppingCart";
 import CheckOut from "./pages/CheckOut";
@@ -28,6 +30,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <Toaster position="top-center" richColors closeButton />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/user/signup" element={<UserSignUp />}></Route>
             <Route path="/user/login" element={<UserLogIn />}></Route>
@@ -35,6 +38,7 @@ function App() {
             <Route path="/shop" element={<ShopProducts />}></Route>
             <Route path="/category" element={<Category />}></Route>
             <Route path="/product/:id" element={<ProductDetails />}></Route>
+            <Route path="/user/:id/add-review" element={<AddReview />}></Route>
             <Route path="user/wishlist" element={<WishList />}></Route>
             <Route path="user/cart" element={<ShoppingCart />}></Route>
             <Route path="/checkout" element={<CheckOut />}></Route>

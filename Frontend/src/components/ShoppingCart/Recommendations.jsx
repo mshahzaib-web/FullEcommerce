@@ -81,42 +81,38 @@ const Recommendations = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {products.map((product) => (
-          <>
-            <div className="group cursor-pointer">
-              <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-100 mb-3">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                <button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-sm hover:bg-gray-50 text-indigo-600">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <p className="text-xs font-bold text-gray-500 tracking-wide mb-1">
-                {product.brand}
-              </p>
-              <h3 className="text-sm font-medium text-gray-900 mb-1 truncate">
-                {product.name}
-              </h3>
-              <p className="text-sm font-bold text-gray-900">
-                ${product.price}
-              </p>
+        {products.map((product, index) => (
+          <div key={index} className="group cursor-pointer">
+            <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-100 mb-3">
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-sm hover:bg-gray-50 text-indigo-600">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+              </button>
             </div>
-          </>
+            <p className="text-xs font-bold text-gray-500 tracking-wide mb-1">
+              {product.brand}
+            </p>
+            <h3 className="text-sm font-medium text-gray-900 mb-1 truncate">
+              {product.name}
+            </h3>
+            <p className="text-sm font-bold text-gray-900">${product.price}</p>
+          </div>
         ))}
       </div>
     </div>

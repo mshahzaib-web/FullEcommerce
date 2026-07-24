@@ -2,8 +2,9 @@ import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { getWishlistProduct, getCartProduct } from "../../api/User/user";
 
 import { userLogout } from "../../api/User/user";
 import { useUserAuth } from "../../hooks/useAuth";
@@ -18,6 +19,16 @@ export default function Navbar() {
   const { data: user } = useUserAuth();
 
   console.log(user);
+
+  const { data: wishlist } = useQuery({
+    queryKey: ["wishlist"],
+    queryFn: getWishlistProduct,
+  });
+
+  const { data: cart } = useQuery({
+    queryKey: ["cart"],
+    queryFn: getCartProduct,
+  });
 
   const logoutMutation = useMutation({
     mutationFn: userLogout,
@@ -60,15 +71,15 @@ export default function Navbar() {
               Shop
             </NavLink>
 
-            <NavLink to="/category" className={navLinkClass}>
-              Category
+            <NavLink to="/user/wishlist" className={navLinkClass}>
+              Wishlist
             </NavLink>
 
             <NavLink to="/admin/add-product" className={navLinkClass}>
               Add Product
             </NavLink>
 
-            <NavLink to="/cart" className={navLinkClass}>
+            <NavLink to="/user/cart" className={navLinkClass}>
               Cart
             </NavLink>
           </div>
@@ -122,7 +133,7 @@ export default function Navbar() {
                   </svg>
 
                   <span className="absolute -top-2 -right-2 bg-indigo-700 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                    3
+                    {wishlist?.userWishlistProduct?.length}
                   </span>
                 </Link>
 
@@ -146,7 +157,7 @@ export default function Navbar() {
                   </svg>
 
                   <span className="absolute -top-2 -right-2 bg-indigo-700 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                    0
+                    {cart?.userCartProduct.length}
                   </span>
                 </Link>
 
@@ -285,11 +296,11 @@ export default function Navbar() {
               </NavLink>
 
               <NavLink
-                to="/category"
+                to="/user/wishlist"
                 className={navLinkClass}
                 onClick={() => setIsOpen(false)}
               >
-                Category
+                Wishlist
               </NavLink>
 
               <NavLink
@@ -301,7 +312,7 @@ export default function Navbar() {
               </NavLink>
 
               <NavLink
-                to="/cart"
+                to="/user/cart"
                 className={navLinkClass}
                 onClick={() => setIsOpen(false)}
               >

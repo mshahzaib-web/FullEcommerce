@@ -1,13 +1,51 @@
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useProductDetails } from "../../context/productDetailsContext";
+import { addToCart } from "../../api/User/user";
+import { toast } from "sonner";
 
 export default function ProductInfo() {
-  const [selectedColor, setSelectedColor] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedColor, setSelectedColor] = useState("None selected");
+  const [selectedSize, setSelectedSize] = useState("None selected");
   const [quantity, setQuantity] = useState(1);
+
+  const queryClient = useQueryClient();
 
   const data = useProductDetails();
   const { product } = data;
+
+  const productAddToCartMutation = useMutation({
+    mutationFn: addToCart,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+      toast.success(data.message);
+    },
+
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const handleProductAddToCart = (product) => {
+    const payload = {
+      productId: product._id,
+      selectedColor: selectedColor,
+      selectedSize: selectedSize,
+      quantity: quantity,
+    };
+
+    console.log(payload);
+
+    if (product.color.length > 0 && payload.selectedColor == "None selected") {
+      return toast.error("Please Select the color");
+    }
+
+    if (product.size.length > 0 && payload.selectedSize == "None selected") {
+      return toast.error("Please Select the size");
+    }
+
+    productAddToCartMutation.mutate(payload);
+  };
 
   return (
     <>
@@ -64,54 +102,62 @@ export default function ProductInfo() {
           ""
         )}
 
-        <div>
-          <p className="text-sm text-gray-700 mb-2">
-            Color: <span className="text-gray-500"></span>
-          </p>
-          <div className="flex flex-wrap gap-3">
-            {product.color.map((color, index) => (
-              <input
-                key={`${color}-${index}`}
-                size={color.length}
-                readOnly
-                value={color}
-                onClick={() => setSelectedColor(`${color}-${index}`)}
-                className={`flex items-center text-center px-1 h-8 rounded-lg border text-sm font-medium transition-colors border-gray-200 text-gray-700 hover:border-gray-400 hover:cursor-pointer outline-none
+        {product.color.length > 0 ? (
+          <div>
+            <p className="text-sm text-gray-700 mb-2">
+              Color: <span className="text-gray-500"></span>
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {product.color.map((color, index) => (
+                <input
+                  key={`${color}-${index}`}
+                  size={color.length}
+                  readOnly
+                  value={color}
+                  onClick={() => setSelectedColor(color)}
+                  className={`flex items-center text-center px-1 h-8 rounded-lg border text-sm font-medium transition-colors border-gray-200 text-gray-700 hover:border-gray-400 hover:cursor-pointer outline-none
             ${
-              selectedColor === `${color}-${index}`
+              selectedColor === color
                 ? "border-indigo-600 border-2 text-indigo-700"
                 : "border-gray-300 text-black"
             }
           `}
-              />
-            ))}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
 
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <p className="text-sm text-gray-700">Size</p>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {product.size.map((size, index) => (
-              <div key={`${size}-${index}`}>
-                <input
-                  size={size.length}
-                  readOnly
-                  defaultValue={size}
-                  onClick={() => setSelectedSize(`${size}-${index}`)}
-                  className={`w-auto px-2 py-2 rounded-lg border text-center text-sm font-medium transition-colors border-gray-200 text-gray-700 hover:border-gray-400 cursor-pointer outline-none
+        {product.size.length > 0 ? (
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-sm text-gray-700">Size</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {product.size.map((size, index) => (
+                <div key={`${size}-${index}`}>
+                  <input
+                    size={size.length}
+                    readOnly
+                    defaultValue={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`w-auto px-2 py-2 rounded-lg border text-center text-sm font-medium transition-colors border-gray-200 text-gray-700 hover:border-gray-400 cursor-pointer outline-none
                   ${
-                    selectedSize === `${size}-${index}`
+                    selectedSize === size
                       ? "border-indigo-600 border-2 text-indigo-700"
                       : "border-gray-300 text-black"
                   } 
                   `}
-                />
-              </div>
-            ))}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
 
         <div className="flex items-center gap-4">
           <p className="text-sm text-gray-700">Quantity</p>
@@ -140,7 +186,11 @@ export default function ProductInfo() {
         </div>
 
         <div className="flex flex-col gap-3 mt-2">
-          <button className="w-full bg-[#3b36d6] hover:bg-indigo-800 text-white font-medium py-3 rounded-lg transition-colors shadow-sm">
+          <button
+            type="button"
+            onClick={() => handleProductAddToCart(product)}
+            className="w-full bg-[#3b36d6] hover:bg-indigo-800 text-white font-medium py-3 rounded-lg transition-colors shadow-sm"
+          >
             Add to Cart
           </button>
           <button className="w-full bg-white border border-[#3b36d6] text-[#3b36d6] hover:bg-indigo-50 font-medium py-3 rounded-lg transition-colors">

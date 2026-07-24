@@ -96,14 +96,31 @@ export const wishlistProduct = asyncHandler(async (req, res) => {
       userId,
       wishlist: [{ product: id }],
     });
-  } else {
-    wishlistFind.wishlist.push({ product: id });
-    await wishlistFind.save();
+
+    return res.status(201).json({
+      success: true,
+      message: "Product added to wishlist successfully",
+    });
   }
 
-  res.status(200).json({
+  const isProductInWishlist = wishlistFind.wishlist.some(
+    (item) => item.product.toString() === id.toString(),
+  );
+
+  if (isProductInWishlist) {
+    return res.status(400).json({
+      success: false,
+      message: "Product already added to wishlist",
+    });
+  }
+
+  wishlistFind.wishlist.push({ product: id });
+  await wishlistFind.save();
+
+  return res.status(200).json({
     success: true,
-    message: "Product add in WishList successfully",
+    message: "Product added to wishlist successfully",
+    wishlist: wishlistFind,
   });
 });
 
@@ -188,5 +205,54 @@ export const addToCart = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Product add in Cart successfully",
+  });
+});
+
+//Get Cart products
+export const getCartProduct = asyncHandler(async (req, res) => {
+  const { userId } = req.user;
+  const carts = await Cart.findOne({ userId }).populate({
+    path: "cart.product",
+  });
+
+  if (!carts) {
+    return res.json([]);
+  }
+
+  const userCartProduct = [...carts.cart].sort((a, b) => b.addedAt - a.addedAt);
+
+  res.status(200).json({
+    success: true,
+    message: "Get all cart product",
+    userCartProduct,
+  });
+});
+
+export const removeCartProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.user;
+
+  const cart = await Cart.findOneAndUpdate(
+    { userId },
+    {
+      $pull: {
+        cart: {
+          product: id,
+        },
+      },
+    },
+    { returnDocument: "after" },
+  );
+
+  if (!cart) {
+    return res.status(404).json({
+      success: false,
+      message: "Wishlist not found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Product remove from Cart successfully",
   });
 });

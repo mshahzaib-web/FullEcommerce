@@ -9,6 +9,8 @@ import {
   addToCart,
 } from "../../api/User/user";
 
+import LoadingCom from "../Loading/LoadingCom";
+
 const WishListCom = () => {
   const queryClient = useQueryClient();
 
@@ -22,6 +24,7 @@ const WishListCom = () => {
   const { data, isPending, error } = useQuery({
     queryKey: ["wishlist"],
     queryFn: getWishlistProduct,
+    retry: false,
   });
 
   const removeWishlistMutation = useMutation({
@@ -127,7 +130,7 @@ const WishListCom = () => {
     handleAddToCartMutation.mutate(cartPayload);
   };
 
-  if (isPending) return <p className="text-center py-10">loading...</p>;
+  if (isPending) return <LoadingCom />;
 
   if (error) {
     toast.error(error.message || "Failed to load wishlist");

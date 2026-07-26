@@ -7,6 +7,7 @@ export const useUserAuth = () => {
     queryKey: ["user"],
     queryFn: getCurrentUser,
     retry: false,
+    refetchOnWindowFocus: false,
   });
 };
 

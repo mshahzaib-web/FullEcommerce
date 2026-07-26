@@ -16,10 +16,11 @@ const Sidebar = () => {
   const adminLogoutMutation = useMutation({
     mutationFn: adminLogout,
     onSuccess: (data) => {
+      queryClient.clear();
       toast.success(data.message);
       navigate("/admin/login");
 
-      queryClient.setQueriesData(["admin"], null);
+      // queryClient.setQueriesData(["admin"], null);
     },
 
     onError: (error) => {

@@ -265,7 +265,7 @@ export const addProductReview = asyncHandler(async (req, res) => {
   const { userId } = req.user;
   const { rating, comment } = req.body;
 
-  const userReview = await Review.findOne({ user: userId });
+  const userReview = await Review.findOne({ product: id, user: userId });
   if (userReview) {
     return res.status(403).json({
       success: false,

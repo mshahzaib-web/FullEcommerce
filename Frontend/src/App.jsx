@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
+import Loading from "./pages/Loading";
 import UserSignUp from "./pages/UserSignUp";
 import UserLogIn from "./pages/UserLogIn";
 import Home from "./pages/Home";
@@ -33,6 +34,7 @@ function App() {
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
+            <Route path="/loading" element={<Loading />}></Route>
             <Route path="/user/signup" element={<UserSignUp />}></Route>
             <Route path="/user/login" element={<UserLogIn />}></Route>
             <Route path="/" element={<Home />}></Route>

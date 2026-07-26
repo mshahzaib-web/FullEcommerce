@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 // import ReactStars from "react-rating-stars-component";
 
-export default function CustomerReviewsCom() {
-  const location = useLocation();
-  const navigate = useNavigate();
+import { getProductReviews } from "../../api/Product/product";
+import { useUserAuth } from "../../hooks/useAuth";
+import LoadingCom from "../Loading/LoadingCom";
 
+export default function CustomerReviewsCom() {
   const [reviews, setReviews] = useState([
     {
       id: 1,
@@ -42,40 +44,26 @@ export default function CustomerReviewsCom() {
     },
   ]);
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const product = location.state?.product;
+  const { data: user } = useUserAuth();
 
   const handleWriteReviewBtn = (product) => {
     navigate(`/user/${product._id}/add-review`, { state: { product } });
   };
 
-  const [editingId, setEditingId] = useState(null);
-  const [editForm, setEditForm] = useState({ title: "", text: "" });
+  const { data, isPending } = useQuery({
+    queryKey: ["review", product._id],
+    queryFn: () => getProductReviews(product._id),
+    retry: false,
+  });
 
-  const overallRating = 4.8;
-  const totalReviews = 1284;
+  console.log(data);
 
   const handleDelete = (id) => {
     setReviews(reviews.filter((r) => r.id !== id));
-  };
-
-  const handleUpdateClick = (review) => {
-    setEditingId(review.id);
-    setEditForm({ title: review.title, text: review.text });
-  };
-
-  const handleUpdateSave = (id) => {
-    setReviews(
-      reviews.map((r) =>
-        r.id === id ? { ...r, title: editForm.title, text: editForm.text } : r,
-      ),
-    );
-    setEditingId(null);
-    setEditForm({ title: "", text: "" });
-  };
-
-  const handleUpdateCancel = () => {
-    setEditingId(null);
-    setEditForm({ title: "", text: "" });
   };
 
   const StarIcon = ({ filled }) => (
@@ -101,6 +89,8 @@ export default function CustomerReviewsCom() {
       </div>
     );
   };
+
+  if (isPending) return <LoadingCom />;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -128,12 +118,10 @@ export default function CustomerReviewsCom() {
             <img src={product.mainImage.url} alt="" />
           </div>
           <div className="flex-1">
-            <h1 className="text-lg sm:text-xl font-bold text-gray-900">
-              Minimalist Silk Shirt
-            </h1>
+            <h1 className="text-md font-bold text-gray-900">{product.name}</h1>
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <span className="text-indigo-600 font-bold text-base sm:text-lg">
-                $145.00
+                ${product.price}
               </span>
               <div className="flex items-center gap-1">
                 <svg
@@ -144,10 +132,10 @@ export default function CustomerReviewsCom() {
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                 </svg>
                 <span className="font-semibold text-gray-900 text-sm sm:text-base">
-                  4.8
+                  {data?.averageRating ?? 0}
                 </span>
                 <span className="text-gray-500 text-xs sm:text-sm">
-                  (1,284 reviews)
+                  ({data?.reviews?.length ?? 0} reviews)
                 </span>
               </div>
             </div>
@@ -164,12 +152,16 @@ export default function CustomerReviewsCom() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 sm:mb-8">
           {/* Left: Overall Rating */}
           <div className="bg-white rounded-2xl shadow-sm p-6 sm:p-8 flex flex-col items-center justify-center text-center">
-            <div className="text-5xl sm:text-6xl font-bold text-gray-900 mb-2">
-              {overallRating}
+            <div
+              className={`text-5xl sm:text-6xl font-bold text-gray-700 mb-2 `}
+            >
+              {data?.averageRating ?? 0}
             </div>
             <div className="flex gap-1 mb-2 text-amber-400">
               {[1, 2, 3, 4, 5].map((star) => {
-                const fill = Math.max(0, Math.min(1, 4.5 - (star - 1))) * 100;
+                const fill =
+                  Math.max(0, Math.min(1, data?.averageRating - (star - 1))) *
+                  100;
                 return (
                   <svg key={star} className="w-7 h-7" viewBox="0 0 24 24">
                     <defs>
@@ -187,7 +179,7 @@ export default function CustomerReviewsCom() {
               })}
             </div>
             <p className="text-gray-500 text-xs sm:text-sm mb-5">
-              Based on {totalReviews.toLocaleString()} Verified Reviews
+              Based on ({data?.reviews?.length ?? 0}) Verified Reviews
             </p>
             <button
               type="button"
@@ -205,155 +197,124 @@ export default function CustomerReviewsCom() {
                 Your Review
               </h2>
             </div>
+            {user ? (
+              <>
+                {data?.loginUserReview ? (
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    {/* Avatar & Info */}
+                    <div className="flex sm:flex-col items-center sm:items-start gap-3 sm:gap-2 sm:w-32 shrink-0">
+                      <div className="sm:text-center flex flex-col items-center">
+                        <div className="w-12 h-12 flex flex-col items-center justify-center border-green-300 border-2 rounded-full">
+                          <p className="uppercase font-semibold text-gray-900 text-base md:text-lg">
+                            {data.loginUserReview.user.firstName[0]}
+                            {data.loginUserReview.user.lastName[0]}
+                          </p>
+                        </div>
 
-            {reviews.length > 0 ? (
-              <div className="flex flex-col sm:flex-row gap-4">
-                {/* Avatar & Info */}
-                <div className="flex sm:flex-col items-center sm:items-start gap-3 sm:gap-2 sm:w-32 shrink-0">
-                  <div
-                    className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full ${reviews[0].avatarColor} flex items-center justify-center font-bold text-gray-700 text-sm sm:text-base`}
-                  >
-                    {reviews[0].initials}
-                  </div>
-                  <div className="sm:text-center">
-                    <p className="font-semibold text-gray-900 text-sm sm:text-base">
-                      {reviews[0].name}
-                    </p>
-                    {reviews[0].verified && (
-                      <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full mt-1">
-                        <svg
-                          className="w-3 h-3"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                        >
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                        </svg>
-                        VERIFIED
-                      </span>
-                    )}
-                    <p className="text-gray-500 text-xs sm:text-sm mt-1">
-                      {reviews[0].date}
-                    </p>
-                  </div>
-                </div>
+                        <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full mt-1">
+                          <svg
+                            className="w-3 h-3"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                          >
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                          </svg>
+                          VERIFIED
+                        </span>
 
-                {/* Review Content */}
-                <div className="flex-1 min-w-0">
-                  {editingId === reviews[0].id ? (
-                    <div className="space-y-3">
-                      <input
-                        type="text"
-                        value={editForm.title}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, title: e.target.value })
-                        }
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="Review title"
-                      />
-                      <textarea
-                        value={editForm.text}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, text: e.target.value })
-                        }
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm h-24 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="Your review"
-                      />
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleUpdateSave(reviews[0].id)}
-                          className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
-                        >
-                          Save
-                        </button>
-                        <button
-                          onClick={handleUpdateCancel}
-                          className="bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
-                        >
-                          Cancel
-                        </button>
+                        <p className="text-gray-500 text-xs sm:text-sm mt-1">
+                          {new Date(
+                            data.loginUserReview.createdAt,
+                          ).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "2-digit",
+                            year: "numeric",
+                          })}
+                        </p>
                       </div>
                     </div>
-                  ) : (
-                    <>
-                      <div className="flex items-center gap-2 mb-2 flex-wrap">
-                        {renderStars(reviews[0].rating)}
-                      </div>
-                      <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-2">
-                        {reviews[0].title}
-                      </h3>
-                      <p className="text-gray-600 text-xs sm:text-sm leading-relaxed line-clamp-4">
-                        {reviews[0].text}
-                      </p>
-                      <div className="flex gap-2 mt-4">
-                        <button
-                          onClick={() => handleUpdateClick(reviews[0])}
-                          className="flex items-center gap-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
-                        >
-                          <svg
-                            className="w-3.5 h-3.5 sm:w-4 sm:h-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+
+                    {/* Review Content */}
+                    <div className="flex-1 min-w-0">
+                      <>
+                        <div className="flex items-center gap-2 mb-2 flex-wrap">
+                          {renderStars(data.loginUserReview.rating)}
+                        </div>
+
+                        <p className="text-gray-600 text-xs sm:text-sm leading-relaxed line-clamp-4">
+                          {data.loginUserReview.comment}
+                        </p>
+                        <div className="flex gap-2 mt-4">
+                          <button className="flex items-center gap-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+                            <svg
+                              className="w-3.5 h-3.5 sm:w-4 sm:h-4"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            </svg>
+                            Update
+                          </button>
+                          <button
+                            onClick={() => handleDelete(reviews[0].id)}
+                            className="flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
                           >
-                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                          </svg>
-                          Update
-                        </button>
-                        <button
-                          onClick={() => handleDelete(reviews[0].id)}
-                          className="flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
-                        >
-                          <svg
-                            className="w-3.5 h-3.5 sm:w-4 sm:h-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <polyline points="3 6 5 6 21 6" />
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                          </svg>
-                          Delete
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
+                            <svg
+                              className="w-3.5 h-3.5 sm:w-4 sm:h-4"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <polyline points="3 6 5 6 21 6" />
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                            </svg>
+                            Delete
+                          </button>
+                        </div>
+                      </>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-sm text-center py-8">
+                    You cannot give any review.
+                  </p>
+                )}
+              </>
             ) : (
-              <p className="text-gray-500 text-sm text-center py-8">
-                No reviews yet.
-              </p>
+              <div className="flex text-gray-400 justify-center ">
+                <p>Please Login to see, update and delete your review.</p>
+              </div>
             )}
           </div>
         </div>
 
         {/* All Reviews List */}
-        <div className="space-y-4 sm:space-y-6">
-          {reviews.slice(1).map((review) => (
-            <div
-              key={review.id}
-              className="bg-white rounded-2xl shadow-sm p-5 sm:p-6"
-            >
-              <div className="flex flex-col sm:flex-row gap-4">
-                {/* Avatar & Info */}
-                <div className="flex sm:flex-col items-start  md:items-center gap-3 sm:gap-2 sm:w-32 shrink-0">
-                  <div
-                    className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full ${review.avatarColor} flex items-center justify-center font-bold text-gray-700 text-sm sm:text-base`}
-                  >
-                    {review.initials}
-                  </div>
-                  <div className="sm:text-center">
-                    <p className="font-semibold text-gray-900 text-sm sm:text-base">
-                      {review.name}
-                    </p>
-                    {review.verified && (
+        {data?.reviews?.length > 0 ? (
+          <div className="space-y-4 sm:space-y-6">
+            {data.reviews.map((review) => (
+              <div
+                key={review._id}
+                className="bg-white rounded-2xl shadow-sm p-5 sm:p-6"
+              >
+                <div className="flex flex-col sm:flex-row gap-4">
+                  {/* Avatar & Info */}
+                  <div className="flex sm:flex-col items-start  md:items-center gap-3 sm:gap-2 sm:w-32 shrink-0">
+                    <div className="sm:text-center flex flex-col items-center">
+                      <div className="w-12 h-12 flex items-center justify-center border-green-300 border-2 rounded-full">
+                        <p className="uppercase font-semibold text-gray-900 text-sm sm:text-base">
+                          {review.user.firstName[0]}
+                          {review.user.lastName[0]}
+                        </p>
+                      </div>
+
                       <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full mt-1">
                         <svg
                           className="w-3 h-3"
@@ -364,51 +325,41 @@ export default function CustomerReviewsCom() {
                         </svg>
                         VERIFIED
                       </span>
-                    )}
-                    <p className="text-gray-500 text-xs sm:text-sm mt-1">
-                      {review.date}
-                    </p>
-                  </div>
-                </div>
 
-                {/* Review Content */}
-                <div className="flex-1 min-w-0">
-                  {editingId === review.id ? (
-                    <div className="space-y-3">
-                      <input
-                        type="text"
-                        value={editForm.title}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, title: e.target.value })
-                        }
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      />
-                      <textarea
-                        value={editForm.text}
-                        onChange={(e) =>
-                          setEditForm({ ...editForm, text: e.target.value })
-                        }
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm h-24 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      />
+                      <p className="text-gray-500 text-xs sm:text-sm mt-1">
+                        {new Date(review.createdAt).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "2-digit",
+                            year: "numeric",
+                          },
+                        )}
+                      </p>
                     </div>
-                  ) : (
+                  </div>
+
+                  {/* Review Content */}
+                  <div className="flex-1 min-w-0">
                     <>
                       <div className="flex items-center gap-2 mb-2 flex-wrap">
                         {renderStars(review.rating)}
                       </div>
-                      <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-2">
-                        {review.title}
-                      </h3>
+
                       <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
-                        {review.text}
+                        {review.comment}
                       </p>
                     </>
-                  )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center text-gray-400 text-xl">
+            Cannot have any Review.
+          </div>
+        )}
       </div>
     </div>
   );

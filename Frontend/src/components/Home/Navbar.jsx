@@ -23,18 +23,21 @@ export default function Navbar() {
   const { data: wishlist } = useQuery({
     queryKey: ["wishlist"],
     queryFn: getWishlistProduct,
+    retry: false,
   });
 
   const { data: cart } = useQuery({
     queryKey: ["cart"],
     queryFn: getCartProduct,
+    retry: false,
   });
 
   const logoutMutation = useMutation({
     mutationFn: userLogout,
     onSuccess: (data) => {
       toast.success(data.message);
-      queryClient.setQueryData(["user"], null);
+      // queryClient.setQueryData(["user"], null);
+      queryClient.clear();
       navigate("/");
     },
 
@@ -133,7 +136,9 @@ export default function Navbar() {
                   </svg>
 
                   <span className="absolute -top-2 -right-2 bg-indigo-700 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                    {wishlist?.userWishlistProduct?.length}
+                    {wishlist?.userWishlistProduct?.length > 0
+                      ? wishlist?.userWishlistProduct?.length
+                      : 0}
                   </span>
                 </Link>
 
@@ -157,7 +162,9 @@ export default function Navbar() {
                   </svg>
 
                   <span className="absolute -top-2 -right-2 bg-indigo-700 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
-                    {cart?.userCartProduct.length}
+                    {cart?.userCartProduct?.length > 0
+                      ? cart?.userCartProduct?.length
+                      : 0}
                   </span>
                 </Link>
 

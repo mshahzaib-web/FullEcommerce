@@ -9,3 +9,8 @@ export const getProductDetails = async (id) => {
   const res = await api.get(`/product/${id}`);
   return res.data;
 };
+
+export const getProductReviews = async (id) => {
+  const res = await api.get(`/product/${id}/reviews`);
+  return res.data;
+};

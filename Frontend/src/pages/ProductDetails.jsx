@@ -9,6 +9,7 @@ import Footer from "../components/Home/Footer";
 import ProductInfo from "../components/ProductDetails/ProductInfo";
 import ProductDescription from "../components/ProductDetails/ProductDescription";
 import RelatedProducts from "../components/ProductDetails/RelatedProducts";
+import LoadingCom from "../components/Loading/LoadingCom";
 
 import { getProductDetails } from "../api/Product/product";
 
@@ -18,9 +19,10 @@ export default function ProductDetails() {
   const { data, isPending, error } = useQuery({
     queryKey: ["products", id],
     queryFn: () => getProductDetails(id),
+    retry: false,
   });
 
-  if (isPending) return <p>loading...</p>;
+  if (isPending) return <LoadingCom />;
   if (error) return toast.error("Someting Wrong");
 
   return (

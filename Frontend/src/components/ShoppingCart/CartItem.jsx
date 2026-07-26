@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 import { getCartProduct, removeCartProduct } from "../../api/User/user";
+import LoadingCom from "../Loading/LoadingCom";
 
 const CartItem = () => {
   const queryClient = useQueryClient();
@@ -10,6 +11,7 @@ const CartItem = () => {
   const { data, isPending, error } = useQuery({
     queryKey: ["cart"],
     queryFn: getCartProduct,
+    retry: false,
   });
 
   const removeCartProductMutation = useMutation({
@@ -30,7 +32,7 @@ const CartItem = () => {
 
   console.log(data);
 
-  if (isPending) return <p>loading...</p>;
+  if (isPending) return <LoadingCom />;
   if (error) return <p>{error.message}</p>;
 
   return (

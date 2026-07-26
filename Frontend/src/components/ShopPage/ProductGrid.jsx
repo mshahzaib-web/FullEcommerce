@@ -5,6 +5,7 @@ import { getProducts } from "../../api/Product/product";
 import { wishlistProduct } from "../../api/User/user";
 import { toast } from "sonner";
 
+import LoadingCom from "../Loading/LoadingCom";
 /**
  * ProductGrid Component
  * Coordinates the filtering controls row alongside structural listing arrays.
@@ -16,6 +17,7 @@ export default function ProductGrid() {
   const { data, isPending, error } = useQuery({
     queryKey: ["products"],
     queryFn: getProducts,
+    retry: false,
   });
 
   const wishlistMutation = useMutation({
@@ -34,7 +36,7 @@ export default function ProductGrid() {
     wishlistMutation.mutate(id);
   };
 
-  if (isPending) return <p>Loading...</p>;
+  if (isPending) return <LoadingCom />;
 
   if (error) return <p>Something went wrong</p>;
 

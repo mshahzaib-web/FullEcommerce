@@ -9,6 +9,7 @@ import ShopProducts from "./pages/ShopProducts";
 import Category from "./pages/Category";
 import ProductDetails from "./pages/ProductDetails";
 import AddReview from "./pages/AddReview";
+import CustomerReviews from "./pages/CustomerReviews";
 import WishList from "./pages/WishList";
 import ShoppingCart from "./pages/ShoppingCart";
 import CheckOut from "./pages/CheckOut";
@@ -39,6 +40,10 @@ function App() {
             <Route path="/category" element={<Category />}></Route>
             <Route path="/product/:id" element={<ProductDetails />}></Route>
             <Route path="/user/:id/add-review" element={<AddReview />}></Route>
+            <Route
+              path="/product/:id/reviews"
+              element={<CustomerReviews />}
+            ></Route>
             <Route path="user/wishlist" element={<WishList />}></Route>
             <Route path="user/cart" element={<ShoppingCart />}></Route>
             <Route path="/checkout" element={<CheckOut />}></Route>

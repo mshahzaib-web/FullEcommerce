@@ -1,14 +1,34 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+
+import { addProductReview } from "../../api/User/user";
 
 export default function AddReviewForm() {
-  const [rating, setRating] = useState(4.5);
-  const [hoverRating, setHoverRating] = useState(4.5);
+  const [rating, setRating] = useState(5);
+  const [hoverRating, setHoverRating] = useState(5);
   const [reviewText, setReviewText] = useState("");
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   const product = location.state?.product;
+
+  const addReviewMutation = useMutation({
+    mutationFn: addProductReview,
+    onSuccess: (data) => {
+      navigate(`/product/${data.id}/reviews`, { state: { product } });
+      toast.success(data.message);
+    },
+
+    onError: (error) => {
+      navigate(`/product/${error.response.data.id}/reviews`, {
+        state: { product },
+      });
+      toast.error(error.response.data.message);
+    },
+  });
 
   const handleStarClick = (star) => {
     setRating(star);
@@ -22,9 +42,19 @@ export default function AddReviewForm() {
     setHoverRating(0);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(`Review submitted!\nRating: ${rating}/5\nReview: ${reviewText}`);
+  const handleSubmit = (id) => {
+    const payload = {
+      rating: rating,
+      comment: reviewText,
+    };
+
+    if (!payload.comment) {
+      return toast.error("Please add commit");
+    }
+    // console.log(payload);
+    // console.log(id);
+
+    addReviewMutation.mutate({ id, data: payload });
   };
 
   return (
@@ -95,8 +125,8 @@ export default function AddReviewForm() {
 
         {/* Review Text */}
         <div className="mb-6 sm:mb-8">
-          <label className="block text-xs sm:text-sm font-semibold text-gray-500 tracking-wider uppercase mb-3">
-            Your Review
+          <label className="block text-xs sm:text-sm font-semibold text-gray-500 tracking-wider  mb-3">
+            Comment:
           </label>
           <textarea
             value={reviewText}
@@ -108,7 +138,8 @@ export default function AddReviewForm() {
 
         {/* Submit Button */}
         <button
-          onClick={handleSubmit}
+          type="button"
+          onClick={() => handleSubmit(product._id)}
           className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold text-base sm:text-lg py-3.5 sm:py-4 rounded-full flex items-center justify-center gap-2 transition-colors shadow-md hover:shadow-lg"
         >
           Submit Review

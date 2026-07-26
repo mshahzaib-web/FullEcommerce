@@ -1,6 +1,5 @@
 import { useProductDetails } from "../../context/productDetailsContext";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
 
 export default function ProductDescription() {
   const data = useProductDetails();
@@ -10,6 +9,10 @@ export default function ProductDescription() {
     navigate(`/user/${product._id}/add-review`, { state: { product } });
   };
 
+  const handleReviewBtn = (product) => {
+    navigate(`/product/${product._id}/reviews`, { state: { product } });
+  };
+
   return (
     <>
       <div className="mt-16 max-w-3xl mx-auto">
@@ -17,16 +20,17 @@ export default function ProductDescription() {
           <button className="text-center py-3 text-sm font-medium text-indigo-600 border-b-2 border-indigo-600 w-1/2 focus:outline-none">
             Description
           </button>
-          <Link
-            to="/shop"
-            className="text-center py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 hover:border-b-2 hover:border-indigo-600  focus:outline-none"
+          <button
+            type="button"
+            onClick={() => handleReviewBtn(data.product)}
+            className="text-center py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 hover:border-b-2 hover:border-indigo-600 hover:cursor-pointer  focus:outline-none"
           >
             Reviews (124)
-          </Link>
+          </button>
           <button
             type="button"
             onClick={() => handleAddReviewBtn(data.product)}
-            className="text-center py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 hover:border-b-2 hover:border-indigo-600  focus:outline-none"
+            className="text-center py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 hover:border-b-2 hover:border-indigo-600 hover:cursor-pointer"
           >
             Add Review
           </button>

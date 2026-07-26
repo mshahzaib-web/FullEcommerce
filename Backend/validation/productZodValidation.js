@@ -36,3 +36,12 @@ export const productValidation = z.object({
     )
     .max(5, "Maximum 5 sub images"),
 });
+
+export const productReviewValidation = z.object({
+  rating: z
+    .number()
+    .min(1, "Minimum 1 star rating requaired")
+    .max(5, "Maximum Rating is 5"),
+
+  comment: z.string().min(1, "Commit is required"),
+});

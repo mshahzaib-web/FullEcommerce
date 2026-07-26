@@ -57,3 +57,8 @@ export const removeCartProduct = async (id) => {
   const res = await api.post(`/user/cart/remove/${id}`);
   return res.data;
 };
+
+export const addProductReview = async ({ id, data }) => {
+  const res = await api.post(`/user/product/${id}/add-review`, data);
+  return res.data;
+};

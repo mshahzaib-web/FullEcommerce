@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import User from "../../models/user.js";
 import Wishlist from "../../models/wishlist.js";
 import Cart from "../../models/cart.js";
+import Review from "../../models/review.js";
 import { success } from "zod";
 
 //Check current user
@@ -228,6 +229,7 @@ export const getCartProduct = asyncHandler(async (req, res) => {
   });
 });
 
+//Remove cart product
 export const removeCartProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { userId } = req.user;
@@ -254,5 +256,34 @@ export const removeCartProduct = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Product remove from Cart successfully",
+  });
+});
+
+//Add Review of Product
+export const addProductReview = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.user;
+  const { rating, comment } = req.body;
+
+  const userReview = await Review.findOne({ user: userId });
+  if (userReview) {
+    return res.status(403).json({
+      success: false,
+      message: "One user add only One Review",
+      id,
+    });
+  }
+
+  const newReview = await Review.create({
+    product: id,
+    user: userId,
+    rating: rating,
+    comment: comment,
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Review add successfully",
+    id,
   });
 });

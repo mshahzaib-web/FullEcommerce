@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 const reviewSchema = new mongoose.Schema(
   {
     product: {
@@ -25,4 +27,6 @@ const reviewSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-export const Review = mongoose.model("Review", reviewSchema);
+const Review = mongoose.model("Review", reviewSchema);
+
+export default Review;

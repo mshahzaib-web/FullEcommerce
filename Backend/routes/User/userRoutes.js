@@ -10,6 +10,7 @@ import {
   addToCart,
   getCartProduct,
   removeCartProduct,
+  addProductReview,
 } from "../../controllers/User/user.js";
 import { validate } from "../../middleware/validate.js";
 import { userIsLogIn } from "../../middleware/userIsLogin.js";
@@ -17,6 +18,7 @@ import {
   userSignUpZodValidation,
   userLogInZodValidation,
 } from "../../validation/userZodValidation.js";
+import { productReviewValidation } from "../../validation/productZodValidation.js";
 
 const router = express.Router();
 
@@ -39,5 +41,12 @@ router.post("/addtocart/:id", userIsLogIn, addToCart);
 router.get("/cartproduct", userIsLogIn, getCartProduct);
 
 router.post("/cart/remove/:id", userIsLogIn, removeCartProduct);
+
+router.post(
+  "/product/:id/add-review",
+  userIsLogIn,
+  validate(productReviewValidation),
+  addProductReview,
+);
 
 export default router;

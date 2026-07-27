@@ -6,7 +6,7 @@ export default function ProductDescription() {
   const navigate = useNavigate();
 
   const handleAddReviewBtn = (product) => {
-    navigate(`/user/${product._id}/add-review`, { state: { product } });
+    navigate(`/user/product/${product._id}/add-review`, { state: { product } });
   };
 
   const handleReviewBtn = (product) => {

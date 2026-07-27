@@ -51,7 +51,7 @@ export default function CustomerReviewsCom() {
   const { data: user } = useUserAuth();
 
   const handleWriteReviewBtn = (product) => {
-    navigate(`/user/${product._id}/add-review`, { state: { product } });
+    navigate(`/user/product/${product._id}/add-review`, { state: { product } });
   };
 
   const { data, isPending } = useQuery({
@@ -61,6 +61,12 @@ export default function CustomerReviewsCom() {
   });
 
   console.log(data);
+
+  const handleUpdateProductReview = ({ id, updateRating, updateComment }) => {
+    navigate(`/user/product/${id}/update-review`, {
+      state: { product, updateRating, updateComment },
+    });
+  };
 
   const handleDelete = (id) => {
     setReviews(reviews.filter((r) => r.id !== id));
@@ -242,10 +248,19 @@ export default function CustomerReviewsCom() {
                         </div>
 
                         <p className="text-gray-600 text-xs sm:text-sm leading-relaxed line-clamp-4">
-                          {data.loginUserReview.comment}
+                          {data?.loginUserReview?.comment}
                         </p>
                         <div className="flex gap-2 mt-4">
-                          <button className="flex items-center gap-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+                          <button
+                            onClick={() =>
+                              handleUpdateProductReview({
+                                id: data.loginUserReview.product,
+                                updateRating: data?.loginUserReview?.rating,
+                                updateComment: data?.loginUserReview?.comment,
+                              })
+                            }
+                            className="flex items-center gap-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                          >
                             <svg
                               className="w-3.5 h-3.5 sm:w-4 sm:h-4"
                               viewBox="0 0 24 24"

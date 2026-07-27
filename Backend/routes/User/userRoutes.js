@@ -11,6 +11,7 @@ import {
   getCartProduct,
   removeCartProduct,
   addProductReview,
+  updateProductReview,
 } from "../../controllers/User/user.js";
 import { validate } from "../../middleware/validate.js";
 import { userIsLogIn } from "../../middleware/userIsLogin.js";
@@ -48,5 +49,7 @@ router.post(
   validate(productReviewValidation),
   addProductReview,
 );
+
+router.put("/product/:id/update-review", userIsLogIn, updateProductReview);
 
 export default router;

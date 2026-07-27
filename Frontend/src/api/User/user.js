@@ -62,3 +62,8 @@ export const addProductReview = async ({ id, data }) => {
   const res = await api.post(`/user/product/${id}/add-review`, data);
   return res.data;
 };
+
+export const updateProductReview = async ({ id, data }) => {
+  const res = await api.put(`/user/product/${id}/update-review`, data);
+  return res.data;
+};

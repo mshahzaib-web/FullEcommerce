@@ -10,6 +10,7 @@ import ShopProducts from "./pages/ShopProducts";
 import Category from "./pages/Category";
 import ProductDetails from "./pages/ProductDetails";
 import AddReview from "./pages/AddReview";
+import UpdateProductReviewForm from "./pages/UpdateProductReviewForm";
 import CustomerReviews from "./pages/CustomerReviews";
 import WishList from "./pages/WishList";
 import ShoppingCart from "./pages/ShoppingCart";
@@ -41,7 +42,14 @@ function App() {
             <Route path="/shop" element={<ShopProducts />}></Route>
             <Route path="/category" element={<Category />}></Route>
             <Route path="/product/:id" element={<ProductDetails />}></Route>
-            <Route path="/user/:id/add-review" element={<AddReview />}></Route>
+            <Route
+              path="/user/product/:id/add-review"
+              element={<AddReview />}
+            ></Route>
+            <Route
+              path="user/product/:id/update-review"
+              element={<UpdateProductReviewForm />}
+            ></Route>
             <Route
               path="/product/:id/reviews"
               element={<CustomerReviews />}

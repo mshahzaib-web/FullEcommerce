@@ -287,3 +287,33 @@ export const addProductReview = asyncHandler(async (req, res) => {
     id,
   });
 });
+
+//Update the Product Review
+export const updateProductReview = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.user;
+  const { rating, comment } = req.body;
+
+  const updatedReview = await Review.findOneAndUpdate(
+    { product: id, user: userId }, // Condition to match the review
+    {
+      $set: {
+        rating: rating,
+        comment: comment,
+        // updatedAt: Date.now() // Optional: update timestamp if you have one
+      },
+    },
+    { returnDocument: "after" }, // Options: returns the updated document and runs schema validations
+  );
+
+  if (!updatedReview) {
+    return res.status(404).json({
+      success: false,
+      message: "Review Cannot Update Successfully",
+    });
+  }
+  res.status(200).json({
+    success: true,
+    message: "Review Update Successfully",
+  });
+});

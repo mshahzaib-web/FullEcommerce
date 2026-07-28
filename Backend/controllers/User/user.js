@@ -5,6 +5,7 @@ import User from "../../models/user.js";
 import Wishlist from "../../models/wishlist.js";
 import Cart from "../../models/cart.js";
 import Review from "../../models/review.js";
+import Order from "../../models/order.js";
 import { success } from "zod";
 
 //Check current user
@@ -315,5 +316,46 @@ export const updateProductReview = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Review Update Successfully",
+  });
+});
+
+//Delete Product Review
+export const deleteProductReview = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.user;
+
+  const deleteReview = await Review.findOneAndDelete(
+    { product: id, user: userId },
+    { returnDocument: "after" },
+  );
+
+  if (!deleteReview) {
+    res.status(404).json({
+      success: false,
+      message: "Product Review Cannot Delete Successfully",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Product Review Delete Successfully",
+  });
+});
+
+// product order
+export const productOrder = asyncHandler(async (req, res) => {
+  const { userId } = req.user;
+  const data = req.body;
+
+  const newOrder = {
+    ...data,
+    user: userId,
+  };
+
+  const order = await Order.create(newOrder);
+
+  res.status(200).json({
+    success: true,
+    message: "Your Order Complete Successfully",
   });
 });

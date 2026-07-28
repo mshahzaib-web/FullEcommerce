@@ -47,16 +47,19 @@ function App() {
               element={<AddReview />}
             ></Route>
             <Route
-              path="user/product/:id/update-review"
+              path="/user/product/:id/update-review"
               element={<UpdateProductReviewForm />}
             ></Route>
             <Route
               path="/product/:id/reviews"
               element={<CustomerReviews />}
             ></Route>
-            <Route path="user/wishlist" element={<WishList />}></Route>
-            <Route path="user/cart" element={<ShoppingCart />}></Route>
-            <Route path="/checkout" element={<CheckOut />}></Route>
+            <Route path="/user/wishlist" element={<WishList />}></Route>
+            <Route path="/user/cart" element={<ShoppingCart />}></Route>
+            <Route
+              path="/user/product/:id/checkout"
+              element={<CheckOut />}
+            ></Route>
 
             {/* Admin Protect Routes */}
             <Route element={<AdminRoutesProtect />}>

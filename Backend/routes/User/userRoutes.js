@@ -12,14 +12,20 @@ import {
   removeCartProduct,
   addProductReview,
   updateProductReview,
+  deleteProductReview,
+  productOrder,
 } from "../../controllers/User/user.js";
 import { validate } from "../../middleware/validate.js";
 import { userIsLogIn } from "../../middleware/userIsLogin.js";
+
 import {
   userSignUpZodValidation,
   userLogInZodValidation,
 } from "../../validation/userZodValidation.js";
+
 import { productReviewValidation } from "../../validation/productZodValidation.js";
+
+import { orderValidation } from "../../validation/orderZodValidation.js";
 
 const router = express.Router();
 
@@ -51,5 +57,14 @@ router.post(
 );
 
 router.put("/product/:id/update-review", userIsLogIn, updateProductReview);
+
+router.delete("/product/:id/delete", userIsLogIn, deleteProductReview);
+
+router.post(
+  "/product/:id/order",
+  userIsLogIn,
+  validate(orderValidation),
+  productOrder,
+);
 
 export default router;

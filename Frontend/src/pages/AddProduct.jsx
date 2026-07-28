@@ -57,7 +57,6 @@ export default function AddProduct() {
       subImages: subImageData,
     };
 
-    console.log("Final Data:", finalData);
     addProductMutation.mutate(finalData);
   };
 

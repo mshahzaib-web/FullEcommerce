@@ -1,4 +1,11 @@
+import { useLocation } from "react-router-dom";
+import { useFormContext } from "react-hook-form";
+
 const SelectionCard = () => {
+  const location = useLocation();
+  const { register } = useFormContext();
+
+  const { product, payload } = location.state || {};
   return (
     <>
       <h2 className="text-xl mt-7 font-bold text-gray-900 mb-4">
@@ -7,11 +14,11 @@ const SelectionCard = () => {
       <div className=" bg-white rounded-2xl p-6 shadow-sm mb-6">
         <div className="flex gap-4">
           {/* Product Image */}
-          <div className="w-24 h-32 bg-gray-100 rounded-lg overflow-hidden shrink-0">
+          <div className="w-24 bg-gray-100 rounded-lg overflow-hidden shrink-0">
             <img
-              src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&q=80&w=200"
+              src={product?.mainImage?.url}
               alt="Silk Shirt"
-              className="w-full h-full object-cover"
+              className="rounded-lg w-full h-auto object-cover"
             />
           </div>
 
@@ -20,45 +27,74 @@ const SelectionCard = () => {
             <div className="">
               <div>
                 <p className="text-xs font-bold text-gray-500 tracking-wider uppercase mb-1">
-                  LUXEAURA EDITION
+                  {product.brand}
                 </p>
-                <h3 className="text-lg font-bold text-gray-900">
-                  Minimalist Silk Shirt
+                <h3 className="text-md font-medium text-gray-900">
+                  {product.name}
                 </h3>
               </div>
               <p className="text-lg font-bold text-[#2e2bb8]">$240.00</p>
             </div>
 
             <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
-              <div className="flex items-center gap-2">
-                <span>Color:</span>
-                <div className="w-4 h-4 rounded-full border border-gray-300 bg-[#fdfbf7]"></div>
-                <span>Ivory</span>
-              </div>
-              <div>
-                <span>Size: Medium</span>
-              </div>
+              {payload?.selectedColor != "None selected" && (
+                <div className="flex items-center gap-2 font-medium">
+                  <span>Color:</span>
+
+                  <span>{payload?.selectedColor}</span>
+                </div>
+              )}
+              {payload?.selectedSize != "None selected" && (
+                <div className="font-medium">
+                  <span>Size: {payload?.selectedSize}</span>
+                </div>
+              )}
             </div>
 
-            <div className="mt-6 flex items-center gap-3">
+            <div className="mt-3 flex items-center gap-3">
               <span className="text-sm font-medium text-gray-700">
                 Quantity:
               </span>
               <div className="flex items-center bg-indigo-50 rounded-full px-3 py-1">
-                <button className="text-gray-500 hover:text-gray-800 px-2">
-                  -
-                </button>
                 <span className="text-sm font-medium text-gray-700 px-2">
-                  1
+                  {payload.quantity}
                 </span>
-                <button className="text-gray-500 hover:text-gray-800 px-2">
-                  +
-                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <input
+        defaultValue={product.owner}
+        {...register("owner")}
+        type="text"
+        className="hidden"
+      />
+      <input
+        defaultValue={product._id}
+        {...register("product")}
+        type="text"
+        className="hidden"
+      />
+      <input
+        defaultValue={payload.selectedColor}
+        {...register("selectColor")}
+        type="text"
+        className="hidden"
+      />
+      <input
+        defaultValue={payload.selectedSize}
+        {...register("selectSize")}
+        type="text"
+        className="hidden"
+      />
+      <input
+        defaultValue={payload.quantity}
+        {...register("quantity", { valueAsNumber: true })}
+        type="text"
+        className="hidden"
+      />
     </>
   );
 };

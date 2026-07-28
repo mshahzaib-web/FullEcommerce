@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useProductDetails } from "../../context/productDetailsContext";
 import { addToCart } from "../../api/User/user";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function ProductInfo() {
@@ -10,6 +11,7 @@ export default function ProductInfo() {
   const [quantity, setQuantity] = useState(1);
 
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const data = useProductDetails();
   const { product } = data;
@@ -45,6 +47,29 @@ export default function ProductInfo() {
     }
 
     productAddToCartMutation.mutate(payload);
+  };
+
+  // send data to checout page
+  const handleProductBuyBtn = (product) => {
+    const payload = {
+      selectedColor: selectedColor,
+      selectedSize: selectedSize,
+      quantity: quantity,
+    };
+
+    console.log(payload);
+
+    if (product.color.length > 0 && payload.selectedColor == "None selected") {
+      return toast.error("Please Select the color");
+    }
+
+    if (product.size.length > 0 && payload.selectedSize == "None selected") {
+      return toast.error("Please Select the size");
+    }
+
+    navigate(`/user/product/${product._id}/checkout`, {
+      state: { product, payload },
+    });
   };
 
   return (
@@ -193,7 +218,11 @@ export default function ProductInfo() {
           >
             Add to Cart
           </button>
-          <button className="w-full bg-white border border-[#3b36d6] text-[#3b36d6] hover:bg-indigo-50 font-medium py-3 rounded-lg transition-colors">
+          <button
+            type="button"
+            onClick={() => handleProductBuyBtn(product)}
+            className="w-full bg-white border border-[#3b36d6] text-[#3b36d6] hover:bg-indigo-50 font-medium py-3 rounded-lg transition-colors"
+          >
             Buy Now
           </button>
         </div>

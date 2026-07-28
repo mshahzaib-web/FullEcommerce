@@ -67,3 +67,13 @@ export const updateProductReview = async ({ id, data }) => {
   const res = await api.put(`/user/product/${id}/update-review`, data);
   return res.data;
 };
+
+export const deleteProductReview = async (id) => {
+  const res = await api.delete(`/user/product/${id}/delete`);
+  return res.data;
+};
+
+export const productOrder = async (data) => {
+  const res = await api.post(`/user/product/${data.product}/order`, data);
+  return res.data;
+};

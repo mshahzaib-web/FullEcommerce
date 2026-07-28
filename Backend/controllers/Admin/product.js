@@ -4,7 +4,11 @@ import Product from "../../models/product.js";
 
 //Add New Product
 export const addProduct = asyncHandler(async (req, res) => {
-  const newProduct = req.body;
+  const { adminId } = req.admin;
+  const newProduct = {
+    ...req.body,
+    owner: adminId, // or req.user.id
+  };
 
   const existingProduct = await Product.findOne({ sku: newProduct.sku });
 

@@ -1,51 +1,17 @@
-import { useState } from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 // import ReactStars from "react-rating-stars-component";
 
 import { getProductReviews } from "../../api/Product/product";
 import { useUserAuth } from "../../hooks/useAuth";
 import LoadingCom from "../Loading/LoadingCom";
+import { deleteProductReview } from "../../api/User/user";
+import { toast } from "sonner";
 
 export default function CustomerReviewsCom() {
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      name: "Sarah Johnson",
-      initials: "SJ",
-      avatarColor: "bg-indigo-200",
-      verified: true,
-      date: "Oct 12, 2024",
-      rating: 5,
-      title: "Exquisite Quality",
-      text: "I am absolutely in love with this shirt! The silk is heavy and feels incredible against the skin. It has that perfect pearl-like sheen that looks expensive but isn't overly shiny. The fit is true to size and it drapes beautifully. I've already worn it to two meetings and received numerous compliments.",
-    },
-    {
-      id: 2,
-      name: "Michael Lawson",
-      initials: "ML",
-      avatarColor: "bg-orange-200",
-      verified: true,
-      date: "Oct 08, 2024",
-      rating: 4,
-      title: "Beautiful but runs slightly large",
-      text: "The shirt is stunning and the quality is top-notch. However, I found that the Large runs a bit bigger than other brands I've purchased. If you're between sizes, I'd recommend sizing down for a sharper look. Other than the sizing, it's a 10/10.",
-    },
-    {
-      id: 3,
-      name: "Emma Wilson",
-      initials: "EW",
-      avatarColor: "bg-pink-200",
-      verified: true,
-      date: "Oct 05, 2024",
-      rating: 5,
-      title: "Perfect for special occasions",
-      text: "This silk shirt exceeded all my expectations. The fabric quality is luxurious and the stitching is impeccable. I wore it to a wedding and received so many compliments. Definitely worth every penny!",
-    },
-  ]);
-
   const location = useLocation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const product = location.state?.product;
   const { data: user } = useUserAuth();
@@ -60,16 +26,26 @@ export default function CustomerReviewsCom() {
     retry: false,
   });
 
-  console.log(data);
-
   const handleUpdateProductReview = ({ id, updateRating, updateComment }) => {
     navigate(`/user/product/${id}/update-review`, {
       state: { product, updateRating, updateComment },
     });
   };
 
-  const handleDelete = (id) => {
-    setReviews(reviews.filter((r) => r.id !== id));
+  const deleteProductReviewMutation = useMutation({
+    mutationFn: deleteProductReview,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["review", product._id] });
+      toast.success(data.message);
+    },
+
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const handleDeleteProductReview = (id) => {
+    deleteProductReviewMutation.mutate(id);
   };
 
   const StarIcon = ({ filled }) => (
@@ -259,7 +235,7 @@ export default function CustomerReviewsCom() {
                                 updateComment: data?.loginUserReview?.comment,
                               })
                             }
-                            className="flex items-center gap-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                            className="flex items-center gap-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg transition-colors hover:cursor-pointer"
                           >
                             <svg
                               className="w-3.5 h-3.5 sm:w-4 sm:h-4"
@@ -276,8 +252,10 @@ export default function CustomerReviewsCom() {
                             Update
                           </button>
                           <button
-                            onClick={() => handleDelete(reviews[0].id)}
-                            className="flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                            onClick={() =>
+                              handleDeleteProductReview(product._id)
+                            }
+                            className="flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg transition-colors hover:cursor-pointer"
                           >
                             <svg
                               className="w-3.5 h-3.5 sm:w-4 sm:h-4"

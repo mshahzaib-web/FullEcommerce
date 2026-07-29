@@ -4,7 +4,59 @@ import Review from "../../models/review.js";
 
 // Get All Products
 export const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({}).sort({ createdAt: -1 });
+  const {
+    search,
+    selectCategory,
+    selectBrand,
+    selectColor,
+    selectSize,
+    minPrice,
+    maxPrice,
+  } = req.query;
+
+  const filter = {};
+
+  if (search) {
+    filter.name = {
+      $regex: search,
+      $options: "i",
+    };
+  }
+
+  // Filter by category
+  if (selectCategory) {
+    filter.category = selectCategory;
+  }
+
+  // // Filter by brand
+  if (selectBrand) {
+    filter.brand = selectBrand;
+  }
+
+  // // Filter by Color
+  if (selectColor) {
+    filter.color = selectColor.toLowerCase();
+  }
+
+  // // Filter by Size
+  if (selectSize) {
+    filter.size = selectSize.toLowerCase();
+  }
+
+  // // Filter by price
+  if (minPrice || maxPrice) {
+    filter.price = {};
+
+    if (minPrice) {
+      filter.price.$gte = Number(minPrice);
+    }
+
+    if (maxPrice) {
+      filter.price.$lte = Number(maxPrice);
+    }
+  }
+
+  const products = await Product.find(filter).sort({ createdAt: -1 });
   res.status(200).json({
     success: true,
     success: "Products Gets",

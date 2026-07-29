@@ -6,17 +6,34 @@ import { wishlistProduct } from "../../api/User/user";
 import { toast } from "sonner";
 
 import LoadingCom from "../Loading/LoadingCom";
+import { useEffect } from "react";
+import { useState } from "react";
 /**
  * ProductGrid Component
  * Coordinates the filtering controls row alongside structural listing arrays.
  */
-export default function ProductGrid() {
+export default function ProductGrid({ search, filter }) {
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  // useEffect(() => {
+  //   console.log("Search API value:", debouncedSearch);
+  //   // Call API or update parent state here
+  // }, [debouncedSearch]);
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data, isPending, error } = useQuery({
-    queryKey: ["products"],
-    queryFn: getProducts,
+    queryKey: ["products", debouncedSearch, filter],
+    queryFn: () => getProducts({ search: debouncedSearch, filter }),
     retry: false,
   });
 

@@ -1,8 +1,101 @@
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { getProducts } from "../../api/Product/product";
+
+import LoadingCom from "../Loading/LoadingCom";
+import { toast } from "sonner";
+
 /**
  * SidebarFilters Component
  * Handles layout formatting for criteria inputs like Brands, Pricing Limits, and Item Colors.
  */
-export default function Sidebar() {
+export default function Sidebar({ search, setSearch, setFilter }) {
+  const [priceRange, setPriceRange] = useState({
+    minPrice: 0,
+    maxPrice: 1000,
+  });
+
+  const { register, handleSubmit } = useForm();
+
+  const onSubmit = (data) => {
+    if (data.selectCategory == "Select Category") {
+      data.selectCategory = "";
+    }
+
+    if (data.selectBrand == "Select Brand") {
+      data.selectBrand = "";
+    }
+
+    if (data.selectColor == "Select Color") {
+      data.selectColor = "";
+    }
+
+    if (data.selectSize == "Select Size") {
+      data.selectSize = "";
+    }
+
+    const payload = {
+      ...data,
+      minPrice: priceRange.minPrice,
+      maxPrice: priceRange.maxPrice,
+    };
+    setFilter(payload);
+  };
+
+  const onError = (errors) => {
+    const error = Object.values(errors)[0];
+    toast.error(error.message);
+  };
+
+  const { data, isPending } = useQuery({
+    queryKey: ["products"],
+    queryFn: getProducts,
+    retry: false,
+  });
+
+  // const uniqueColors = [
+  //   ...new Set(
+  //     data?.products.flatMap((product) =>
+  //       (product.color || []).map(
+  //         (color) =>
+  //           color.charAt(0).toUpperCase() + color.slice(1).toLowerCase(),
+  //       ),
+  //     ),
+  //   ),
+  // ];
+
+  // console.log(uniqueColors);
+
+  console.log(data);
+
+  const handleMinChange = (e) => {
+    const value = Number(e.target.value);
+
+    if (value < priceRange.maxPrice) {
+      setPriceRange((prev) => ({
+        ...prev,
+        minPrice: value,
+      }));
+    }
+  };
+
+  const handleMaxChange = (e) => {
+    const value = Number(e.target.value);
+
+    if (value > priceRange.minPrice) {
+      setPriceRange((prev) => ({
+        ...prev,
+        maxPrice: value,
+      }));
+    }
+  };
+
+  const left = (priceRange.minPrice / 1000) * 100;
+  const right = 100 - (priceRange.maxPrice / 1000) * 100;
+
+  if (isPending) return <LoadingCom />;
+
   return (
     <div className="space-y-7 ms-5">
       {/* Search Input Box Block */}
@@ -27,6 +120,8 @@ export default function Sidebar() {
             </svg>
           </span>
           <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             type="text"
             placeholder="Product name..."
             className="w-full bg-white text-xs pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:border-gray-400 text-gray-700 placeholder-gray-400"
@@ -35,111 +130,160 @@ export default function Sidebar() {
       </div>
 
       {/* Category Checkboxes Block */}
-      <div>
-        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
-          Categories
-        </label>
-        <div className="space-y-2.5">
-          {["Women", "Men", "Shoes", "Accessories"].map((category) => (
-            <label
-              key={category}
-              className="flex items-center text-xs font-medium text-gray-600 cursor-pointer"
+      <form
+        onSubmit={handleSubmit(onSubmit, onError)}
+        className="space-y-7 ms-5"
+      >
+        <div>
+          <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+            Categories
+          </label>
+          <select
+            {...register("selectCategory")}
+            className=" border-gray-300 border-2 py-1 w-full focus:outline-none focus:border-indigo-600 focus:border-2 rounded-md"
+          >
+            <option>Select Category</option>
+            {[
+              ...new Set(data?.products.map((product) => product.category)),
+            ].map((category, index) => (
+              <option key={index} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Dual Value Pricing Range Bar */}
+        <div>
+          <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+            Price Range
+          </label>
+
+          <div className="relative pt-1">
+            {/* Track */}
+            <div className="h-1 bg-gray-200 rounded-full">
+              <div
+                className="absolute h-1 bg-[#4F46E5] rounded-full"
+                style={{
+                  left: `${left}%`,
+                  right: `${right}%`,
+                }}
+              ></div>
+            </div>
+
+            {/* Minimum slider */}
+            <input
+              type="range"
+              min="0"
+              max="1000"
+              value={priceRange.minPrice}
+              onChange={handleMinChange}
+              className="mt-2 absolute top-[-6px] left-0 w-full"
+            />
+
+            {/* Maximum slider */}
+            <input
+              type="range"
+              min="0"
+              max="1000"
+              value={priceRange.maxPrice}
+              onChange={handleMaxChange}
+              className="absolute top-[-6px] left-0 w-full"
+            />
+          </div>
+
+          {/* Show Values */}
+          <div className="flex items-center justify-between gap-2 mt-4">
+            <div className="bg-white border border-gray-200 rounded-lg py-1.5 px-3 text-center flex-1 text-xs text-gray-600 font-medium">
+              ${priceRange.minPrice}
+            </div>
+
+            <div className="bg-white border border-gray-200 rounded-lg py-1.5 px-3 text-center flex-1 text-xs text-gray-600 font-medium">
+              ${priceRange.maxPrice}
+            </div>
+          </div>
+        </div>
+        {/* Brand Radio Selection Block */}
+        <div>
+          <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+            Brands
+          </label>
+          <select
+            {...register("selectBrand")}
+            className=" border-gray-300 border-2 py-1 w-full focus:outline-none focus:border-indigo-600 focus:border-2 rounded-md"
+          >
+            <option>Select Brand</option>
+            {[...new Set(data?.products.map((product) => product.brand))].map(
+              (brand, index) => (
+                <option key={index} value={brand}>
+                  {brand}
+                </option>
+              ),
+            )}
+          </select>
+        </div>
+
+        {/* Palette Solid Color Selection Bullets */}
+        <div>
+          <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+            Colors
+          </label>
+          <div className="flex flex-wrap gap-2.5">
+            <select
+              {...register("selectColor")}
+              className=" border-gray-300 border-2 py-1 w-full focus:outline-none focus:border-indigo-600 focus:border-2 rounded-md"
             >
-              <input
-                type="checkbox"
-                defaultChecked={category === "Men"}
-                className="w-4 h-4 rounded border-gray-300 text-[#4F46E5] focus:ring-[#4F46E5] mr-3"
-              />
-              {category}
-            </label>
-          ))}
-        </div>
-      </div>
-
-      {/* Dual Value Pricing Range Bar */}
-      <div>
-        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
-          Price Range
-        </label>
-        <div className="relative pt-1">
-          <div className="h-1 bg-gray-200 rounded-full">
-            <div className="absolute h-1 bg-[#4F46E5] rounded-full left-0 right-1/4"></div>
-          </div>
-          <div className="absolute top-0 left-0 w-3.5 h-3.5 bg-white border-2 border-[#4F46E5] rounded-full -mt-1 cursor-pointer shadow-sm"></div>
-          <div className="absolute top-0 right-1/4 w-3.5 h-3.5 bg-white border-2 border-[#4F46E5] rounded-full -mt-1 cursor-pointer shadow-sm"></div>
-        </div>
-        <div className="flex items-center justify-between gap-2 mt-4">
-          <div className="bg-white border border-gray-200 rounded-lg py-1.5 px-3 text-center flex-1 text-xs text-gray-600 font-medium">
-            $0
-          </div>
-          <div className="bg-white border border-gray-200 rounded-lg py-1.5 px-3 text-center flex-1 text-xs text-gray-600 font-medium">
-            $5000
+              <option>Select Color</option>
+              {[
+                ...new Set(
+                  data?.products.flatMap((product, indx) =>
+                    (product.color || []).map((color, index) => (
+                      <option key={index + color + indx + product._id}>
+                        {color.charAt(0).toUpperCase() +
+                          color.slice(1).toLowerCase()}
+                      </option>
+                    )),
+                  ),
+                ),
+              ]}
+            </select>
           </div>
         </div>
-      </div>
 
-      {/* Brand Radio Selection Block */}
-      <div>
-        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
-          Brands
-        </label>
-        <div className="space-y-2.5">
-          {["LuxeAura Exclusive", "Heritage Lab", "Vogue Modern"].map(
-            (brand) => (
-              <label
-                key={brand}
-                className="flex items-center text-xs font-medium text-gray-600 cursor-pointer"
-              >
-                <input
-                  type="radio"
-                  name="brand"
-                  className="w-4 h-4 border-gray-300 text-[#4F46E5] focus:ring-[#4F46E5] mr-3"
-                />
-                {brand}
-              </label>
-            ),
-          )}
-        </div>
-      </div>
-
-      {/* Palette Solid Color Selection Bullets */}
-      <div>
-        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
-          Colors
-        </label>
-        <div className="flex flex-wrap gap-2.5">
-          {["bg-[#111827]", "bg-[#4F46E5]", "bg-[#F59E0B]", "bg-[#DC2626]"].map(
-            (colorClass, idx) => (
-              <button
-                key={idx}
-                className={`w-5 h-5 rounded-full ${colorClass} focus:outline-none ring-2 ring-offset-2 ring-transparent hover:scale-110 transition-transform`}
-              ></button>
-            ),
-          )}
-        </div>
-      </div>
-
-      {/* Multi-size Matrix Boxes */}
-      <div>
-        <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
-          Size
-        </label>
-        <div className="grid grid-cols-4 gap-1.5">
-          {["XS", "S", "M", "L", "XL", "2XL"].map((size) => (
-            <button
-              key={size}
-              className={`border py-2 text-[10px] font-bold rounded-md transition-colors text-center ${size === "S" ? "border-[#4F46E5] text-[#4F46E5] bg-indigo-50/50" : "border-gray-200 text-gray-600 bg-white hover:border-gray-400"}`}
+        {/* Multi-size Matrix Boxes */}
+        <div>
+          <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+            Size
+          </label>
+          <div className="grid gap-1.5">
+            <select
+              {...register("selectSize")}
+              className=" border-gray-300 border-2 py-1 w-full focus:outline-none focus:border-indigo-600 focus:border-2 rounded-md"
             >
-              {size}
-            </button>
-          ))}
+              <option>Select Size</option>
+              {[
+                ...new Set(
+                  data?.products.flatMap((product, indx) =>
+                    (product.size || []).map((size, index) => (
+                      <option key={index + indx + size + product._id}>
+                        {size.toUpperCase()}
+                      </option>
+                    )),
+                  ),
+                ),
+              ]}
+            </select>
+          </div>
         </div>
-      </div>
 
-      {/* Global Filter Trigger Submitter */}
-      <button className="w-full bg-[#4338CA] text-white font-bold text-xs py-3.5 rounded-xl hover:bg-opacity-95 transition-all shadow-md mt-2">
-        Apply All Filters
-      </button>
+        {/* Global Filter Trigger Submitter */}
+        <button
+          type="submit"
+          className="w-full bg-[#4338CA] text-white font-bold text-xs py-3.5 rounded-xl hover:bg-opacity-95 transition-all shadow-md mt-2"
+        >
+          Apply Filters
+        </button>
+      </form>
     </div>
   );
 }

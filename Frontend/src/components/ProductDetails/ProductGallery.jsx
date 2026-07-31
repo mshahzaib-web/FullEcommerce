@@ -3,14 +3,6 @@ import { useProductDetails } from "../../context/productDetailsContext";
 export default function ProductGallery() {
   const data = useProductDetails();
 
-  const thumbnails = [
-    "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&q=80&w=150",
-    "https://images.unsplash.com/photo-1598532163257-ae3c6b2524b6?auto=format&fit=crop&q=80&w=150",
-    "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&q=80&w=150",
-    "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=150",
-    "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&q=80&w=150",
-    "https://images.unsplash.com/photo-1598532163257-ae3c6b2524b6?auto=format&fit=crop&q=80&w=150",
-  ];
   return (
     <>
       <div className="flex flex-col gap-4">
@@ -24,7 +16,7 @@ export default function ProductGallery() {
           <img
             src={data.product.mainImage.url}
             alt={data.product.name}
-            className=" object-cover"
+            className=" object-cover rounded-md"
           />
           <div className="absolute bottom-4 right-4 flex gap-2">
             <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-50">

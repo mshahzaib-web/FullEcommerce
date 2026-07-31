@@ -30,7 +30,7 @@ export const getProducts = asyncHandler(async (req, res) => {
 
   // // Filter by brand
   if (selectBrand) {
-    filter.brand = selectBrand;
+    filter.brand = selectBrand.toUpperCase();
   }
 
   // // Filter by Color

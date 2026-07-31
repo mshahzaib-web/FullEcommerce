@@ -28,6 +28,7 @@ const orderSchema = new mongoose.Schema(
     quantity: { type: Number, required: true, min: 1 },
     selectColor: { type: String },
     selectSize: { type: String },
+    price: { type: Number },
     paymentMethod: { type: String, required: true, default: "COD" },
     shippingMethod: { type: String, required: true },
     status: {

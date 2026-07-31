@@ -77,3 +77,8 @@ export const productOrder = async (data) => {
   const res = await api.post(`/user/product/${data.product}/order`, data);
   return res.data;
 };
+
+export const cartProductsOrder = async (data) => {
+  const res = await api.post(`/user/products/cart/order`, data);
+  return res.data;
+};

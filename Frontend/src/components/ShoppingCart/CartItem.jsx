@@ -1,18 +1,25 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
+// import { useForm } from "react-hook-form";
 
 import { getCartProduct, removeCartProduct } from "../../api/User/user";
 import LoadingCom from "../Loading/LoadingCom";
 
 const CartItem = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  // const { register, handleSubmit } = useForm();
 
   const { data, isPending, error } = useQuery({
     queryKey: ["cart"],
     queryFn: getCartProduct,
     retry: false,
   });
+
+  console.log(data);
 
   const removeCartProductMutation = useMutation({
     mutationFn: removeCartProduct,
@@ -30,7 +37,23 @@ const CartItem = () => {
     removeCartProductMutation.mutate(id);
   };
 
-  console.log(data);
+  const cartProducts = [];
+  const handleBuyAllBtn = () => {
+    data.userCartProduct.forEach((item) => {
+      cartProducts.push({
+        selectColor: item.color,
+        selectSize: item.size,
+        quantity: item.quantity,
+        price: item.product.price,
+        product: item.product._id,
+        owner: item.product.owner,
+        products: item.product,
+      });
+    });
+    navigate(`/user/product/${cartProducts[0].product}/checkout`, {
+      state: { cartProducts },
+    });
+  };
 
   if (isPending) return <LoadingCom />;
   if (error) return <p>{error.message}</p>;
@@ -49,6 +72,7 @@ const CartItem = () => {
           Shopping Cart
         </h1>
       </div>
+
       {data.userCartProduct.map((item) => (
         <div
           key={item.product._id}
@@ -140,7 +164,33 @@ const CartItem = () => {
               </button>
             </div>
           </div>
+          {/* <input
+              type="hidden"
+              defaultValue={item.product._id}
+              {...register(`products.${index}.productId`)}
+            />
+
+            <input
+              type="hidden"
+              defaultValue={item.color}
+              {...register(`products.${index}.color`)}
+            />
+
+            <input
+              type="hidden"
+              defaultValue={item.size}
+              {...register(`products.${index}.size`)}
+            />
+
+            <input
+              type="hidden"
+              defaultValue={item.quantity}
+              {...register(`products.${index}.quantity`, {
+                valueAsNumber: true,
+              })}
+            /> */}
         </div>
+        //Hiden input to send data
       ))}
 
       {data?.userCartProduct?.length === 0 && (
@@ -192,7 +242,11 @@ const CartItem = () => {
               </p>
             </div>
             <div className="flex justify-center mt-5 md:mt-0 hover:cursor-pointer">
-              <button className="w-full md:w-1/2 bg-[#3b36d6] hover:bg-indigo-800 text-white font-medium py-3 rounded-lg transition-colors shadow-sm hover:cursor-pointer">
+              <button
+                type="button"
+                onClick={handleBuyAllBtn}
+                className="w-full md:w-1/2 bg-[#3b36d6] hover:bg-indigo-800 text-white font-medium py-3 rounded-lg transition-colors shadow-sm hover:cursor-pointer"
+              >
                 Buy All
               </button>
             </div>

@@ -14,6 +14,7 @@ import {
   updateProductReview,
   deleteProductReview,
   productOrder,
+  cartProductsOrder,
 } from "../../controllers/User/user.js";
 import { validate } from "../../middleware/validate.js";
 import { userIsLogIn } from "../../middleware/userIsLogin.js";
@@ -26,6 +27,7 @@ import {
 import { productReviewValidation } from "../../validation/productZodValidation.js";
 
 import { orderValidation } from "../../validation/orderZodValidation.js";
+import { cartProductValidation } from "../../validation/cartProductZodValidation.js";
 
 const router = express.Router();
 
@@ -66,5 +68,7 @@ router.post(
   validate(orderValidation),
   productOrder,
 );
+
+router.post("/products/cart/order", userIsLogIn, cartProductsOrder);
 
 export default router;

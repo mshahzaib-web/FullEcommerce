@@ -12,6 +12,7 @@ export const orderValidation = z.object({
   country: z.string().min(1, "Country is required"),
   zipCode: z.number({ invalid_type_error: "Zip code must be a number" }),
   quantity: z.number().min(1, "Quantity must be at least 1"),
+  price: z.number(),
   selectColor: z.string().optional(),
   selectSize: z.string().optional(),
   paymentMethod: z.string().min(1, "Payment method is required"),

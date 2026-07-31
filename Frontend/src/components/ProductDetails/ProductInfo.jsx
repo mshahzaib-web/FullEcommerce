@@ -52,6 +52,7 @@ export default function ProductInfo() {
   // send data to checout page
   const handleProductBuyBtn = (product) => {
     const payload = {
+      price: product.price,
       selectedColor: selectedColor,
       selectedSize: selectedSize,
       quantity: quantity,
@@ -79,7 +80,7 @@ export default function ProductInfo() {
           <p className="text-xs font-bold text-amber-700 tracking-widest uppercase mb-2">
             {product.brand}
           </p>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
             {product.name}
           </h1>
           <div className="flex items-center gap-2 mb-4">
@@ -100,7 +101,9 @@ export default function ProductInfo() {
         </div>
 
         <div className="flex items-center gap-4">
-          <span className="text-2xl font-bold text-gray-900">$149.00</span>
+          <span className="text-2xl font-bold text-indigo-600">
+            ${product.price}
+          </span>
           <span className="bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
             Save 20% Today
           </span>
@@ -213,17 +216,17 @@ export default function ProductInfo() {
         <div className="flex flex-col gap-3 mt-2">
           <button
             type="button"
-            onClick={() => handleProductAddToCart(product)}
-            className="w-full bg-[#3b36d6] hover:bg-indigo-800 text-white font-medium py-3 rounded-lg transition-colors shadow-sm"
+            onClick={() => handleProductBuyBtn(product)}
+            className="w-full bg-[#3b36d6] hover:bg-indigo-800 text-white font-medium py-3 rounded-lg transition-colors shadow-sm hover:cursor-pointer"
           >
-            Add to Cart
+            Buy Now
           </button>
           <button
             type="button"
-            onClick={() => handleProductBuyBtn(product)}
-            className="w-full bg-white border border-[#3b36d6] text-[#3b36d6] hover:bg-indigo-50 font-medium py-3 rounded-lg transition-colors"
+            onClick={() => handleProductAddToCart(product)}
+            className="w-full bg-white border border-[#3b36d6] text-[#3b36d6] hover:bg-indigo-100 font-medium py-3 rounded-lg transition-colors hover:cursor-pointer"
           >
-            Buy Now
+            Add to Cart
           </button>
         </div>
 

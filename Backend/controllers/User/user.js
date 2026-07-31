@@ -359,3 +359,26 @@ export const productOrder = asyncHandler(async (req, res) => {
     message: "Your Order Complete Successfully",
   });
 });
+
+//Cart Products Order
+export const cartProductsOrder = asyncHandler(async (req, res) => {
+  const { userId } = req.user;
+  const data = req.body;
+
+  for (const product of data.products) {
+    const { products, ...newProduct } = product;
+
+    const orderDetails = {
+      ...newProduct,
+      ...data.user,
+      user: userId,
+    };
+
+    await Order.create(orderDetails);
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Cart Products Order Successfully",
+  });
+});

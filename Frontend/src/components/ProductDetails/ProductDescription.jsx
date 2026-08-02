@@ -5,12 +5,12 @@ export default function ProductDescription() {
   const data = useProductDetails();
   const navigate = useNavigate();
 
-  const handleAddReviewBtn = (product) => {
-    navigate(`/user/product/${product._id}/add-review`, { state: { product } });
+  const handleAddReviewBtn = (id) => {
+    navigate(`/user/product/${id}/add-review`);
   };
 
-  const handleReviewBtn = (product) => {
-    navigate(`/product/${product._id}/reviews`, { state: { product } });
+  const handleReviewBtn = (id) => {
+    navigate(`/product/${id}/reviews`);
   };
 
   return (
@@ -22,14 +22,14 @@ export default function ProductDescription() {
           </button>
           <button
             type="button"
-            onClick={() => handleReviewBtn(data.product)}
+            onClick={() => handleReviewBtn(data.product._id)}
             className="text-center py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 hover:border-b-2 hover:border-indigo-600 hover:cursor-pointer  focus:outline-none"
           >
             Reviews (124)
           </button>
           <button
             type="button"
-            onClick={() => handleAddReviewBtn(data.product)}
+            onClick={() => handleAddReviewBtn(data.product._id)}
             className="text-center py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 hover:border-b-2 hover:border-indigo-600 hover:cursor-pointer"
           >
             Add Review

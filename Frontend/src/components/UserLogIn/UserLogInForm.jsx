@@ -2,16 +2,21 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { userLogInValidation } from "../../validation/userValidation";
-import { userLogIn } from "../../api/User/user";
+import { getCurrentUser, userLogIn } from "../../api/User/user";
 
 import UserLoginLeftPanel from "./UserLoginLeftPanel";
 // import SocialAuthButtons from "./SocialAuthButtons";
 import UserLoginTrustBadges from "./UserLoginTrustBadges";
 
 export default function UserLogInForm() {
+  const location = useLocation();
+
+  const from = location.state?.from?.pathname || "/shop";
+
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const queryClient = useQueryClient();
@@ -22,11 +27,15 @@ export default function UserLogInForm() {
 
   const userLogInMutation = useMutation({
     mutationFn: userLogIn,
-    onSuccess: (data) => {
-      reset();
+    onSuccess: async (data) => {
+      console.log(data);
+      await queryClient.fetchQuery({
+        queryKey: ["user"],
+        queryFn: getCurrentUser, // your API function that calls /admin/auth/me
+      });
+      navigate(from, { replace: true });
       toast.success(data.message);
-      queryClient.invalidateQueries({ queryKey: ["user"] });
-      navigate("/shop");
+      reset();
     },
     onError: (error) => {
       toast.error(error.response.data.message);

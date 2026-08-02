@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { getProducts } from "../../api/Product/product";
 
 import LoadingCom from "../Loading/LoadingCom";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 /**
  * SidebarFilters Component
@@ -16,7 +18,18 @@ export default function Sidebar({ search, setSearch, setFilter }) {
     maxPrice: 1000,
   });
 
+  const [searchParams] = useSearchParams();
   const { register, handleSubmit } = useForm();
+
+  const category = searchParams.get("category");
+
+  useEffect(() => {
+    const categoryFilters = {
+      selectCategory: category,
+    };
+
+    setFilter(categoryFilters);
+  }, [category]);
 
   const onSubmit = (data) => {
     if (data.selectCategory == "Select Category") {

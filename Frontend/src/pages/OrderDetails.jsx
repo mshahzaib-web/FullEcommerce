@@ -15,25 +15,24 @@ export default function OrderDetails() {
         <Header />
       </div>
       <div className="grid grid-cols-1  lg:grid-cols-12">
-        <div className="  lg:col-span-3">
+        <div className="  lg:col-span-2">
           <Sidebar />
         </div>
-        <div className="col-span-1 md:col-span-8 lg:col-span-9 min-h-screen bg-[#f5f3ff]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="col-span-1 md:col-span-8 lg:col-span-10 min-h-screen bg-[#f5f3ff]">
+          <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
             <Breadcrumb />
             <OrderHeader />
 
             <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Left Column - Products */}
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-3">
                 <OrderedProducts />
               </div>
 
               {/* Right Column - Sidebar */}
-              <div className="space-y-6">
+              <div className="space-y-6 lg:grid lg:col-span-3 lg:grid-cols-3">
                 <TrackingInfo />
                 <ShippingAddress />
-                <PaymentInfo />
                 <OrderSummary />
               </div>
             </div>

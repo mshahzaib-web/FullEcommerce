@@ -1,12 +1,13 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAdminAuth } from "../hooks/useAuth";
+import LoadingCom from "../components/Loading/LoadingCom";
 
 export default function AdminRoutesProtect() {
   const { data: admin, isLoading } = useAdminAuth();
   const location = useLocation();
 
   if (isLoading) {
-    return <div>Loading...</div>; // Or a nice spinner component
+    return <LoadingCom />; // Or a nice spinner component
   }
 
   if (!admin) {

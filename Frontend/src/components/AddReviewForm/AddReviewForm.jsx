@@ -1,31 +1,37 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useNavigate, useParams } from "react-router-dom";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { addProductReview } from "../../api/User/user";
+import { getProductDetails } from "../../api/Product/product";
+import LoadingCom from "../Loading/LoadingCom";
 
 export default function AddReviewForm() {
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(5);
   const [reviewText, setReviewText] = useState("");
 
-  const location = useLocation();
   const navigate = useNavigate();
 
-  const product = location.state?.product;
+  const { id } = useParams();
+
+  const { data, isPending } = useQuery({
+    queryKey: ["products", id],
+    queryFn: () => getProductDetails(id),
+    retry: false,
+  });
+  const product = data.product;
 
   const addReviewMutation = useMutation({
     mutationFn: addProductReview,
     onSuccess: (data) => {
-      navigate(`/product/${data.id}/reviews`, { state: { product } });
+      navigate(`/product/${product._id}/reviews`);
       toast.success(data.message);
     },
 
     onError: (error) => {
-      navigate(`/product/${error.response.data.id}/reviews`, {
-        state: { product },
-      });
+      navigate(`/user/product/${product._id}/add-review`);
       toast.error(error.response.data.message);
     },
   });
@@ -57,6 +63,7 @@ export default function AddReviewForm() {
     addReviewMutation.mutate({ id, data: payload });
   };
 
+  if (isPending) return <LoadingCom />;
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 sm:p-6 md:p-8">
       <div className="w-full max-w-2xl bg-white rounded-2xl shadow-sm p-6 sm:p-8 md:p-10">
@@ -73,7 +80,7 @@ export default function AddReviewForm() {
         {/* Product Info */}
         <div className="bg-indigo-50 rounded-xl p-4 sm:p-5 mb-6 sm:mb-8 flex items-center gap-4">
           <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden shrink-0  flex items-center justify-center">
-            <img src={product.mainImage.url} alt="" />
+            <img src={product?.mainImage?.url} alt="" />
           </div>
           <div>
             <p className="text-indigo-600 text-xs sm:text-sm font-semibold tracking-wider uppercase mb-1">

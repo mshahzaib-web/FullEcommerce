@@ -2,14 +2,18 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useProductDetails } from "../../context/productDetailsContext";
 import { addToCart } from "../../api/User/user";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useUserAuth } from "../../hooks/useAuth";
+import LoadingCom from "../Loading/LoadingCom";
 
 export default function ProductInfo() {
   const [selectedColor, setSelectedColor] = useState("None selected");
   const [selectedSize, setSelectedSize] = useState("None selected");
   const [quantity, setQuantity] = useState(1);
 
+  const { data: user, isLoading } = useUserAuth();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -49,8 +53,15 @@ export default function ProductInfo() {
     productAddToCartMutation.mutate(payload);
   };
 
-  // send data to checout page
   const handleProductBuyBtn = (product) => {
+    if (!user) {
+      navigate("/user/login", {
+        state: { from: location },
+        replace: true,
+      });
+      return;
+    }
+
     const payload = {
       price: product.price,
       selectedColor: selectedColor,
@@ -73,6 +84,9 @@ export default function ProductInfo() {
     });
   };
 
+  if (isLoading) {
+    return <LoadingCom />; // Or a nice spinner component
+  }
   return (
     <>
       <div className="flex flex-col gap-5">

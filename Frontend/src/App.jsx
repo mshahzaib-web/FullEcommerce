@@ -15,6 +15,7 @@ import CustomerReviews from "./pages/CustomerReviews";
 import WishList from "./pages/WishList";
 import ShoppingCart from "./pages/ShoppingCart";
 import CheckOut from "./pages/CheckOut";
+import CustomerOrders from "./pages/CustomerOrders";
 import AdminDashboard from "./pages/AdminDashboard";
 import AddProduct from "./pages/AddProduct";
 import ProductManage from "./pages/ProductManage";
@@ -24,6 +25,7 @@ import AdminSignUp from "./pages/AdminSignUp";
 import AdminLogIn from "./pages/AdminLogIn";
 
 import AdminRoutesProtect from "./ProtectRoutes/AdminRoutesProtect";
+import UserRoutesProtect from "./ProtectRoutes/UserRoutesProtect";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +37,25 @@ function App() {
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
+            {/* User Protect Routes */}
+            <Route element={<UserRoutesProtect />}>
+              <Route
+                path="/user/product/:id/add-review"
+                element={<AddReview />}
+              ></Route>
+              <Route
+                path="/user/product/:id/update-review"
+                element={<UpdateProductReviewForm />}
+              ></Route>
+              <Route path="/user/wishlist" element={<WishList />}></Route>
+              <Route path="/user/cart" element={<ShoppingCart />}></Route>
+              <Route
+                path="/user/product/:id/checkout"
+                element={<CheckOut />}
+              ></Route>
+              <Route path="/user/orders" element={<CustomerOrders />}></Route>
+            </Route>
+
             <Route path="/loading" element={<Loading />}></Route>
             <Route path="/user/signup" element={<UserSignUp />}></Route>
             <Route path="/user/login" element={<UserLogIn />}></Route>
@@ -42,23 +63,10 @@ function App() {
             <Route path="/shop" element={<ShopProducts />}></Route>
             <Route path="/category" element={<Category />}></Route>
             <Route path="/product/:id" element={<ProductDetails />}></Route>
-            <Route
-              path="/user/product/:id/add-review"
-              element={<AddReview />}
-            ></Route>
-            <Route
-              path="/user/product/:id/update-review"
-              element={<UpdateProductReviewForm />}
-            ></Route>
+
             <Route
               path="/product/:id/reviews"
               element={<CustomerReviews />}
-            ></Route>
-            <Route path="/user/wishlist" element={<WishList />}></Route>
-            <Route path="/user/cart" element={<ShoppingCart />}></Route>
-            <Route
-              path="/user/product/:id/checkout"
-              element={<CheckOut />}
             ></Route>
 
             {/* Admin Protect Routes */}

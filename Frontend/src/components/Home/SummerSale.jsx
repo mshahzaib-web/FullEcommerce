@@ -1,5 +1,5 @@
 // components/SummerSale.jsx
-
+import { Link } from "react-router-dom";
 const SummerSale = () => {
   return (
     <section className="py-12 lg:py-16 bg-white">
@@ -23,12 +23,14 @@ const SummerSale = () => {
               event is now live across all luxury categories.
             </p>
             <div className="flex flex-wrap gap-4">
-              <button className="bg-indigo-700 text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-indigo-800 transition">
-                Shop the Sale
-              </button>
-              <button className="border border-gray-300 text-gray-700 px-6 py-3 rounded-full text-sm font-medium hover:bg-gray-100 transition">
+              <Link to={"/shop"}>
+                <button className="bg-indigo-700 text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-indigo-800 transition">
+                  Shop Now
+                </button>
+              </Link>
+              {/* <button className="border border-gray-300 text-gray-700 px-6 py-3 rounded-full text-sm font-medium hover:bg-gray-100 transition">
                 Terms Apply
-              </button>
+              </button> */}
             </div>
           </div>
 

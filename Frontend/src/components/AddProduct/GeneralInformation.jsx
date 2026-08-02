@@ -32,12 +32,23 @@ const GeneralInformation = () => {
             <label className="block text-sm font-medium text-gray-700 mb-2">
               SKU
             </label>
-            <input
-              {...register("sku")}
-              type="text"
-              placeholder="SKU"
-              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-            />
+
+            <div className="flex">
+              <span className="flex items-center px-4 bg-gray-200 border border-r-0 border-gray-200 rounded-l-lg text-gray-700">
+                SKU-
+              </span>
+
+              <input
+                {...register("sku")}
+                type="text"
+                placeholder="mysku"
+                className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+              />
+            </div>
+
+            <p className="text-xs text-gray-500 mt-1">
+              SKU format: SKU-your-code (example: SKU-mysku)
+            </p>
           </div>
         </div>
 
@@ -56,6 +67,15 @@ const GeneralInformation = () => {
                 <option value="Clothing">Clothing</option>
                 <option value="Accessories">Accessories</option>
                 <option value="Footwear">Footwear</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Fashion">Fashion</option>
+                <option value="Home & Living">Home & Living</option>
+                <option value="Beauty & Personal Care">
+                  Beauty & Personal Care
+                </option>
+                <option value="Sports & Fitness">Sports & Fitness</option>
+                <option value="Books & Stationery">Books & Stationery</option>
+                <option value="Automotive & Tools">Automotive & Tools</option>
               </select>
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
                 <svg

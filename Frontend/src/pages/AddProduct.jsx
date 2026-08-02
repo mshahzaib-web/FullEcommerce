@@ -52,6 +52,7 @@ export default function AddProduct() {
 
     const finalData = {
       ...data,
+      sku: `SKU-${data.sku}`,
       brand: data.brand?.trim() || "No Brand",
       mainImage: mainImageData,
       subImages: subImageData,
@@ -82,7 +83,7 @@ export default function AddProduct() {
                 <Sidebar />
               </div>
 
-              <div className="col-span-12 md:col-span-8 lg:col-span-9 grid grid-cols-1 md:grid-cols-12 gap-3">
+              <div className="col-span-12 md:col-span-12 lg:col-span-9 grid grid-cols-1 md:grid-cols-12 gap-3">
                 <div className="col-span-1 md:col-span-12 lg:col-span-9 order-2 lg:order-1">
                   <Heading />
                   <GeneralInformation />

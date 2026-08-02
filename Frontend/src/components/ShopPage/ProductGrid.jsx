@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 import { getProducts } from "../../api/Product/product";
 import { wishlistProduct } from "../../api/User/user";
@@ -15,13 +16,31 @@ import { useState } from "react";
 export default function ProductGrid({ search, filter }) {
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
+  console.log(filter.selectCategory);
+
+  const [searchParams] = useSearchParams();
+
+  const collection = searchParams.get("collection");
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedSearch(search);
+      if (collection) {
+        setDebouncedSearch(collection);
+      } else {
+        setDebouncedSearch(search);
+      }
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [search, collection]);
+
+  // useEffect(() => {
+  //   if (menCollection == "men") {
+  //     setDebouncedSearch(menCollection);
+  //   }
+  // }, [menCollection]);
+
+  console.log(debouncedSearch);
 
   // useEffect(() => {
   //   console.log("Search API value:", debouncedSearch);

@@ -1,6 +1,16 @@
-// components/CollectionBanners.jsx
+import { useNavigate } from "react-router-dom";
 
 const CollectionBanners = () => {
+  const navigate = useNavigate();
+  // components/CollectionBanners.jsx
+  const handleMenCollectionBtn = () => {
+    navigate("/shop?collection=men");
+  };
+
+  const handleWomenCollectionBtn = () => {
+    navigate("/shop?collection=men");
+  };
+
   return (
     <section className="py-12 lg:py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -18,7 +28,10 @@ const CollectionBanners = () => {
               <h3 className="text-2xl lg:text-3xl font-bold mb-4">
                 The Men's Collection
               </h3>
-              <button className="bg-white text-gray-900 px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition">
+              <button
+                onClick={handleMenCollectionBtn}
+                className="bg-white text-gray-900 px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition"
+              >
                 Shop Now
               </button>
             </div>
@@ -35,10 +48,13 @@ const CollectionBanners = () => {
             <div className="absolute bottom-8 left-8 text-white">
               <p className="text-sm text-indigo-200 mb-1">Summer Essentials</p>
               <h3 className="text-2xl lg:text-3xl font-bold mb-4">
-                The Women's Edit
+                The Women's Collection
               </h3>
-              <button className="bg-white text-gray-900 px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition">
-                Explore Collection
+              <button
+                onClick={handleWomenCollectionBtn}
+                className="bg-white text-gray-900 px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition"
+              >
+                Shop Now
               </button>
             </div>
           </div>

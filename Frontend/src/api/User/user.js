@@ -82,3 +82,8 @@ export const cartProductsOrder = async (data) => {
   const res = await api.post(`/user/products/cart/order`, data);
   return res.data;
 };
+
+export const getUserOrders = async () => {
+  const res = await api.get("/user/orders");
+  return res.data;
+};

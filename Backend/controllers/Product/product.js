@@ -17,10 +17,20 @@ export const getProducts = asyncHandler(async (req, res) => {
   const filter = {};
 
   if (search) {
-    filter.name = {
-      $regex: search,
-      $options: "i",
-    };
+    filter.$or = [
+      {
+        name: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+      {
+        sku: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+    ];
   }
 
   // Filter by category

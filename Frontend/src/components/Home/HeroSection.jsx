@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import HeroImg from "../../assets/images/unnamed.jpg";
+
 export default function HeroSection() {
   return (
     <>
@@ -19,12 +22,14 @@ export default function HeroSection() {
                 brought directly to your doorstep with uncompromising elegance.
               </p>
               <div className="flex flex-wrap gap-4">
-                <button className="bg-white text-indigo-700 px-6 py-3 rounded-full text-sm font-medium hover:bg-indigo-50 transition">
+                {/* <button className="bg-white text-indigo-700 px-6 py-3 rounded-full text-sm font-medium hover:bg-indigo-50 transition">
                   Shop Now
-                </button>
-                <button className="border border-white text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-white hover:text-indigo-700 transition">
-                  Explore Collection
-                </button>
+                </button> */}
+                <Link to={"/shop"}>
+                  <button className="border border-white text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-white hover:text-indigo-700 transition hover:cursor-pointer">
+                    Shop Now
+                  </button>
+                </Link>
               </div>
             </div>
 
@@ -34,7 +39,7 @@ export default function HeroSection() {
                 <div className="bg-gray-100 rounded-xl overflow-hidden relative h-80 lg:h-96">
                   <div className="relative rounded-2xl overflow-hidden h-72 lg:h-80 group cursor-pointer">
                     <img
-                      src="https://shorturl.at/mpNT8"
+                      src={HeroImg}
                       alt="Women's Edit"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />

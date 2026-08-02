@@ -1,23 +1,33 @@
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 // import ReactStars from "react-rating-stars-component";
 
-import { getProductReviews } from "../../api/Product/product";
+import {
+  getProductDetails,
+  getProductReviews,
+} from "../../api/Product/product";
 import { useUserAuth } from "../../hooks/useAuth";
 import LoadingCom from "../Loading/LoadingCom";
 import { deleteProductReview } from "../../api/User/user";
 import { toast } from "sonner";
 
 export default function CustomerReviewsCom() {
-  const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const product = location.state?.product;
   const { data: user } = useUserAuth();
 
-  const handleWriteReviewBtn = (product) => {
-    navigate(`/user/product/${product._id}/add-review`, { state: { product } });
+  const { id } = useParams();
+
+  const { data: productData } = useQuery({
+    queryKey: ["products", id],
+    queryFn: () => getProductDetails(id),
+    retry: false,
+  });
+  const product = productData.product;
+
+  const handleWriteReviewBtn = (id) => {
+    navigate(`/user/product/${id}/add-review`);
   };
 
   const { data, isPending } = useQuery({
@@ -97,7 +107,7 @@ export default function CustomerReviewsCom() {
         {/* Product Header Card */}
         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-gray-100 overflow-hidden shrink-0 flex items-center justify-center">
-            <img src={product.mainImage.url} alt="" />
+            <img src={product?.mainImage?.url} alt="" />
           </div>
           <div className="flex-1">
             <h1 className="text-md font-bold text-gray-900">{product.name}</h1>
@@ -165,7 +175,7 @@ export default function CustomerReviewsCom() {
             </p>
             <button
               type="button"
-              onClick={() => handleWriteReviewBtn(product)}
+              onClick={() => handleWriteReviewBtn(product._id)}
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm sm:text-base py-3 rounded-xl transition-colors hover:cursor-pointer"
             >
               Write a Review

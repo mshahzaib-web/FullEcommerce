@@ -61,3 +61,17 @@ export const adminLogout = async () => {
   const res = await api.post("/admin/logout");
   return res.data;
 };
+
+// Get all Amdin Product
+export const getAdminProducts = async ({ filter }) => {
+  const url = filter ? `/admin/products?filter=${filter}` : `/admin/products`;
+
+  const res = await api.get(url);
+  return res.data;
+};
+
+// Admin Update Product
+export const updateProduct = async ({ id, data }) => {
+  const res = await api.put(`/admin/${id}/update-product`, data);
+  return res.data;
+};

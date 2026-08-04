@@ -15,6 +15,7 @@ import {
   deleteProductReview,
   productOrder,
   cartProductsOrder,
+  getUserOrders,
 } from "../../controllers/User/user.js";
 import { validate } from "../../middleware/validate.js";
 import { userIsLogIn } from "../../middleware/userIsLogin.js";
@@ -70,5 +71,7 @@ router.post(
 );
 
 router.post("/products/cart/order", userIsLogIn, cartProductsOrder);
+
+router.get("/orders", userIsLogIn, getUserOrders);
 
 export default router;

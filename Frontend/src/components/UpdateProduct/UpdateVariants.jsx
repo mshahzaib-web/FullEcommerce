@@ -1,18 +1,26 @@
 import { useEffect, useRef, useState } from "react";
+import { useUpdateProduct } from "../../context/updateProductContext";
 
-const Variants = ({ setAddColors, setAddSizes }) => {
+const UpdateVariants = ({ setSizes, setColors }) => {
   const [sizeValue, setSizeValue] = useState([]);
   const [colorValue, setColorValue] = useState([]);
   const sizeInputRef = useRef();
   const colorInputRef = useRef();
 
+  const { product } = useUpdateProduct();
+
   useEffect(() => {
-    setAddSizes(sizeValue);
+    setSizes(sizeValue);
   }, [sizeValue]);
 
   useEffect(() => {
-    setAddColors(colorValue);
+    setColors(colorValue);
   }, [colorValue]);
+
+  useEffect(() => {
+    setSizeValue(product?.size);
+    setColorValue(product?.color);
+  }, []);
 
   const handleSizeInputData = (e) => {
     e.preventDefault();
@@ -226,4 +234,4 @@ const Variants = ({ setAddColors, setAddSizes }) => {
   );
 };
 
-export default Variants;
+export default UpdateVariants;

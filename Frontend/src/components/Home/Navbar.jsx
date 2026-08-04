@@ -85,6 +85,9 @@ export default function Navbar() {
             <NavLink to="/user/cart" className={navLinkClass}>
               Cart
             </NavLink>
+            <NavLink to="/user/orders" className={navLinkClass}>
+              Your Orders
+            </NavLink>
           </div>
 
           {/* Right Side */}
@@ -324,6 +327,13 @@ export default function Navbar() {
                 onClick={() => setIsOpen(false)}
               >
                 Cart
+              </NavLink>
+              <NavLink
+                to="/user/orders"
+                className={navLinkClass}
+                onClick={() => setIsOpen(false)}
+              >
+                Your Orders
               </NavLink>
             </div>
             {user ? (

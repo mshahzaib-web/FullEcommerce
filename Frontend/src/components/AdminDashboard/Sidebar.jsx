@@ -110,7 +110,7 @@ const Sidebar = () => {
             to="/admin/products"
             onClick={() => setOpen(false)}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+              `flex items-center gap-3 px-4 py-3 rounded-xl transition-colors  ${
                 isActive
                   ? "bg-indigo-600 text-white"
                   : "text-gray-600 hover:bg-gray-100"
@@ -159,6 +159,34 @@ const Sidebar = () => {
               />
             </svg>
             <span>Orders</span>
+          </NavLink>
+
+          {/* Add Product */}
+          <NavLink
+            to="/admin/add-product"
+            onClick={() => setOpen(false)}
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                isActive
+                  ? "bg-indigo-600 text-white"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`
+            }
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M5 5h14v14H5V5zm7 3v8m-4-4h8"
+              />
+            </svg>
+            <span>Add Product</span>
           </NavLink>
         </nav>
 

@@ -22,6 +22,8 @@ export default function AddProduct() {
 
   const [mainImageData, setMainImageData] = useState({});
   const [subImageData, setSubImageData] = useState([]);
+  const [addColors, setAddColors] = useState([]);
+  const [addSizes, setAddSizes] = useState([]);
 
   const methods = useForm({
     resolver: zodResolver(productValidation),
@@ -52,6 +54,8 @@ export default function AddProduct() {
 
     const finalData = {
       ...data,
+      color: addColors,
+      size: addSizes,
       sku: `SKU-${data.sku}`,
       brand: data.brand?.trim() || "No Brand",
       mainImage: mainImageData,
@@ -77,8 +81,10 @@ export default function AddProduct() {
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit, onError)}>
           <div>
-            <Header />
-            <div className="grid grid-cols-12 gap-3 py-6">
+            <div className="px-4">
+              <Header />
+            </div>
+            <div className="grid grid-cols-12 gap-3 pb-6">
               <div className="col-span-12 lg:col-span-3">
                 <Sidebar />
               </div>
@@ -89,7 +95,10 @@ export default function AddProduct() {
                   <GeneralInformation />
                   <Pricing />
                   <Inventory />
-                  <Variants />
+                  <Variants
+                    setAddColors={setAddColors}
+                    setAddSizes={setAddSizes}
+                  />
                 </div>
 
                 <div className="col-span-1 md:col-span-12 lg:col-span-3 order-1 lg:order-2">

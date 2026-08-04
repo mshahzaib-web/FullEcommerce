@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../../models/user.js";
 import Wishlist from "../../models/wishlist.js";
+import Product from "../../models/product.js";
 import Cart from "../../models/cart.js";
 import Review from "../../models/review.js";
 import Order from "../../models/order.js";
@@ -352,11 +353,30 @@ export const productOrder = asyncHandler(async (req, res) => {
     user: userId,
   };
 
+  const productFind = await Product.findOneAndUpdate(
+    {
+      _id: newOrder.product,
+      stock: { $gte: newOrder.quantity }, // Make sure at least 1 is available
+    },
+    {
+      $inc: { stock: -newOrder.quantity }, // Decrease by 1
+    },
+    {
+      returnDocument: "after",
+    },
+  );
+
+  if (!productFind) {
+    return res.status(400).json({
+      message: "Product is out of stock",
+    });
+  }
+
   const order = await Order.create(newOrder);
 
   res.status(200).json({
     success: true,
-    message: "Your Order Complete Successfully",
+    message: "Your Order Completed Successfully",
   });
 });
 
@@ -374,11 +394,46 @@ export const cartProductsOrder = asyncHandler(async (req, res) => {
       user: userId,
     };
 
+    const productFind = await Product.findOneAndUpdate(
+      {
+        _id: orderDetails.product,
+        stock: { $gte: orderDetails.quantity },
+      },
+      {
+        $inc: {
+          stock: -orderDetails.quantity,
+        },
+      },
+      {
+        returnDocument: "after",
+      },
+    );
+
+    if (!productFind) {
+      success: false;
+      message: `${item.name} is out of stock`;
+    }
+
     await Order.create(orderDetails);
   }
 
   res.status(200).json({
     success: true,
     message: "Cart Products Order Successfully",
+  });
+});
+
+// Get User Orders to show the order to user
+export const getUserOrders = asyncHandler(async (req, res) => {
+  const { userId } = req.user;
+
+  const userOrders = await Order.find({ user: userId }).populate({
+    path: "product",
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "User Orders Get",
+    userOrders,
   });
 });

@@ -18,6 +18,7 @@ import CheckOut from "./pages/CheckOut";
 import CustomerOrders from "./pages/CustomerOrders";
 import AdminDashboard from "./pages/AdminDashboard";
 import AddProduct from "./pages/AddProduct";
+import UpdateProduct from "./pages/UpdateProduct";
 import ProductManage from "./pages/ProductManage";
 import OrdersManage from "./pages/OrdersManage";
 import OrderDetails from "./pages/OrderDetails";
@@ -76,6 +77,10 @@ function App() {
                 element={<AdminDashboard />}
               ></Route>
               <Route path="/admin/add-product" element={<AddProduct />}></Route>
+              <Route
+                path="/admin/:id/update-product"
+                element={<UpdateProduct />}
+              ></Route>
               <Route path="/admin/products" element={<ProductManage />}></Route>
               <Route path="/admin/orders" element={<OrdersManage />}></Route>
               <Route

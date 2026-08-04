@@ -3,7 +3,6 @@ import OrderHeader from "../components/OrderDetails/OrderHeader";
 import OrderedProducts from "../components/OrderDetails/OrderedProducts";
 import TrackingInfo from "../components/OrderDetails/TrackingInfo";
 import ShippingAddress from "../components/OrderDetails/ShippingAddress";
-import PaymentInfo from "../components/OrderDetails/PaymentInfo";
 import OrderSummary from "../components/OrderDetails/OrderSummary";
 import Header from "../components/AdminDashboard/Header";
 import Sidebar from "../components/AdminDashboard/Sidebar";
@@ -24,17 +23,17 @@ export default function OrderDetails() {
             <OrderHeader />
 
             <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="space-y-6 lg:grid lg:col-span-3 lg:grid-cols-3">
+                <TrackingInfo />
+                <ShippingAddress />
+                <OrderSummary />
+              </div>
               {/* Left Column - Products */}
               <div className="lg:col-span-3">
                 <OrderedProducts />
               </div>
 
               {/* Right Column - Sidebar */}
-              <div className="space-y-6 lg:grid lg:col-span-3 lg:grid-cols-3">
-                <TrackingInfo />
-                <ShippingAddress />
-                <OrderSummary />
-              </div>
             </div>
           </div>
         </div>

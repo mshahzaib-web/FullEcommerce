@@ -17,7 +17,11 @@ import {
   deleteSubImage,
 } from "../../controllers/Admin/productImage.js";
 
-import { addProduct } from "../../controllers/Admin/product.js";
+import {
+  addProduct,
+  getAdminProducts,
+  updateProduct,
+} from "../../controllers/Admin/product.js";
 
 const router = express.Router();
 
@@ -55,6 +59,17 @@ router.post(
   adminIsLogIn,
   validate(productValidation),
   addProduct,
+);
+
+// Get Admin products
+router.get("/products", adminIsLogIn, getAdminProducts);
+
+//Update admin product by admin
+router.put(
+  "/:id/update-product",
+  adminIsLogIn,
+  validate(productValidation),
+  updateProduct,
 );
 
 export default router;

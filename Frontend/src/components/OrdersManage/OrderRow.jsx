@@ -1,14 +1,17 @@
 import StatusBadge from "./StatusBadge";
+import { Link } from "react-router-dom";
 
 function OrderRow({ order }) {
   return (
     <tr className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors duration-150">
       {/* Order ID */}
-      <td className="px-4 sm:px-6 py-4 sm:py-5">
-        <span className="text-indigo-700 font-bold text-sm sm:text-base whitespace-nowrap">
-          #{order.id}
-        </span>
-      </td>
+      <Link to={"/admin/order-details"}>
+        <td className="px-4 sm:px-6 py-4 sm:py-5">
+          <span className="text-indigo-700 font-bold text-sm sm:text-base whitespace-nowrap">
+            #{order.id}
+          </span>
+        </td>
+      </Link>
 
       {/* Customer */}
       <td className="px-4 sm:px-6 py-4 sm:py-5">

@@ -9,6 +9,7 @@ import {
   adminLogIn,
   getCurrentAdmin,
   adminLogout,
+  getAdminDashboardData,
 } from "../../controllers/Admin/admin.js";
 import {
   uploadImage,
@@ -71,5 +72,8 @@ router.put(
   validate(productValidation),
   updateProduct,
 );
+
+//Get admin dashboard data
+router.get("/dashboard/data", adminIsLogIn, getAdminDashboardData);
 
 export default router;

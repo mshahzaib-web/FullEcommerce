@@ -9,12 +9,12 @@ function ProductCard() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const filter = searchParams.get("filter");
-  console.log(filter);
+  const product = searchParams.get("products");
+  console.log(product);
 
   const { data, isPending, error } = useQuery({
-    queryKey: ["adminproducts", filter],
-    queryFn: () => getAdminProducts({ filter }),
+    queryKey: ["adminproducts", product],
+    queryFn: () => getAdminProducts({ product }),
   });
 
   console.log(data);
@@ -94,7 +94,7 @@ function ProductCard() {
             </div>
           ))}
         </div>
-      ) : filter != "" ? (
+      ) : product != "" ? (
         <div className="flex justify-center items-center py-10">
           <p className="text-gray-400 text-xl">
             No records require your attention right now. Inventory, orders, and

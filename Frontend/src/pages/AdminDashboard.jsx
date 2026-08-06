@@ -5,29 +5,19 @@ import { useNavigate } from "react-router-dom";
 
 import "../CSS/AdminDashboard.css";
 import { useQuery } from "@tanstack/react-query";
-import { getAdminProducts } from "../api/Admin/admin";
 import { toast } from "sonner";
 import LoadingCom from "../components/Loading/LoadingCom";
+import { getAdminDashboardData } from "../api/Admin/admin";
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
 
   const { data, isPending, error } = useQuery({
-    queryKey: ["adminproducts"],
-    queryFn: getAdminProducts,
+    queryKey: ["admindashboard"],
+    queryFn: getAdminDashboardData,
   });
 
-  let lowStockProducts = 0;
-  let outStockProducts = 0;
-
-  data?.products?.forEach((product) => {
-    if (product.stock === 0) {
-      outStockProducts++;
-    }
-    if (product.stock > 0 && product.stock < 20) {
-      lowStockProducts++;
-    }
-  });
+  console.log(data);
 
   if (error) return toast.error(error.message);
   if (isPending) return <LoadingCom />;
@@ -44,22 +34,42 @@ export default function AdminDashboard() {
           </div>
           <div className=" m-4 lg:mx-0 col-span-12 lg:col-span-8 gap-4">
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {/* Products cart */}
               <Card
                 title="Total Products"
-                value={data?.products?.length}
+                value={data?.products?.totalProducts}
                 subtitle="All products in catalog"
                 icon="total"
                 tone="indigo"
                 progress={86}
                 progressLabel="Catalog health"
                 trend="+18 this week"
-                stats={[{ label: "products", value: data?.products?.length }]}
+                stats={[
+                  { label: "products", value: data?.products?.totalProducts },
+                ]}
                 onClick={() => navigate("/admin/products")}
               />
 
               <Card
+                title="Healthy Products"
+                value={data?.products?.healthyStock}
+                subtitle="All products good not action required"
+                icon="total"
+                tone="green"
+                progress={86}
+                progressLabel="Catalog health"
+                trend="+18 this week"
+                stats={[
+                  { label: "products", value: data?.products?.healthyStock },
+                ]}
+                onClick={() =>
+                  navigate("/admin/products?products=healthy-stock")
+                }
+              />
+
+              <Card
                 title="Low Stock Items"
-                value={lowStockProducts}
+                value={data?.products?.lowStock}
                 subtitle="Products below minimum stock"
                 icon="low"
                 tone="amber"
@@ -68,15 +78,18 @@ export default function AdminDashboard() {
                 trend="Restock soon"
                 showPulse
                 stats={[
-                  { label: "products", value: lowStockProducts },
+                  {
+                    label: "products",
+                    value: data?.products?.lowStock,
+                  },
                   { label: "Stock below 20", value: "" },
                 ]}
-                onClick={() => navigate("/admin/products?filter=low-stock")}
+                onClick={() => navigate("/admin/products?products=low-stock")}
               />
 
               <Card
                 title="Out of Stock"
-                value={outStockProducts}
+                value={data?.products?.outOfStock}
                 subtitle="Products currently unavailable"
                 icon="out"
                 tone="rose"
@@ -85,10 +98,122 @@ export default function AdminDashboard() {
                 trend="Urgent"
                 showPulse
                 stats={[
-                  { label: "products", value: outStockProducts },
+                  {
+                    label: "products",
+                    value: data?.products?.outOfStock,
+                  },
                   { label: "Stock 0", value: "" },
                 ]}
+                onClick={() =>
+                  navigate("/admin/products?products=out-of-stock")
+                }
+              />
+
+              {/* Orders Card */}
+
+              <Card
+                title="Total Orders"
+                value={data?.orders?.totalOrders}
+                subtitle="All orders in catalog"
+                icon="total"
+                tone="indigo"
+                progress={86}
+                progressLabel="Catalog health"
+                trend="+18 this week"
+                stats={[{ label: "Orders", value: data?.orders?.totalOrders }]}
+                onClick={() => navigate("/admin/products")}
+              />
+
+              <Card
+                title="Pending Orders"
+                value={data?.orders?.pendingOrders}
+                subtitle="Pending Orders"
+                icon="low"
+                tone="amber"
+                progress={34}
+                progressLabel="Pending Orders"
+                trend="Apply Action"
+                showPulse
+                stats={[
+                  {
+                    label: "Orders",
+                    value: data?.orders?.pendingOrders,
+                  },
+                  { label: "Pending", value: "" },
+                ]}
+                onClick={() => navigate("/admin/products?filter=low-stock")}
+              />
+
+              <Card
+                title="Processing Orders"
+                value={data?.orders?.processingOrders}
+                subtitle="Processing Orders"
+                icon="total"
+                tone="blue"
+                progress={34}
+                progressLabel="Processing Orders"
+                trend="Action in processing..."
+                showPulse
+                stats={[
+                  {
+                    label: "Orders",
+                    value: data?.orders?.processingOrders,
+                  },
+                  { label: "Processing", value: "" },
+                ]}
+                onClick={() => navigate("/admin/products?filter=low-stock")}
+              />
+
+              <Card
+                title="Delivered Orders"
+                value={data?.orders?.deliveredOrders}
+                subtitle="Delivered Orders"
+                icon="total"
+                tone="green"
+                progress={86}
+                progressLabel="Delivered Orders"
+                trend="+18 this week"
+                stats={[
+                  { label: "Orders", value: data?.orders?.deliveredOrders },
+                  { label: "Delivered", value: "" },
+                ]}
+                onClick={() => navigate("/admin/products?filter=healthy-stock")}
+              />
+
+              <Card
+                title="Unpaid Orders"
+                value={data?.orders?.unpaidOrders}
+                subtitle="Unpaid Orders"
+                icon="out"
+                tone="rose"
+                progress={8}
+                progressLabel="Unpaid"
+                trend="Unpaid"
+                showPulse
+                stats={[
+                  {
+                    label: "Orders",
+                    value: data?.orders?.unpaidOrders,
+                  },
+                  { label: "Unpaid", value: "" },
+                ]}
                 onClick={() => navigate("/admin/products?filter=out-of-stock")}
+              />
+
+              <Card
+                title="Paid Orders"
+                value={data?.orders?.paidOrders}
+                subtitle="Paid Orders"
+                icon="total"
+                tone="green"
+                progress={86}
+                progressLabel="Paid Orders"
+                trend="Paid Orders"
+                stats={[
+                  { label: "Orders", value: data?.orders?.paidOrders },
+                  { label: "Paid", value: "" },
+                ]}
+                onClick={() => navigate("/admin/products?filter=healthy-stock")}
               />
             </div>
           </div>

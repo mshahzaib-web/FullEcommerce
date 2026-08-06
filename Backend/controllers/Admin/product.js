@@ -36,20 +36,26 @@ export const addProduct = asyncHandler(async (req, res) => {
 // Get all admin products
 export const getAdminProducts = asyncHandler(async (req, res) => {
   const { adminId } = req.admin;
-  const { filter } = req.query;
+  const { product } = req.query;
 
   let query = {
     owner: adminId,
   };
 
-  if (filter === "low-stock") {
+  if (product === "healthy-stock") {
+    query.stock = {
+      $gte: 20,
+    };
+  }
+
+  if (product === "low-stock") {
     query.stock = {
       $gte: 1,
       $lt: 20,
     };
   }
 
-  if (filter === "out-of-stock") {
+  if (product === "out-of-stock") {
     query.stock = 0;
   }
 

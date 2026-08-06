@@ -93,13 +93,23 @@ const tones = {
   },
 
   green: {
-    border: "green-l-green-600",
+    border: "border-l-green-500",
     text: "text-green-600",
     iconBg: "bg-green-50 text-green-600",
     badge: "bg-green-50 text-green-700",
     gradient: "from-green-500 via-green-500 to-green-500",
     glow: "from-green-200/60 to-green-200/60",
     pulse: "bg-green-400/30",
+  },
+
+  blue: {
+    border: "border-l-blue-500",
+    text: "blue-green-600",
+    iconBg: "bg-blue-50 text-blue-600",
+    badge: "bg-blue-50 text-blue-700",
+    gradient: "from-blue-500 via-blue-500 to-blue-500",
+    glow: "from-blue-200/60 to-blue-200/60",
+    pulse: "bg-blue-400/30",
   },
 
   amber: {

@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Admin from "../../models/admin.js";
 import User from "../../models/user.js";
+import Product from "../../models/product.js";
+import Order from "../../models/order.js";
 
 //Get Current Admin
 export const getCurrentAdmin = asyncHandler(async (req, res) => {
@@ -88,5 +90,73 @@ export const adminLogout = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Admin Logout Successfully",
+  });
+});
+// get admin dashbord data
+export const getAdminDashboardData = asyncHandler(async (req, res) => {
+  const { adminId } = req.admin;
+
+  //products data
+  const totalProducts = await Product.countDocuments({ owner: adminId });
+
+  const healthyStock = await Product.find({
+    owner: adminId,
+    stock: { $gte: 20 },
+  });
+
+  const lowStock = await Product.find({
+    owner: adminId,
+    stock: { $gt: 0, $lt: 20 },
+  });
+
+  const outOfStock = await Product.find({
+    owner: adminId,
+    stock: 0,
+  });
+
+  //orders data
+  const totalOrders = await Order.countDocuments({ owner: adminId });
+
+  const pendingOrders = await Order.countDocuments({
+    owner: adminId,
+    status: "Pending",
+  });
+  const processingOrders = await Order.countDocuments({
+    owner: adminId,
+    status: "Processing",
+  });
+
+  const deliveredOrders = await Order.countDocuments({
+    owner: adminId,
+    status: "Delivered",
+  });
+
+  const unpaidOrders = await Order.countDocuments({
+    owner: adminId,
+    payment: "Unpaid",
+  });
+
+  const paidOrders = await Order.countDocuments({
+    owner: adminId,
+    payment: "Paid",
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Admin Dashborad Data get",
+    products: {
+      totalProducts,
+      healthyStock: healthyStock.length,
+      lowStock: lowStock.length,
+      outOfStock: outOfStock.length,
+    },
+    orders: {
+      totalOrders,
+      pendingOrders,
+      processingOrders,
+      deliveredOrders,
+      unpaidOrders,
+      paidOrders,
+    },
   });
 });

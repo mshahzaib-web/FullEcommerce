@@ -55,7 +55,8 @@ function OrderedProducts() {
                       <span className="font-semibold">{product.size}</span>
                     </p>
                     <p className="text-gray-500 text-sm mt-0.5">
-                      Color: <span className="font-semibold">Black</span>
+                      Color:{" "}
+                      <span className="font-semibold">{product?.color}</span>
                     </p>
                     <p className="text-gray-500 text-sm mt-0.5">
                       Quantity:{" "}

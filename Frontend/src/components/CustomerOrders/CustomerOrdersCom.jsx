@@ -28,8 +28,8 @@ export default function CustomerOrdersCom() {
 
       {data?.userOrders.map((item) => (
         <div
-          key={item?.product._id}
-          className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-500 grid sm:grid-cols-1 md:grid-cols-3 justify-around gap-4 sm:gap-6 mb-4"
+          key={item?._id}
+          className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-500 grid sm:grid-cols-1 md:grid-cols-4 justify-around gap-4 sm:gap-6 mb-4"
         >
           <div className="w-full sm:w-32 h-32 shrink-0 bg-gray-50 rounded-lg overflow-hidden">
             <img
@@ -81,6 +81,32 @@ export default function CustomerOrdersCom() {
                   {item?.quantity}
                 </span>
               </div>
+            </div>
+          </div>
+
+          {/* product status and payment info */}
+          <div className="flex flex-col md:items-center my-5 md:m-0">
+            <div className="me-2">
+              <label className="block text-xs font-normal text-gray-700">
+                Payment:{" "}
+                {/* <span className="font-bold text-amber-300">Pending</span> */}
+              </label>
+
+              <select className="w-full appearance-none p-1 mt-0.5  bg-gray-50 border border-gray-600 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm cursor-pointer">
+                <option>{item?.payment}</option>
+              </select>
+            </div>
+            <div className="mt-3">
+              <label className="block text-xs font-normal text-gray-700">
+                Status:{" "}
+                {/* <span className="font-bold text-indigo-600">
+                        Processing
+                      </span> */}
+              </label>
+
+              <select className="w-full appearance-none p-1 mt-0.5  bg-gray-50 border border-gray-600 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm cursor-pointer">
+                <option>{item?.status}</option>
+              </select>
             </div>
           </div>
 

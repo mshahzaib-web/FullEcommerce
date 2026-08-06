@@ -63,8 +63,10 @@ export const adminLogout = async () => {
 };
 
 // Get all Amdin Product
-export const getAdminProducts = async ({ filter }) => {
-  const url = filter ? `/admin/products?filter=${filter}` : `/admin/products`;
+export const getAdminProducts = async ({ product }) => {
+  const url = product
+    ? `/admin/products?product=${product}`
+    : `/admin/products`;
 
   const res = await api.get(url);
   return res.data;
@@ -73,5 +75,11 @@ export const getAdminProducts = async ({ filter }) => {
 // Admin Update Product
 export const updateProduct = async ({ id, data }) => {
   const res = await api.put(`/admin/${id}/update-product`, data);
+  return res.data;
+};
+
+// Admin Dashboard data get
+export const getAdminDashboardData = async () => {
+  const res = await api.get("/admin/dashboard/data");
   return res.data;
 };

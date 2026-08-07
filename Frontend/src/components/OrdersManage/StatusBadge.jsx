@@ -1,6 +1,7 @@
 function StatusBadge({ label, variant }) {
   const variantStyles = {
     paid: "bg-green-100 text-green-700",
+    unpaid: "bg-red-100 text-red-700",
     pending: "bg-amber-100 text-amber-700",
     delivered: "bg-green-100 text-green-700",
     processing: "bg-indigo-100 text-indigo-700",
@@ -9,6 +10,7 @@ function StatusBadge({ label, variant }) {
 
   const dotColors = {
     paid: "bg-green-500",
+    unpaid: "bg-red-500",
     pending: "bg-amber-500",
     delivered: "bg-green-500",
     processing: "bg-indigo-500",

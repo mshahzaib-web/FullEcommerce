@@ -83,3 +83,15 @@ export const getAdminDashboardData = async () => {
   const res = await api.get("/admin/dashboard/data");
   return res.data;
 };
+
+// Get admin Orders
+export const getAdminOrders = async () => {
+  const res = await api.get("/admin/orders");
+  return res.data;
+};
+
+//get admin order dtails information
+export const getAdminOrderDetailsInfo = async (id) => {
+  const res = await api.get(`/admin/order/${id}/order-details`);
+  return res.data;
+};

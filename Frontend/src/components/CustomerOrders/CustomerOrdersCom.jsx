@@ -4,7 +4,7 @@ import { getUserOrders } from "../../api/User/user";
 
 export default function CustomerOrdersCom() {
   const { data, isPending } = useQuery({
-    queryKey: ["orders"],
+    queryKey: ["userorders"],
     queryFn: getUserOrders,
   });
 

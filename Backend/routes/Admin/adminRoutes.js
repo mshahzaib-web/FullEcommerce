@@ -10,6 +10,8 @@ import {
   getCurrentAdmin,
   adminLogout,
   getAdminDashboardData,
+  getAdminOrders,
+  getAdminOrderDetailsInfo,
 } from "../../controllers/Admin/admin.js";
 import {
   uploadImage,
@@ -75,5 +77,11 @@ router.put(
 
 //Get admin dashboard data
 router.get("/dashboard/data", adminIsLogIn, getAdminDashboardData);
+
+//Get admin orders
+router.get("/orders", adminIsLogIn, getAdminOrders);
+
+//get admin order details info
+router.get("/order/:id/order-details", adminIsLogIn, getAdminOrderDetailsInfo);
 
 export default router;

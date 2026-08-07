@@ -160,3 +160,30 @@ export const getAdminDashboardData = asyncHandler(async (req, res) => {
     },
   });
 });
+
+// Get admin orders
+export const getAdminOrders = asyncHandler(async (req, res) => {
+  const { adminId } = req.admin;
+
+  const adminOrders = await Order.find({ owner: adminId });
+
+  res.status(200).json({
+    success: true,
+    message: "Admin Order Get",
+    orders: adminOrders,
+  });
+});
+
+// get admin order details information
+export const getAdminOrderDetailsInfo = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { adminId } = req.admin;
+
+  const orderDetails = await Order.find({ owner: adminId, _id: id });
+
+  res.status(200).json({
+    success: true,
+    message: "Admin Order Details Info Get",
+    orderInfo: orderDetails,
+  });
+});

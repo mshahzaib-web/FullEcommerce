@@ -22,6 +22,7 @@ const Newsletter = () => {
     if (email && emailRegex.test(email)) {
       toast.success("You Join successfully");
     }
+    setEmail("");
   };
   return (
     <section className="py-12 lg:py-16 bg-white">

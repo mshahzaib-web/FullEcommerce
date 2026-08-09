@@ -5,7 +5,8 @@ function StatusBadge({ label, variant }) {
     pending: "bg-amber-100 text-amber-700",
     delivered: "bg-green-100 text-green-700",
     processing: "bg-indigo-100 text-indigo-700",
-    shipped: "bg-gray-100 text-gray-600",
+    shipped: "bg-purple-200 text-purple-600",
+    completed: "bg-green-100 text-green-700",
   };
 
   const dotColors = {
@@ -14,7 +15,8 @@ function StatusBadge({ label, variant }) {
     pending: "bg-amber-500",
     delivered: "bg-green-500",
     processing: "bg-indigo-500",
-    shipped: "bg-gray-400",
+    shipped: "bg-purple-400",
+    completed: "bg-green-600",
   };
 
   return (

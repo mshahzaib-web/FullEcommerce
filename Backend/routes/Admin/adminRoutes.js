@@ -12,6 +12,8 @@ import {
   getAdminDashboardData,
   getAdminOrders,
   getAdminOrderDetailsInfo,
+  updateOrderStatus,
+  getAdminInfo,
 } from "../../controllers/Admin/admin.js";
 import {
   uploadImage,
@@ -30,6 +32,9 @@ const router = express.Router();
 
 //Get Curren Admin
 router.get("/auth/me", adminIsLogIn, getCurrentAdmin);
+
+//Get amdmin infromation
+router.get("/:id/info", adminIsLogIn, getAdminInfo);
 
 //Admin SignUp
 router.post("/signup", validate(adminSignUpZodValidation), adminSignUp);
@@ -83,5 +88,8 @@ router.get("/orders", adminIsLogIn, getAdminOrders);
 
 //get admin order details info
 router.get("/order/:id/order-details", adminIsLogIn, getAdminOrderDetailsInfo);
+
+// Update order staust and payment
+router.put("/order/:id/updatestatus", adminIsLogIn, updateOrderStatus);
 
 export default router;

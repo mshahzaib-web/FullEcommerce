@@ -20,35 +20,37 @@ const BestSellers = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 ">
           {products.map(
             (product, idx) =>
               idx < 4 && (
                 <div
                   key={idx}
-                  className="bg-white rounded-xl overflow-hidden group hover:shadow-lg transition"
+                  className=" bg-white overflow-hidden group hover:shadow-lg transition"
                 >
-                  <div className="relative overflow-hidden">
+                  <div className="relative overflow-hidden ">
                     <img
                       src={product?.mainImage?.url}
                       alt={product?.name}
-                      className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-40 md:h-44 lg:h-56 object-cover rounded-md  group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-sm text-gray-800 mb-1">
-                      {product?.name}
-                    </h3>
-                    <p className="text-indigo-700 font-bold text-sm">
-                      ${product?.price.toFixed(2)}
-                    </p>
-                  </div>
-                  <div className="text-center mt-1 ">
-                    <Link to={`/product/${product._id}`}>
-                      <button className="w-full border border-indigo-700 text-indigo-700 px-8 py-3 rounded-full text-sm font-medium hover:bg-indigo-700 hover:text-white transition">
-                        View
-                      </button>
-                    </Link>
+                  <div>
+                    <div className="p-4">
+                      <h3 className="font-semibold text-sm text-gray-800 mb-1">
+                        {product?.name}
+                      </h3>
+                      <p className="text-indigo-700 font-bold text-sm">
+                        ${product?.price.toFixed(2)}
+                      </p>
+                    </div>
+                    <div className="text-center mt-1 ">
+                      <Link to={`/product/${product._id}`}>
+                        <button className="w-full border border-indigo-700 text-indigo-700 px-8 py-3 rounded-full text-sm font-medium hover:bg-indigo-700 hover:text-white transition">
+                          View
+                        </button>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               ),

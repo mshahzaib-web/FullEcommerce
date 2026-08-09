@@ -5,12 +5,25 @@ import Admin from "../../models/admin.js";
 import User from "../../models/user.js";
 import Product from "../../models/product.js";
 import Order from "../../models/order.js";
+import { success } from "zod";
 
 //Get Current Admin
 export const getCurrentAdmin = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     admin: req.admin,
+  });
+});
+
+//Get admin information
+export const getAdminInfo = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const adminInfo = await Admin.findById(id);
+  res.status(200).json({
+    success: true,
+    message: "Admin Info Get",
+    adminInfo,
   });
 });
 
@@ -164,8 +177,40 @@ export const getAdminDashboardData = asyncHandler(async (req, res) => {
 // Get admin orders
 export const getAdminOrders = asyncHandler(async (req, res) => {
   const { adminId } = req.admin;
+  const { search, searchPayment, searchStatus } = req.query;
 
-  const adminOrders = await Order.find({ owner: adminId });
+  const query = {
+    owner: adminId,
+  };
+
+  if (search && search != "") {
+    query.$or = [
+      {
+        firstName: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+      {
+        lastName: {
+          $regex: search,
+          $options: "i",
+        },
+      },
+    ];
+  }
+
+  if (searchPayment && searchPayment != "All Payments") {
+    query.payment = searchPayment;
+  }
+
+  if (searchStatus && searchStatus != "All Statuses") {
+    query.status = searchStatus;
+  }
+
+  const adminOrders = await Order.find(query).sort({
+    createdAt: -1,
+  });
 
   res.status(200).json({
     success: true,
@@ -179,11 +224,44 @@ export const getAdminOrderDetailsInfo = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { adminId } = req.admin;
 
-  const orderDetails = await Order.find({ owner: adminId, _id: id });
+  const orderDetails = await Order.find({ owner: adminId, _id: id }).populate(
+    "product",
+    "name mainImage",
+  );
 
   res.status(200).json({
     success: true,
     message: "Admin Order Details Info Get",
     orderInfo: orderDetails,
+  });
+});
+
+//Update order status and payment
+export const updateOrderStatus = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { adminId } = req.admin;
+  const { status, payment } = req.body;
+
+  const updateOrder = await Order.findOneAndUpdate(
+    { _id: id, owner: adminId },
+    {
+      status: status,
+      payment: payment,
+    },
+    {
+      returnDocument: true,
+    },
+  );
+
+  if (!updateOrder) {
+    return res.status(404).json({
+      success: false,
+      message: "Oder Status & Payment not Update Successfully",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Order Status & Payment Update Successfully",
   });
 });

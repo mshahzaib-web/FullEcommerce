@@ -110,14 +110,14 @@ export default function Sidebar({ search, setSearch, setFilter }) {
   if (isPending) return <LoadingCom />;
 
   return (
-    <div className="space-y-7 ms-5">
+    <div className="space-y-7 px-3">
       {/* Search Input Box Block */}
       <div>
         <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
           Search Product
         </label>
         <div className="relative">
-          <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+          <span className="absolute inset-y-0 left-0 flex items-center text-gray-400">
             <svg
               className="w-3.5 h-3.5"
               fill="none"
@@ -143,10 +143,7 @@ export default function Sidebar({ search, setSearch, setFilter }) {
       </div>
 
       {/* Category Checkboxes Block */}
-      <form
-        onSubmit={handleSubmit(onSubmit, onError)}
-        className="space-y-7 ms-5"
-      >
+      <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-7">
         <div>
           <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
             Categories

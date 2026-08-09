@@ -1,4 +1,19 @@
+import { useAdminAuth } from "../../hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+
+import { getAdminInfo } from "../../api/Admin/admin";
+import LoadingCom from "../Loading/LoadingCom";
+
 const Header = () => {
+  const { data: admin } = useAdminAuth();
+
+  const { data, isPending } = useQuery({
+    queryKey: ["adininfo", admin?.adminId],
+    queryFn: () => getAdminInfo(admin?.adminId),
+  });
+  console.log(data);
+  if (isPending) return <LoadingCom />;
+
   return (
     <header className="bg-white border-b border-gray-200  p-4">
       <div className="flex items-center justify-between">
@@ -35,17 +50,18 @@ const Header = () => {
         <div className="hidden md:block">
           <div className="flex items-center gap-4">
             <div className="text-right">
-              <p className="font-semibold text-gray-900">Alex Rivera</p>
+              <p className="font-semibold text-gray-900">
+                {data?.adminInfo?.firstName} {data?.adminInfo?.lastName}{" "}
+              </p>
               <p className="text-xs text-gray-500 uppercase tracking-wide">
                 Store Admin
               </p>
             </div>
-            <div className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden">
-              <img
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
-                alt="Alex Rivera"
-                className="w-full h-full object-cover"
-              />
+            <div className="flex justify-center items-center w-10 h-10 rounded-full bg-indigo-600 overflow-hidden">
+              <p className="text-white font-bold text-md">
+                {data?.adminInfo?.firstName[0]}
+                {data?.adminInfo?.lastName[0]}
+              </p>
             </div>
           </div>
         </div>

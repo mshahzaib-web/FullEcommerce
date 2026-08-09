@@ -3,8 +3,13 @@ import FilterBar from "../components/OrdersManage/FilterBar";
 import OrdersTable from "../components/OrdersManage/OrdersTable";
 import Header from "../components/AdminDashboard/Header";
 import Sidebar from "../components/AdminDashboard/Sidebar";
+import { useState } from "react";
 
 export default function OrdersManage() {
+  const [search, setSearch] = useState("");
+  const [searchStatus, setSearchStatus] = useState("All Statuses");
+  const [searchPayment, setSearchPayment] = useState("All Payments");
+
   return (
     <>
       <div className="px-4">
@@ -19,9 +24,20 @@ export default function OrdersManage() {
             <Heading />
           </div>
           <div className="md:ms-13 lg:ms-0">
-            <FilterBar />
+            <FilterBar
+              search={search}
+              searchStatus={searchStatus}
+              searchPayment={searchPayment}
+              setSearch={setSearch}
+              setSearchPayment={setSearchPayment}
+              setSearchStatus={setSearchStatus}
+            />
           </div>
-          <OrdersTable />
+          <OrdersTable
+            search={search}
+            searchStatus={searchStatus}
+            searchPayment={searchPayment}
+          />
         </div>
       </div>
     </>

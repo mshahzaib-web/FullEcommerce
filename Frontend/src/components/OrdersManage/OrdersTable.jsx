@@ -5,10 +5,12 @@ import LoadingCom from "../Loading/LoadingCom";
 import { getAdminOrders } from "../../api/Admin/admin";
 import { Link } from "react-router-dom";
 
-function OrdersTable() {
+function OrdersTable({ search, searchPayment, searchStatus }) {
+  const filterOrder = { search, searchPayment, searchStatus };
+
   const { data, isPending } = useQuery({
-    queryKey: ["adminorders"],
-    queryFn: getAdminOrders,
+    queryKey: ["adminorders", filterOrder],
+    queryFn: () => getAdminOrders(filterOrder),
   });
 
   console.log(data);

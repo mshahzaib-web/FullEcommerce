@@ -14,6 +14,12 @@ export const getCurrentAdmin = async () => {
   }
 };
 
+//get Admin information
+export const getAdminInfo = async (id) => {
+  const res = await api.get(`/admin/${id}/info`);
+  return res.data;
+};
+
 //Uplad Main image
 export const uploadImage = async (formData) => {
   const res = await api.post("/admin/product/upload-image", formData);
@@ -85,13 +91,21 @@ export const getAdminDashboardData = async () => {
 };
 
 // Get admin Orders
-export const getAdminOrders = async () => {
-  const res = await api.get("/admin/orders");
+export const getAdminOrders = async (filterOrder) => {
+  const res = await api.get("/admin/orders", {
+    params: filterOrder,
+  });
   return res.data;
 };
 
 //get admin order dtails information
 export const getAdminOrderDetailsInfo = async (id) => {
   const res = await api.get(`/admin/order/${id}/order-details`);
+  return res.data;
+};
+
+//Update Order Status and payment
+export const updateOrderStatus = async ({ id, data }) => {
+  const res = await api.put(`/admin/order/${id}/updatestatus`, data);
   return res.data;
 };

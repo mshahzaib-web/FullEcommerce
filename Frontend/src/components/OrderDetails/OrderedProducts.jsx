@@ -1,217 +1,75 @@
-import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { useOrderDetails } from "../../context/orderDetailsContext";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { updateOrderStatus } from "../../api/Admin/admin";
 
 function OrderedProducts() {
+  const [payment, setPayment] = useState("");
+  const [status, setStatus] = useState("");
   const orderInfo = useOrderDetails();
-  const params = useParams();
   const queryClient = useQueryClient();
 
-  const orderId = orderInfo?.orderId || orderInfo?.id || params?.id;
-
-  const firstProduct =
-    (Array.isArray(orderInfo?.products) && orderInfo.products[0]) ||
-    (Array.isArray(orderInfo?.orderedProducts) &&
-      orderInfo.orderedProducts[0]) ||
-    null;
-
-  const product =
-    firstProduct ||
-    orderInfo?.product ||
-    orderInfo?.orderedProduct ||
-    orderInfo ||
-    {};
-
-  const productName =
-    product?.name ||
-    product?.productName ||
-    orderInfo?.productName ||
-    "Ordered Product";
-
-  const productImage =
-    product?.image ||
-    product?.productImage ||
-    orderInfo?.productImage ||
-    orderInfo?.image ||
-    "";
-
-  const size = product?.size || orderInfo?.size || "";
-  const color = product?.color || orderInfo?.color || "";
-
-  const quantity = Number(
-    product?.qty || product?.quantity || orderInfo?.quantity || 1,
-  );
-
-  const unitPrice = Number(
-    product?.unitPrice || product?.price || orderInfo?.price || 0,
-  );
-
-  const totalPrice = Number(
-    product?.totalPrice || orderInfo?.totalPrice || unitPrice * quantity,
-  );
-
-  const rawPayment = String(
-    product?.payment ||
-      orderInfo?.payment ||
-      orderInfo?.paymentStatus ||
-      "Pending",
-  );
-
-  const rawStatus = String(
-    product?.status ||
-      orderInfo?.status ||
-      orderInfo?.orderStatus ||
-      "Processing",
-  );
-
-  const initialPayment = rawPayment === "Payments" ? "Pending" : rawPayment;
-  const initialStatus = rawStatus === "Status" ? "Processing" : rawStatus;
-
-  const [payment, setPayment] = useState(initialPayment);
-  const [status, setStatus] = useState(initialStatus);
-
-  useEffect(() => {
-    setPayment(initialPayment);
-    setStatus(initialStatus);
-  }, [initialPayment, initialStatus]);
-
-  const paymentOptions = useMemo(() => {
-    const options = [
-      "Pending",
-      "Paid",
-      "Cash on Delivery",
-      "Refunded",
-      "Failed",
-    ];
-
-    if (initialPayment && !options.includes(initialPayment)) {
-      options.unshift(initialPayment);
-    }
-
-    return options;
-  }, [initialPayment]);
-
-  const statusOptions = useMemo(() => {
-    const options = [
-      "Processing",
-      "Shipped",
-      "Delivered",
-      "Deliverd",
-      "Cancelled",
-      "Returned",
-    ];
-
-    if (initialStatus && !options.includes(initialStatus)) {
-      options.unshift(initialStatus);
-    }
-
-    return options;
-  }, [initialStatus]);
-
-  const isDirty = payment !== initialPayment || status !== initialStatus;
-
-  const applyMutation = useMutation({
-    mutationFn: async (payload) => {
-      if (!orderId) {
-        throw new Error("Order ID not found.");
-      }
-
-      /**
-       * Replace this URL with your real backend route.
-       * Example:
-       * `/api/admin/orders/${orderId}/status`
-       */
-      const response = await fetch(`/api/admin/orders/${orderId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData?.message || "Unable to update order.");
-      }
-
-      return response.json();
+  const updateOrderStatusMutation = useMutation({
+    mutationFn: updateOrderStatus,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["adminorders"] });
+      toast.success(data.message);
     },
-
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["adminorderdetails", orderId],
-      });
+    onError: (error) => {
+      toast.error(error?.response?.data.message);
     },
   });
 
-  const isApplying = Boolean(
-    applyMutation.isPending ||
-    applyMutation.isLoading ||
-    applyMutation.isSubmitting,
-  );
+  useEffect(() => {
+    setPayment(orderInfo?.payment);
+    setStatus(orderInfo?.status);
+  }, []);
 
-  const handleApply = () => {
-    applyMutation.mutate({
-      orderId,
-      payment,
+  const handleApply = (id) => {
+    const data = {
       status,
-
-      /**
-       * Extra keys are added so this works with different backend field names.
-       * You can remove them if your backend only needs payment/status.
-       */
-      paymentStatus: payment,
-      orderStatus: status,
-    });
+      payment,
+    };
+    updateOrderStatusMutation.mutate({ id, data });
   };
 
-  const getPaymentBadgeClass = (value) => {
-    const paymentValue = String(value || "").toLowerCase();
+  const getPaymentBadgeClass = () => {
+    const paymentValue = String(orderInfo?.payment || "");
 
-    if (paymentValue === "paid") {
+    if (paymentValue === "Paid") {
       return "border-emerald-200 bg-emerald-50 text-emerald-700";
     }
 
-    if (paymentValue === "pending") {
-      return "border-amber-200 bg-amber-50 text-amber-700";
+    if (paymentValue === "Unpaid") {
+      return "border-red-300 bg-red-100 text-red-500";
     }
 
-    if (paymentValue === "cash on delivery") {
-      return "border-blue-200 bg-blue-50 text-blue-700";
+    if (paymentValue == "Cash On Delivery") {
+      return "border-indigo-600 bg-indigo-50 text-indigo-700";
     }
-
-    if (paymentValue === "refunded") {
-      return "border-gray-200 bg-gray-50 text-gray-600";
-    }
-
-    if (paymentValue === "failed") {
-      return "border-red-200 bg-red-50 text-red-700";
-    }
-
-    return "border-violet-200 bg-violet-50 text-violet-700";
   };
 
-  const getStatusBadgeClass = (value) => {
-    const statusValue = String(value || "").toLowerCase();
+  const getStatusBadgeClass = () => {
+    const statusValue = String(orderInfo?.status || "");
 
-    if (statusValue === "delivered" || statusValue === "deliverd") {
+    if (
+      statusValue === "Delivered" ||
+      statusValue === "Deliverd" ||
+      statusValue === "Completed"
+    ) {
       return "border-emerald-200 bg-emerald-50 text-emerald-700";
     }
 
-    if (statusValue === "processing") {
+    if (statusValue === "Processing") {
       return "border-blue-200 bg-blue-50 text-blue-700";
     }
 
-    if (statusValue === "shipped") {
+    if (statusValue === "Out for delivery") {
       return "border-indigo-200 bg-indigo-50 text-indigo-700";
     }
 
-    if (statusValue === "cancelled") {
-      return "border-red-200 bg-red-50 text-red-700";
-    }
-
-    if (statusValue === "returned") {
+    if (statusValue === "Pending") {
       return "border-orange-200 bg-orange-50 text-orange-700";
     }
 
@@ -220,31 +78,24 @@ function OrderedProducts() {
 
   return (
     <section className="overflow-hidden rounded-3xl border border-violet-100 bg-white shadow-sm">
-      <div className="flex flex-col gap-4 border-b border-violet-100 bg-gradient-to-r from-violet-50/70 to-white px-5 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
+      <div className="flex flex-col gap-4 border-b border-violet-100 bg-linear-to-r from-violet-50/70 to-white px-5 py-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h2 className="text-base font-bold text-gray-900 sm:text-lg">
             Ordered Product
           </h2>
-          <p className="text-xs text-gray-500 sm:text-sm">
-            Single product order details and admin controls
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <span
-            className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${getPaymentBadgeClass(
-              payment,
-            )}`}
+            className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${getPaymentBadgeClass()}`}
           >
-            Payment: {payment}
+            Payment: {orderInfo?.payment}
           </span>
 
           <span
-            className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${getStatusBadgeClass(
-              status,
-            )}`}
+            className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold ${getStatusBadgeClass()}`}
           >
-            Status: {status}
+            Status: {orderInfo?.status}
           </span>
         </div>
       </div>
@@ -252,12 +103,12 @@ function OrderedProducts() {
       <div className="p-5 sm:p-6 lg:p-8">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[260px_minmax(0,1fr)]">
           {/* Product Image */}
-          <div className="overflow-hidden rounded-2xl border border-gray-100 bg-gray-50">
-            {productImage ? (
+          <div className="overflow-hidden border border-gray-100 bg-gray-50">
+            {orderInfo?.product?.mainImage?.url ? (
               <img
-                src={productImage}
-                alt={productName}
-                className=" w-full object-cover "
+                src={orderInfo?.product?.mainImage?.url}
+                alt={orderInfo?.product?.name}
+                className=" w-full object-cover rounded-md"
               />
             ) : (
               <div className="flex w-full items-center justify-center bg-gray-100 ">
@@ -284,29 +135,33 @@ function OrderedProducts() {
               {/* Left: Product Info */}
               <div className="min-w-0 space-y-5">
                 <div>
-                  <h3 className="break-words text-xl font-bold text-gray-900 sm:text-2xl">
-                    {productName}
+                  <h3 className="line-clamp-2 font-semibold text-gray-800 ">
+                    {orderInfo?.product?.name}
                   </h3>
 
                   <p className="mt-2 text-sm text-gray-500">
                     Order ID:{" "}
-                    <span className="font-semibold text-gray-700">
-                      {orderId || "N/A"}
+                    <span className="font-semibold text-gray-500">
+                      {orderInfo?._id || "N/A"}
                     </span>
                   </p>
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  <span className="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700">
-                    Size: {size || "N/A"}
-                  </span>
+                  {orderInfo?.color && (
+                    <span className="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700">
+                      Color: {orderInfo?.color || "N/A"}
+                    </span>
+                  )}
+
+                  {orderInfo?.size && (
+                    <span className="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700">
+                      Size: {orderInfo?.size || "N/A"}
+                    </span>
+                  )}
 
                   <span className="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700">
-                    Color: {color || "N/A"}
-                  </span>
-
-                  <span className="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700">
-                    Quantity: {quantity}
+                    Quantity: {orderInfo?.quantity}
                   </span>
                 </div>
 
@@ -316,7 +171,7 @@ function OrderedProducts() {
                       Unit Price
                     </p>
                     <p className="mt-2 text-sm font-bold text-gray-900 sm:text-base">
-                      ${unitPrice.toFixed(2)}
+                      ${orderInfo?.price}
                     </p>
                   </div>
 
@@ -325,7 +180,7 @@ function OrderedProducts() {
                       Quantity
                     </p>
                     <p className="mt-2 text-sm font-bold text-gray-900 sm:text-base">
-                      {quantity}
+                      {orderInfo?.quantity}
                     </p>
                   </div>
 
@@ -334,18 +189,11 @@ function OrderedProducts() {
                       Total Price
                     </p>
                     <p className="mt-2 text-sm font-extrabold text-violet-700 sm:text-base">
-                      ${totalPrice.toFixed(2)}
+                      ${orderInfo?.price * orderInfo?.quantity}
                     </p>
                   </div>
                 </div>
-
-                <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 p-4">
-                  <p className="text-sm leading-6 text-gray-600">
-                    Use the admin controls to update payment and order status.
-                    Changes will be sent to the backend after clicking the Apply
-                    button.
-                  </p>
-                </div>
+                <hr className="text-indigo-600 lg:hidden" />
               </div>
 
               {/* Right: Admin Controls */}
@@ -354,10 +202,6 @@ function OrderedProducts() {
                   <h3 className="text-sm font-bold text-gray-900">
                     Admin Controls
                   </h3>
-
-                  <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-violet-700 shadow-sm">
-                    Update
-                  </span>
                 </div>
 
                 <div className="space-y-4">
@@ -370,12 +214,14 @@ function OrderedProducts() {
                     </label>
 
                     <select
-                      id="payment-status"
                       value={payment}
-                      onChange={(event) => setPayment(event.target.value)}
+                      onChange={(e) => setPayment(e.target.value)}
                       className="w-full cursor-pointer rounded-xl border border-gray-200 bg-white p-2.5 text-sm font-medium text-gray-700 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                      {paymentOptions.map((option) => (
+                      <option value={orderInfo?.payment}>
+                        {orderInfo?.payment}
+                      </option>
+                      {["Unpaid", "Paid", "Cash On Delivery"].map((option) => (
                         <option key={option} value={option}>
                           {option}
                         </option>
@@ -392,12 +238,21 @@ function OrderedProducts() {
                     </label>
 
                     <select
-                      id="order-status"
                       value={status}
-                      onChange={(event) => setStatus(event.target.value)}
+                      onChange={(e) => setStatus(e.target.value)}
                       className="w-full cursor-pointer rounded-xl border border-gray-200 bg-white p-2.5 text-sm font-medium text-gray-700 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                      {statusOptions.map((option) => (
+                      <option value={orderInfo?.status}>
+                        {orderInfo?.status}
+                      </option>
+                      {[
+                        "Pending",
+                        "Processing",
+                        "Shipped",
+                        "Out for delivery",
+                        "Delivered",
+                        "Completed",
+                      ].map((option) => (
                         <option key={option} value={option}>
                           {option}
                         </option>
@@ -407,37 +262,12 @@ function OrderedProducts() {
 
                   <button
                     type="button"
-                    onClick={handleApply}
-                    disabled={!isDirty || isApplying}
-                    className={`w-full rounded-xl px-4 py-3 text-sm font-semibold text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-                      !isDirty || isApplying
-                        ? "cursor-not-allowed bg-gray-300"
-                        : "bg-indigo-700 hover:bg-indigo-800 focus:ring-indigo-500"
-                    }`}
+                    onClick={() => handleApply(orderInfo?._id)}
+                    className={`w-full rounded-xl px-4 py-3 text-sm font-semibold text-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 bg-indigo-700 hover:bg-indigo-800 focus:ring-indigo-500
+                    `}
                   >
-                    {isApplying ? "Applying..." : "Apply Changes"}
+                    Update
                   </button>
-
-                  {!isDirty &&
-                    !applyMutation.isSuccess &&
-                    !applyMutation.isError && (
-                      <p className="text-xs text-gray-500">
-                        Change payment or status to enable Apply.
-                      </p>
-                    )}
-
-                  {applyMutation.isSuccess && (
-                    <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-xs font-medium text-emerald-700">
-                      Order updated successfully.
-                    </div>
-                  )}
-
-                  {applyMutation.isError && (
-                    <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs font-medium text-red-700">
-                      {applyMutation.error?.message ||
-                        "Failed to update order."}
-                    </div>
-                  )}
                 </div>
               </div>
             </div>

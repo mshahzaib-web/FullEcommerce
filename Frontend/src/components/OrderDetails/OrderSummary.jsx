@@ -21,7 +21,7 @@ function OrderSummary() {
         <div className="flex items-center justify-between rounded-2xl border border-gray-100 bg-gray-50/60 px-4 py-3">
           <span className="text-sm text-gray-500">Price</span>
           <span className="text-sm font-semibold text-gray-900">
-            {orderInfo?.price}
+            ${orderInfo?.price}
           </span>
         </div>
 
@@ -47,6 +47,15 @@ function OrderSummary() {
           </div>
         </div>
       </div>
+      <button
+        type="button"
+        className="flex w-full items-center justify-center gap-2 rounded-2xl bg-indigo-700 px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Order Completed
+      </button>
+      <p className="text-center text-gray-500">
+        NOTE: When Click on this button Order will me remove from your Orders
+      </p>
     </section>
   );
 }

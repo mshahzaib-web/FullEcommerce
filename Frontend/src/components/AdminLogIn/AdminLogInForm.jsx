@@ -10,8 +10,10 @@ import AdminLoginLeftPanel from "./AdminLoginLeftPanel";
 // import SocialAuthButtons from "./SocialAuthButtons";
 import AdminLoginTrustBadges from "./AdminLoginTrustBadges";
 import { toast } from "sonner";
+import { useState } from "react";
 
 export default function AdminLogInForm() {
+  const [seePassword, setSeePassword] = useState(false);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const location = useLocation();
@@ -106,13 +108,14 @@ export default function AdminLogInForm() {
                 <div className="relative">
                   <input
                     {...register("password")}
-                    type="password"
+                    type={seePassword == false ? "password" : "text"}
                     placeholder="Enter your password"
                     className="w-full px-4 py-3 rounded-xl border-0 bg-[#f3f4fd] text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/50 focus:ring-2 focus:ring-[#4c3ce6] transition duration-150 outline-none pr-10"
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    onClick={() => setSeePassword(!seePassword)}
+                    className={`absolute right-3 top-1/2 -translate-y-1/2  hover:text-indigo-600 ${seePassword == false ? "text-gray-400" : "text-indigo-600"}`}
                   >
                     <svg
                       className="w-4 h-4"

@@ -47,24 +47,21 @@ function FilterBar({
           </div>
         </div>
 
-        {/* Order Status */}
+        {/* Payment Status */}
         <div className="w-full lg:w-48">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Order Status
+            Payment Status
           </label>
           <div className="relative">
             <select
-              value={searchStatus}
-              onChange={(e) => setSearchStatus(e.target.value)}
+              value={searchPayment}
+              onChange={(e) => setSearchPayment(e.target.value)}
               className="w-full appearance-none pl-4 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm cursor-pointer"
             >
-              <option>All Statuses</option>
-              <option>Pending</option>
-              <option>Processing</option>
-              <option>Shipped</option>
-              <option>Out for delivery</option>
-              <option>Delivered</option>
-              <option>Completed</option>
+              <option>All Payments</option>
+              <option>Unpaid</option>
+              <option>Paid</option>
+              <option>Cash On Delivery</option>
             </select>
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
               <svg
@@ -85,21 +82,24 @@ function FilterBar({
           </div>
         </div>
 
-        {/* Payment Status */}
+        {/* Order Status */}
         <div className="w-full lg:w-48">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Payment Status
+            Order Status
           </label>
           <div className="relative">
             <select
-              value={searchPayment}
-              onChange={(e) => setSearchPayment(e.target.value)}
+              value={searchStatus}
+              onChange={(e) => setSearchStatus(e.target.value)}
               className="w-full appearance-none pl-4 pr-10 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm cursor-pointer"
             >
-              <option>All Payments</option>
-              <option>Unpaid</option>
-              <option>Paid</option>
-              <option>Cash On Delivery</option>
+              <option>All Statuses</option>
+              <option>Pending</option>
+              <option>Processing</option>
+              <option>Shipped</option>
+              <option>Out for delivery</option>
+              <option>Delivered</option>
+              <option>Completed</option>
             </select>
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
               <svg

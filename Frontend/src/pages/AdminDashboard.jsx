@@ -121,7 +121,7 @@ export default function AdminDashboard() {
                 progressLabel="Catalog health"
                 trend="+18 this week"
                 stats={[{ label: "Orders", value: data?.orders?.totalOrders }]}
-                onClick={() => navigate("/admin/products")}
+                onClick={() => navigate("/admin/orders")}
               />
 
               <Card
@@ -141,7 +141,7 @@ export default function AdminDashboard() {
                   },
                   { label: "Pending", value: "" },
                 ]}
-                onClick={() => navigate("/admin/products?filter=low-stock")}
+                onClick={() => navigate("/admin/orders?filterStatus=Pending")}
               />
 
               <Card
@@ -161,7 +161,9 @@ export default function AdminDashboard() {
                   },
                   { label: "Processing", value: "" },
                 ]}
-                onClick={() => navigate("/admin/products?filter=low-stock")}
+                onClick={() =>
+                  navigate("/admin/orders?filterStatus=Processing")
+                }
               />
 
               <Card
@@ -177,7 +179,7 @@ export default function AdminDashboard() {
                   { label: "Orders", value: data?.orders?.deliveredOrders },
                   { label: "Delivered", value: "" },
                 ]}
-                onClick={() => navigate("/admin/products?filter=healthy-stock")}
+                onClick={() => navigate("/admin/orders?filterStatus=Delivered")}
               />
 
               <Card
@@ -197,7 +199,7 @@ export default function AdminDashboard() {
                   },
                   { label: "Unpaid", value: "" },
                 ]}
-                onClick={() => navigate("/admin/products?filter=out-of-stock")}
+                onClick={() => navigate("/admin/orders?filterPayment=Unpaid")}
               />
 
               <Card
@@ -213,7 +215,7 @@ export default function AdminDashboard() {
                   { label: "Orders", value: data?.orders?.paidOrders },
                   { label: "Paid", value: "" },
                 ]}
-                onClick={() => navigate("/admin/products?filter=healthy-stock")}
+                onClick={() => navigate("/admin/orders?filterPayment=Paid")}
               />
             </div>
           </div>

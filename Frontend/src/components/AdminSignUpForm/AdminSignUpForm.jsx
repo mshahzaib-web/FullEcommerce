@@ -11,6 +11,9 @@ import AdminSignUpTrustBadges from "./AdminSignUpTrustBadges";
 import AdminSignUpLeftPanel from "./AdminSignUpLeftPanel";
 import { toast } from "sonner";
 export default function AdminSignUpForm() {
+  const [seePassword, setSeePassword] = useState(false);
+  const [confirmSeePassword, setConfirmSeePassword] = useState(false);
+
   const navigate = useNavigate();
   const [inputPassword, setInputPassword] = useState("");
 
@@ -142,12 +145,13 @@ export default function AdminSignUpForm() {
                       <input
                         value={inputPassword}
                         onChange={(e) => setInputPassword(e.target.value)}
-                        type="password"
+                        type={seePassword == false ? "password" : "text"}
                         className="w-full px-4 py-2.5 rounded-xl border-0 bg-indigo-50/40 text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/70 focus:ring-2 focus:ring-[#3222d4] transition duration-150 outline-none pr-10"
                       />
                       <button
                         type="button"
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        onClick={() => setSeePassword(!seePassword)}
+                        className={`absolute right-3 top-1/2 -translate-y-1/2  hover:text-indigo-600 ${seePassword == false ? "text-gray-400" : "text-indigo-600"}`}
                       >
                         <svg
                           className="w-4 h-4"
@@ -183,11 +187,39 @@ export default function AdminSignUpForm() {
                     <label className="text-xs sm:text-sm font-medium text-gray-700">
                       Confirm Password
                     </label>
-                    <input
-                      {...register("password")}
-                      type="password"
-                      className="w-full px-4 py-2.5 rounded-xl border-0 bg-indigo-50/40 text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/70 focus:ring-2 focus:ring-[#3222d4] transition duration-150 outline-none"
-                    />
+                    <div className="relative">
+                      <input
+                        {...register("password")}
+                        type={confirmSeePassword == false ? "password" : "text"}
+                        className="w-full px-4 py-2.5 rounded-xl border-0 bg-indigo-50/40 text-gray-900 placeholder-gray-400 text-sm focus:bg-indigo-50/70 focus:ring-2 focus:ring-[#3222d4] transition duration-150 outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setConfirmSeePassword(!confirmSeePassword)
+                        }
+                        className={`absolute right-3 top-1/2 -translate-y-1/2  hover:text-indigo-600 ${confirmSeePassword == false ? "text-gray-400" : "text-indigo-600"}`}
+                      >
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
 

@@ -5,16 +5,15 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 
-function ProductCard() {
+function ProductCard({ adminSearchProduct }) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const product = searchParams.get("products");
-  console.log(product);
 
   const { data, isPending, error } = useQuery({
-    queryKey: ["adminproducts", product],
-    queryFn: () => getAdminProducts({ product }),
+    queryKey: ["adminproducts", product, adminSearchProduct],
+    queryFn: () => getAdminProducts({ product, adminSearchProduct }),
   });
 
   console.log(data);

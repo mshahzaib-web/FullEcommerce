@@ -26,7 +26,7 @@ const AdminSignUpLeftPanel = () => {
 
           {/* Hero Typography */}
           <h1 className="text-4xl xl:text-5xl font-extrabold tracking-tight leading-tight">
-            Join Our Shopping <br /> Community
+            Join Our Seller <br /> Community
           </h1>
 
           <p className="text-purple-100 text-base xl:text-lg font-light leading-relaxed max-w-sm mx-auto">

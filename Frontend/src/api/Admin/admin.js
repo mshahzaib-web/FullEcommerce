@@ -69,12 +69,14 @@ export const adminLogout = async () => {
 };
 
 // Get all Amdin Product
-export const getAdminProducts = async ({ product }) => {
+export const getAdminProducts = async ({ product, adminSearchProduct }) => {
   const url = product
     ? `/admin/products?product=${product}`
     : `/admin/products`;
 
-  const res = await api.get(url);
+  const res = await api.get(url, {
+    params: { search: adminSearchProduct },
+  });
   return res.data;
 };
 

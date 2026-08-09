@@ -1,14 +1,33 @@
+import { useSearchParams } from "react-router-dom";
+
 import Heading from "../components/OrdersManage/Heading";
 import FilterBar from "../components/OrdersManage/FilterBar";
 import OrdersTable from "../components/OrdersManage/OrdersTable";
 import Header from "../components/AdminDashboard/Header";
 import Sidebar from "../components/AdminDashboard/Sidebar";
 import { useState } from "react";
+import { useEffect } from "react";
 
 export default function OrdersManage() {
   const [search, setSearch] = useState("");
   const [searchStatus, setSearchStatus] = useState("All Statuses");
   const [searchPayment, setSearchPayment] = useState("All Payments");
+
+  const [searchParams] = useSearchParams();
+
+  const filterStatus = searchParams.get("filterStatus");
+
+  const filterPayment = searchParams.get("filterPayment");
+
+  useEffect(() => {
+    if (filterStatus) {
+      setSearchStatus(filterStatus);
+    }
+
+    if (filterPayment) {
+      setSearchPayment(filterPayment);
+    }
+  }, [filterStatus, filterPayment]);
 
   return (
     <>

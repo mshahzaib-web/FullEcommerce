@@ -1,4 +1,18 @@
-function SearchBar() {
+import { useEffect } from "react";
+import { useState } from "react";
+
+function SearchBar({ setAdminSearchProduct }) {
+  const [debounseSearchAdminProduct, setDebounseSearchAdminProduct] =
+    useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAdminSearchProduct(debounseSearchAdminProduct);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [debounseSearchAdminProduct]);
+
   return (
     <div className="bg-white rounded-2xl p-6 mb-8 shadow-sm">
       <h2 className="text-lg font-bold text-gray-800 mb-4">Search Product</h2>
@@ -20,7 +34,9 @@ function SearchBar() {
           </svg>
         </div>
         <input
+          value={debounseSearchAdminProduct}
           type="text"
+          onChange={(e) => setDebounseSearchAdminProduct(e.target.value)}
           placeholder="Name or SKU"
           className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
         />

@@ -11,7 +11,7 @@ const Header = () => {
     queryKey: ["adininfo", admin?.adminId],
     queryFn: () => getAdminInfo(admin?.adminId),
   });
-  console.log(data);
+
   if (isPending) return <LoadingCom />;
 
   return (

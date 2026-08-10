@@ -148,19 +148,19 @@ function OrderedProducts() {
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  {orderInfo?.color && (
-                    <span className="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700">
-                      Color: {orderInfo?.color || "N/A"}
+                  {orderInfo?.selectColor && (
+                    <span className="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-sm font-medium text-gray-700">
+                      Color: {orderInfo?.selectColor}
                     </span>
                   )}
 
-                  {orderInfo?.size && (
-                    <span className="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700">
-                      Size: {orderInfo?.size || "N/A"}
+                  {orderInfo?.selectSize && (
+                    <span className="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-sm font-medium text-gray-700">
+                      Size: {orderInfo?.selectSize}
                     </span>
                   )}
 
-                  <span className="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-medium text-gray-700">
+                  <span className="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-sm font-medium text-gray-700">
                     Quantity: {orderInfo?.quantity}
                   </span>
                 </div>

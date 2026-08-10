@@ -14,6 +14,7 @@ import {
   getAdminOrderDetailsInfo,
   updateOrderStatus,
   getAdminInfo,
+  adminDeleteOrder,
 } from "../../controllers/Admin/admin.js";
 import {
   uploadImage,
@@ -91,5 +92,8 @@ router.get("/order/:id/order-details", adminIsLogIn, getAdminOrderDetailsInfo);
 
 // Update order staust and payment
 router.put("/order/:id/updatestatus", adminIsLogIn, updateOrderStatus);
+
+//Admin delte the order after complet the order
+router.delete("/order/:id/delete", adminIsLogIn, adminDeleteOrder);
 
 export default router;

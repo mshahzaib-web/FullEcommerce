@@ -265,3 +265,22 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
     message: "Order Status & Payment Update Successfully",
   });
 });
+
+//Delete the order by admin after complete the order
+export const adminDeleteOrder = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const deleteOrder = await Order.findByIdAndDelete(id);
+
+  if (!deleteOrder) {
+    return res.status(400).json({
+      success: false,
+      message: "Order Not Delete Successfully",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Order Delete Successfully",
+  });
+});

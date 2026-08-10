@@ -111,3 +111,9 @@ export const updateOrderStatus = async ({ id, data }) => {
   const res = await api.put(`/admin/order/${id}/updatestatus`, data);
   return res.data;
 };
+
+// Admin Delte the order after complete the order
+export const adminDeleteOrder = async (id) => {
+  const res = await api.delete(`/admin/order/${id}/delete`);
+  return res.data;
+};

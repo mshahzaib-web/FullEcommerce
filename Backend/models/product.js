@@ -55,7 +55,7 @@ const productSchema = new mongoose.Schema(
     color: [
       {
         type: String,
-        lowercase: true,
+        uppercase: true,
         trim: true,
       },
     ],
@@ -63,7 +63,7 @@ const productSchema = new mongoose.Schema(
     size: [
       {
         type: String,
-        lowercase: true,
+        uppercase: true,
         trim: true,
       },
     ],

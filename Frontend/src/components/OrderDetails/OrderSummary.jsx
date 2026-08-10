@@ -1,8 +1,31 @@
 import { useOrderDetails } from "../../context/orderDetailsContext";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { adminDeleteOrder } from "../../api/Admin/admin";
 
 function OrderSummary() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const orderInfo = useOrderDetails();
 
+  const adminDeleteOrderMutation = useMutation({
+    mutationFn: adminDeleteOrder,
+
+    onSuccess: (data) => {
+      navigate("/admin/orders");
+      queryClient.invalidateQueries({ queryKey: ["adminorders"] });
+      toast.success(data.message);
+    },
+
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+  });
+
+  const handleDeleteOrderBtn = (id) => {
+    adminDeleteOrderMutation.mutate(id);
+  };
   return (
     <section className="overflow-hidden rounded-3xl border border-violet-100 bg-white shadow-sm">
       <div className="flex items-center justify-between gap-3 border-b border-violet-100 bg-linear-to-r from-violet-50/70 to-white px-5 py-4 sm:px-6">
@@ -49,6 +72,7 @@ function OrderSummary() {
       </div>
       <button
         type="button"
+        onClick={() => handleDeleteOrderBtn(orderInfo?._id)}
         className="flex w-full items-center justify-center gap-2 rounded-2xl bg-indigo-700 px-4 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
         Order Completed

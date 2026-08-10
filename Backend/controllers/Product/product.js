@@ -45,12 +45,12 @@ export const getProducts = asyncHandler(async (req, res) => {
 
   // // Filter by Color
   if (selectColor) {
-    filter.color = selectColor.toLowerCase();
+    filter.color = selectColor.toUpperCase();
   }
 
   // // Filter by Size
   if (selectSize) {
-    filter.size = selectSize.toLowerCase();
+    filter.size = selectSize.toUpperCase();
   }
 
   // // Filter by price

@@ -117,3 +117,9 @@ export const adminDeleteOrder = async (id) => {
   const res = await api.delete(`/admin/order/${id}/delete`);
   return res.data;
 };
+
+//Admin delete the product
+export const adminDeleteProduct = async (id) => {
+  const res = await api.delete(`/admin/product/${id}/delete`);
+  return res.data;
+};

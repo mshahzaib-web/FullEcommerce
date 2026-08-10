@@ -5,6 +5,7 @@ import Admin from "../../models/admin.js";
 import User from "../../models/user.js";
 import Product from "../../models/product.js";
 import Order from "../../models/order.js";
+import Review from "../../models/review.js";
 import { success } from "zod";
 
 //Get Current Admin
@@ -269,8 +270,9 @@ export const updateOrderStatus = asyncHandler(async (req, res) => {
 //Delete the order by admin after complete the order
 export const adminDeleteOrder = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const { adminId } = req.admin;
 
-  const deleteOrder = await Order.findByIdAndDelete(id);
+  const deleteOrder = await Order.findOneAndDelete({ _id: id, owner: adminId });
 
   if (!deleteOrder) {
     return res.status(400).json({
@@ -282,5 +284,30 @@ export const adminDeleteOrder = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Order Delete Successfully",
+  });
+});
+
+//Admin delete the product
+export const adminDeleteProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { adminId } = req.admin;
+
+  const deleteProduct = await Product.findOneAndDelete({
+    _id: id,
+    owner: adminId,
+  });
+
+  if (!deleteProduct) {
+    return res.status(400).json({
+      success: false,
+      message: "Product Not Deleted",
+    });
+  }
+
+  const deleteProductReviews = await Review.deleteMany({ product: id });
+
+  res.status(200).json({
+    success: true,
+    message: "Product Delete Successfully",
   });
 });

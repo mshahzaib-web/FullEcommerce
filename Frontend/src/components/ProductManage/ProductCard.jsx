@@ -1,25 +1,40 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import LoadingCom from "../Loading/LoadingCom";
-import { getAdminProducts } from "../../api/Admin/admin";
+import { adminDeleteProduct, getAdminProducts } from "../../api/Admin/admin";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 
 function ProductCard({ adminSearchProduct }) {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
 
   const product = searchParams.get("products");
+
+  const adminDeleteProductMutation = useMutation({
+    mutationFn: adminDeleteProduct,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["adminproducts"] });
+      navigate("/admin/products");
+      toast.success(data.message);
+    },
+    onError: (error) => {
+      toast.error(error.response.data.message);
+    },
+  });
 
   const { data, isPending, error } = useQuery({
     queryKey: ["adminproducts", product, adminSearchProduct],
     queryFn: () => getAdminProducts({ product, adminSearchProduct }),
   });
 
-  console.log(data);
-
   const handleUpdateProductBtn = (id) => {
     navigate(`/admin/${id}/update-product`);
+  };
+
+  const handleAdminDeleteProduct = (id) => {
+    adminDeleteProductMutation.mutate(id);
   };
 
   if (error) return toast.error(error.message);
@@ -85,7 +100,11 @@ function ProductCard({ adminSearchProduct }) {
                   </button>
 
                   {/* Delete Link */}
-                  <button className="w-full text-red-500 hover:text-red-700 font-medium py-2 px-4 transition-colors duration-200">
+                  <button
+                    type="button"
+                    onClick={() => handleAdminDeleteProduct(product?._id)}
+                    className="w-full text-red-500 hover:text-red-700 font-medium py-2 px-4 transition-colors duration-200"
+                  >
                     Delete Product
                   </button>
                 </div>

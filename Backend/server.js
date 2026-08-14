@@ -26,10 +26,14 @@ app.use(express.json());
 // Cookie parser
 app.use(cookieParser());
 
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.CLIENT_URL_PRODUCTION,
+];
 // CORS
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: allowedOrigins,
     credentials: true,
   }),
 );

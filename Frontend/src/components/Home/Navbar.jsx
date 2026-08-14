@@ -62,7 +62,24 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <h1 className="text-2xl font-bold text-indigo-700">LuxeAura</h1>
+          <div className="flex">
+            <div className="mr-3 w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+              <svg
+                className="w-5 h-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold text-indigo-700">LuxeAura</h1>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
@@ -74,7 +91,7 @@ export default function Navbar() {
               Shop
             </NavLink>
 
-            <NavLink to="/user/wishlist" className={navLinkClass}>
+            {/* <NavLink to="/user/wishlist" className={navLinkClass}>
               Wishlist
             </NavLink>
 
@@ -87,7 +104,7 @@ export default function Navbar() {
             </NavLink>
             <NavLink to="/user/orders" className={navLinkClass}>
               Your Orders
-            </NavLink>
+            </NavLink> */}
           </div>
 
           {/* Right Side */}
@@ -293,17 +310,17 @@ export default function Navbar() {
               /* Logged Out */
               <>
                 <Link
-                  to="/user/login"
+                  to="/admin/signup"
                   className="hidden md:block px-4 py-2 border rounded-md hover:bg-gray-100"
                 >
-                  Sign In
+                  Seller
                 </Link>
 
                 <Link
                   to="/user/signup"
                   className="hidden md:block px-4 py-2 bg-indigo-700 text-white rounded-md hover:bg-indigo-800"
                 >
-                  Sign Up
+                  Buyer
                 </Link>
               </>
             )}
@@ -389,7 +406,7 @@ export default function Navbar() {
                 Shop
               </NavLink>
 
-              <NavLink
+              {/* <NavLink
                 to="/user/wishlist"
                 className={navLinkClass}
                 onClick={() => setIsOpen(false)}
@@ -418,24 +435,24 @@ export default function Navbar() {
                 onClick={() => setIsOpen(false)}
               >
                 Your Orders
-              </NavLink>
+              </NavLink> */}
             </div>
             {user ? (
               <></>
             ) : (
               <div className="md:hidden flex justify-between mt-3">
                 <Link
-                  to="/user/login"
+                  to="/admin/signup"
                   className="px-2 py-1 border rounded-md hover:bg-gray-100"
                 >
-                  Sign In
+                  Seller
                 </Link>
 
                 <Link
                   to="/user/signup"
                   className="px-2 py-1 bg-indigo-700 text-white rounded-md hover:bg-indigo-800"
                 >
-                  Sign Up
+                  Buyer
                 </Link>
               </div>
             )}

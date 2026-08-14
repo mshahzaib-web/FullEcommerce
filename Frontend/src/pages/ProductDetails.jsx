@@ -10,7 +10,6 @@ import ProductInfo from "../components/ProductDetails/ProductInfo";
 import ProductDescription from "../components/ProductDetails/ProductDescription";
 import RelatedProducts from "../components/ProductDetails/RelatedProducts";
 import LoadingCom from "../components/Loading/LoadingCom";
-
 import { getProductDetails } from "../api/Product/product";
 
 export default function ProductDetails() {
@@ -35,7 +34,7 @@ export default function ProductDetails() {
             <ProductInfo />
           </div>
           <ProductDescription />
-          <RelatedProducts />
+          <RelatedProducts category={data?.product?.category} />
         </div>
         <Footer />
       </productDetailsContext.Provider>

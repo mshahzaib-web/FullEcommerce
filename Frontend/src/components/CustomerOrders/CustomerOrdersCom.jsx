@@ -21,9 +21,7 @@ export default function CustomerOrdersCom() {
           <span>/user/</span>
           <span className="text-indigo-600">orders</span>
         </nav>
-        <h1 className=" text-2xl md:text-4xl font-bold text-black">
-          Your Orders
-        </h1>
+        <h1 className=" text-2xl font-bold text-gray-600">Your Orders</h1>
       </div>
 
       {data?.userOrders.map((item) => (

@@ -6,6 +6,8 @@ import User from "../../models/user.js";
 import Product from "../../models/product.js";
 import Order from "../../models/order.js";
 import Review from "../../models/review.js";
+import Cart from "../../models/cart.js";
+import Wishlist from "../../models/wishlist.js";
 import { success } from "zod";
 
 //Get Current Admin
@@ -306,6 +308,25 @@ export const adminDeleteProduct = asyncHandler(async (req, res) => {
 
   const deleteProductReviews = await Review.deleteMany({ product: id });
 
+  const deleteProductFromWishlist = await Wishlist.updateMany(
+    { "wishlist.product": id },
+    {
+      $pull: {
+        wishlist: { product: id },
+      },
+    },
+    { returnDocument: "after" },
+  );
+
+  const deleteProductFromCart = await Cart.updateMany(
+    { "cart.product": id },
+    {
+      $pull: {
+        cart: { product: id },
+      },
+    },
+    { returnDocument: "after" },
+  );
   res.status(200).json({
     success: true,
     message: "Product Delete Successfully",

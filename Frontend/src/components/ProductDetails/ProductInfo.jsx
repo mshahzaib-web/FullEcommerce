@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useProductDetails } from "../../context/productDetailsContext";
 import { addToCart } from "../../api/User/user";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useUserAuth } from "../../hooks/useAuth";
 import LoadingCom from "../Loading/LoadingCom";
+import { getProductReviews } from "../../api/Product/product";
 
 export default function ProductInfo() {
   const [selectedColor, setSelectedColor] = useState("None selected");
@@ -84,6 +85,14 @@ export default function ProductInfo() {
     });
   };
 
+  const { data: reviews } = useQuery({
+    queryKey: ["review", product._id],
+    queryFn: () => getProductReviews(product._id),
+    retry: false,
+  });
+
+  console.log(reviews);
+
   if (isLoading) {
     return <LoadingCom />; // Or a nice spinner component
   }
@@ -98,19 +107,32 @@ export default function ProductInfo() {
             {product.name}
           </h1>
           <div className="flex items-center gap-2 mb-4">
-            <div className="flex text-yellow-400">
-              {[...Array(5)].map((_, i) => (
-                <svg
-                  key={i}
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
+            <div className="flex items-center gap-1 text-amber-400">
+              {[1, 2, 3, 4, 5].map((star) => {
+                const fill =
+                  Math.max(
+                    0,
+                    Math.min(1, reviews?.averageRating - (star - 1)),
+                  ) * 100;
+                return (
+                  <svg key={star} className="w-4 h-4" viewBox="0 0 24 24">
+                    <defs>
+                      <linearGradient id={`star-${star}`}>
+                        <stop offset={`${fill}%`} stopColor="currentColor" />
+                        <stop offset={`${fill}%`} stopColor="#d1d5db" />
+                      </linearGradient>
+                    </defs>
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                      fill={`url(#star-${star})`}
+                    />
+                  </svg>
+                );
+              })}
             </div>
-            <span className="text-sm text-gray-500">(124 Reviews)</span>
+            <span className="text-sm text-gray-500">
+              ({reviews?.reviews.length})
+            </span>
           </div>
         </div>
 

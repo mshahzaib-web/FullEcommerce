@@ -16,6 +16,8 @@ function ProductCard({ adminSearchProduct }) {
     mutationFn: adminDeleteProduct,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["adminproducts"] });
+      queryClient.invalidateQueries({ queryKey: ["wishlist"] });
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
       navigate("/admin/products");
       toast.success(data.message);
     },

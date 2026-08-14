@@ -25,7 +25,7 @@ export default function ProductDescription() {
             onClick={() => handleReviewBtn(data.product._id)}
             className="text-center py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 hover:border-b-2 hover:border-indigo-600 hover:cursor-pointer  focus:outline-none"
           >
-            Reviews (124)
+            Reviews
           </button>
           <button
             type="button"

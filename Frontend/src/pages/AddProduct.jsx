@@ -4,6 +4,7 @@ import { productValidation } from "../validation/productValidation";
 import { useForm, FormProvider } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 import Heading from "../components/AddProduct/Heading";
 import GeneralInformation from "../components/AddProduct/GeneralInformation";
@@ -19,6 +20,7 @@ import { addProduct } from "../api/Admin/admin";
 
 export default function AddProduct() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const [mainImageData, setMainImageData] = useState({});
   const [subImageData, setSubImageData] = useState([]);
@@ -35,6 +37,7 @@ export default function AddProduct() {
     onSuccess: (data) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["products"] });
+      navigate("/admin/products");
     },
     onError: (error) => {
       toast.error(error.response.data.message);

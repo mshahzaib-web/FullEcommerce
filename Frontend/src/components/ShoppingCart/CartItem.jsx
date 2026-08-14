@@ -68,7 +68,7 @@ const CartItem = () => {
           <span>/</span>
           <span className="text-indigo-600">Cart</span>
         </nav>
-        <h1 className=" text-2xl md:text-5xl font-bold text-black">
+        <h1 className=" text-2xl md:text-3xl font-bold text-gray-600">
           Shopping Cart
         </h1>
       </div>
@@ -219,39 +219,48 @@ const CartItem = () => {
 
       {data?.userCartProduct?.length > 0 && (
         <>
-          <hr className="text-indigo-700 w-full" />
-          <div className="grid grid-cols-1 md:grid-cols-3 py-5 items-center">
-            <div>
-              <p className="flex justify-between md:justify-start gap-2 items-center text-2xl font-bold">
-                <span>Total Product:</span>
-                <span className="text-indigo-600">
+          <div className="mt-6 overflow-hidden rounded-2xl border border-indigo-100 bg-white shadow-sm">
+            <div className="h-1 w-full bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-600" />
+
+            <div className="grid grid-cols-1 gap-6 p-5 sm:p-6 md:grid-cols-3 md:items-center md:gap-8">
+              {/* Total Products */}
+              <div className="flex items-center justify-between rounded-xl bg-indigo-50/70 px-4 py-4 md:block md:bg-transparent md:px-0 md:py-0">
+                <p className="text-sm font-medium text-gray-500 sm:text-base">
+                  Total Products
+                </p>
+
+                <p className="mt-1 text-2xl font-bold text-indigo-600 sm:text-3xl">
                   {data.userCartProduct.length}
-                </span>
-              </p>
-            </div>
-            <div>
-              <p className="flex justify-between md:justify-start gap-2 items-center text-2xl font-bold">
-                <span>Total Price:</span>
-                <span className="text-indigo-600">
+                </p>
+              </div>
+
+              {/* Total Price */}
+              <div className="flex items-center justify-between rounded-xl bg-indigo-50/70 px-4 py-4 md:block md:bg-transparent md:px-0 md:py-0">
+                <p className="text-sm font-medium text-gray-500 sm:text-base">
+                  Total Price
+                </p>
+
+                <p className="mt-1 text-2xl font-bold text-indigo-600 sm:text-3xl">
                   $
                   {data.userCartProduct.reduce(
                     (total, item) => total + item.product.price,
                     0,
                   )}
-                </span>
-              </p>
-            </div>
-            <div className="flex justify-center mt-5 md:mt-0 hover:cursor-pointer">
-              <button
-                type="button"
-                onClick={handleBuyAllBtn}
-                className="w-full md:w-1/2 bg-[#3b36d6] hover:bg-indigo-800 text-white font-medium py-3 rounded-lg transition-colors shadow-sm hover:cursor-pointer"
-              >
-                Buy All
-              </button>
+                </p>
+              </div>
+
+              {/* Buy All Button */}
+              <div className="flex w-full justify-center md:justify-end">
+                <button
+                  type="button"
+                  onClick={handleBuyAllBtn}
+                  className="w-full rounded-xl bg-indigo-600 px-6 py-3.5 text-base font-semibold text-white shadow-md shadow-indigo-200 transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-2/3 md:w-full lg:w-2/3"
+                >
+                  Buy All
+                </button>
+              </div>
             </div>
           </div>
-          <hr className="text-indigo-700 w-full h-7" />
         </>
       )}
     </>

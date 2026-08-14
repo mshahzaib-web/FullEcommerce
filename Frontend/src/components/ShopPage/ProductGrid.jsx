@@ -158,7 +158,7 @@ export default function ProductGrid({ search, filter }) {
                 </h3>
 
                 {/* Rating layout block indicators */}
-                <div className="flex items-center space-x-1 mb-3">
+                {/* <div className="flex items-center space-x-1 mb-3">
                   <div className="flex text-[#F59E0B]">
                     {[...Array(5)].map((_, i) => (
                       <svg
@@ -175,7 +175,7 @@ export default function ProductGrid({ search, filter }) {
                       (6)
                     </span>
                   }
-                </div>
+                </div> */}
               </div>
 
               {/* Bottom Action/Pricing Alignment Controls */}

@@ -43,6 +43,13 @@ app.use("/user", userRoutes);
 // app.use("/api/users", userRoutes);
 
 // Error Handler (Always keep this LAST)
+app.get("/check", (req, res) => {
+  res.status(200).json({
+    status: "success",
+    message: "Azure deployment is working correctly!",
+    timestamp: new Date().toISOString(),
+  });
+});
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;

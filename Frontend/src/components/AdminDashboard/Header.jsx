@@ -34,7 +34,7 @@ const Header = () => {
                 />
               </svg>
             </div>
-            <span className="text-xl font-bold text-indigo-900">LuxeAura</span>
+            <span className="text-xl font-bold text-indigo-900">LuxeAuras</span>
           </div>{" "}
         </div>
 

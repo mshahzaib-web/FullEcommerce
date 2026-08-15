@@ -78,7 +78,7 @@ export default function Navbar() {
                 />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-indigo-700">LuxeAura</h1>
+            <h1 className="text-2xl font-bold text-indigo-700">LuxeAuras</h1>
           </div>
 
           {/* Desktop Navigation */}

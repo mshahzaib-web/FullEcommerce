@@ -88,8 +88,8 @@ export const adminLogIn = asyncHandler(async (req, res) => {
 
   res.cookie("adminToken", token, {
     httpOnly: true,
-    secure: false,
-    sameSite: "lax",
+    secure: true,
+    sameSite: "none",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 

@@ -79,7 +79,11 @@ export const userLogIn = asyncHandler(async (req, res) => {
 
 // User Logout
 export const userLogout = asyncHandler(async (req, res) => {
-  res.clearCookie("userToken");
+  res.clearCookie("userToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+  });
 
   res.status(200).json({
     success: true,

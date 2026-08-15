@@ -13,6 +13,7 @@ import { useEffect } from "react";
  * Handles layout formatting for criteria inputs like Brands, Pricing Limits, and Item Colors.
  */
 export default function Sidebar({ search, setSearch, setFilter }) {
+  const [isOpen, setIsOpen] = useState(false);
   const [priceRange, setPriceRange] = useState({
     minPrice: 0,
     maxPrice: 1000,
@@ -143,157 +144,173 @@ export default function Sidebar({ search, setSearch, setFilter }) {
       </div>
 
       {/* Category Checkboxes Block */}
-      <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-7">
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-            Categories
-          </label>
-          <select
-            {...register("selectCategory")}
-            className=" border-gray-300 border-2 py-1 w-full focus:outline-none focus:border-indigo-600 focus:border-2 rounded-md"
-          >
-            <option>Select Category</option>
-            {[
-              ...new Set(data?.products.map((product) => product.category)),
-            ].map((category, index) => (
-              <option key={index} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Dual Value Pricing Range Bar */}
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-            Price Range
-          </label>
-
-          <div className="relative pt-1">
-            {/* Track */}
-            <div className="h-1 bg-gray-200 rounded-full">
-              <div
-                className="absolute h-1 bg-[#4F46E5] rounded-full"
-                style={{
-                  left: `${left}%`,
-                  right: `${right}%`,
-                }}
-              ></div>
-            </div>
-
-            {/* Minimum slider */}
-            <input
-              type="range"
-              min="0"
-              max="1000"
-              value={priceRange.minPrice}
-              onChange={handleMinChange}
-              className="mt-2 absolute top-[-6px] left-0 w-full"
-            />
-
-            {/* Maximum slider */}
-            <input
-              type="range"
-              min="0"
-              max="1000"
-              value={priceRange.maxPrice}
-              onChange={handleMaxChange}
-              className="absolute top-[-6px] left-0 w-full"
-            />
-          </div>
-
-          {/* Show Values */}
-          <div className="flex items-center justify-between gap-2 mt-4">
-            <div className="bg-white border border-gray-200 rounded-lg py-1.5 px-3 text-center flex-1 text-xs text-gray-600 font-medium">
-              ${priceRange.minPrice}
-            </div>
-
-            <div className="bg-white border border-gray-200 rounded-lg py-1.5 px-3 text-center flex-1 text-xs text-gray-600 font-medium">
-              ${priceRange.maxPrice}
-            </div>
-          </div>
-        </div>
-        {/* Brand Radio Selection Block */}
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-            Brands
-          </label>
-          <select
-            {...register("selectBrand")}
-            className=" border-gray-300 border-2 py-1 w-full focus:outline-none focus:border-indigo-600 focus:border-2 rounded-md"
-          >
-            <option>Select Brand</option>
-            {[...new Set(data?.products.map((product) => product.brand))].map(
-              (brand, index) => (
-                <option key={index} value={brand}>
-                  {brand}
-                </option>
-              ),
-            )}
-          </select>
-        </div>
-
-        {/* Palette Solid Color Selection Bullets */}
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-            Colors
-          </label>
-          <div className="flex flex-wrap gap-2.5">
-            <select
-              {...register("selectColor")}
-              className=" border-gray-300 border-2 py-1 w-full focus:outline-none focus:border-indigo-600 focus:border-2 rounded-md"
-            >
-              <option>Select Color</option>
-              {[
-                ...new Set(
-                  data?.products.flatMap((product, indx) =>
-                    (product.color || []).map((color, index) => (
-                      <option key={index + color + indx + product._id}>
-                        {color.charAt(0).toUpperCase() +
-                          color.slice(1).toLowerCase()}
-                      </option>
-                    )),
-                  ),
-                ),
-              ]}
-            </select>
-          </div>
-        </div>
-
-        {/* Multi-size Matrix Boxes */}
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
-            Size
-          </label>
-          <div className="grid gap-1.5">
-            <select
-              {...register("selectSize")}
-              className=" border-gray-300 border-2 py-1 w-full focus:outline-none focus:border-indigo-600 focus:border-2 rounded-md"
-            >
-              <option>Select Size</option>
-              {[
-                ...new Set(
-                  data?.products.flatMap((product, indx) =>
-                    (product.size || []).map((size, index) => (
-                      <option key={index + indx + size + product._id}>
-                        {size.toUpperCase()}
-                      </option>
-                    )),
-                  ),
-                ),
-              ]}
-            </select>
-          </div>
-        </div>
-
-        {/* Global Filter Trigger Submitter */}
+      <div>
         <button
-          type="submit"
-          className="w-full bg-[#4338CA] text-white font-bold text-xs py-3.5 rounded-xl hover:bg-opacity-95 transition-all shadow-md mt-2"
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="lg:hidden mb-4 rounded-lg bg-blue-600 px-4 py-2 text-white"
         >
-          Apply Filters
+          {isOpen ? "✕ Close" : "☰ Filter"}
         </button>
-      </form>
+        <form
+          onSubmit={handleSubmit(onSubmit, onError)}
+          className={`
+          ${isOpen ? "block" : "hidden"}
+          lg:block
+          rounded-lg border border-gray-200 shadow-xl bg-white p-4 space-y-7
+        `}
+        >
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+              Categories
+            </label>
+            <select
+              {...register("selectCategory")}
+              className=" border-gray-300 border-2 py-1 w-full focus:outline-none focus:border-indigo-600 focus:border-2 rounded-md"
+            >
+              <option>Select Category</option>
+              {[
+                ...new Set(data?.products.map((product) => product.category)),
+              ].map((category, index) => (
+                <option key={index} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Dual Value Pricing Range Bar */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+              Price Range
+            </label>
+
+            <div className="relative pt-1">
+              {/* Track */}
+              <div className="h-1 bg-gray-200 rounded-full">
+                <div
+                  className="absolute h-1 bg-[#4F46E5] rounded-full"
+                  style={{
+                    left: `${left}%`,
+                    right: `${right}%`,
+                  }}
+                ></div>
+              </div>
+
+              {/* Minimum slider */}
+              <input
+                type="range"
+                min="0"
+                max="1000"
+                value={priceRange.minPrice}
+                onChange={handleMinChange}
+                className="mt-2 absolute top-[-6px] left-0 w-full"
+              />
+
+              {/* Maximum slider */}
+              <input
+                type="range"
+                min="0"
+                max="1000"
+                value={priceRange.maxPrice}
+                onChange={handleMaxChange}
+                className="absolute top-[-6px] left-0 w-full"
+              />
+            </div>
+
+            {/* Show Values */}
+            <div className="flex items-center justify-between gap-2 mt-4">
+              <div className="bg-white border border-gray-200 rounded-lg py-1.5 px-3 text-center flex-1 text-xs text-gray-600 font-medium">
+                ${priceRange.minPrice}
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded-lg py-1.5 px-3 text-center flex-1 text-xs text-gray-600 font-medium">
+                ${priceRange.maxPrice}
+              </div>
+            </div>
+          </div>
+          {/* Brand Radio Selection Block */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+              Brands
+            </label>
+            <select
+              {...register("selectBrand")}
+              className=" border-gray-300 border-2 py-1 w-full focus:outline-none focus:border-indigo-600 focus:border-2 rounded-md"
+            >
+              <option>Select Brand</option>
+              {[...new Set(data?.products.map((product) => product.brand))].map(
+                (brand, index) => (
+                  <option key={index} value={brand}>
+                    {brand}
+                  </option>
+                ),
+              )}
+            </select>
+          </div>
+
+          {/* Palette Solid Color Selection Bullets */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+              Colors
+            </label>
+            <div className="flex flex-wrap gap-2.5">
+              <select
+                {...register("selectColor")}
+                className=" border-gray-300 border-2 py-1 w-full focus:outline-none focus:border-indigo-600 focus:border-2 rounded-md"
+              >
+                <option>Select Color</option>
+                {[
+                  ...new Set(
+                    data?.products.flatMap((product, indx) =>
+                      (product.color || []).map((color, index) => (
+                        <option key={index + color + indx + product._id}>
+                          {color.charAt(0).toUpperCase() +
+                            color.slice(1).toLowerCase()}
+                        </option>
+                      )),
+                    ),
+                  ),
+                ]}
+              </select>
+            </div>
+          </div>
+
+          {/* Multi-size Matrix Boxes */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+              Size
+            </label>
+            <div className="grid gap-1.5">
+              <select
+                {...register("selectSize")}
+                className=" border-gray-300 border-2 py-1 w-full focus:outline-none focus:border-indigo-600 focus:border-2 rounded-md"
+              >
+                <option>Select Size</option>
+                {[
+                  ...new Set(
+                    data?.products.flatMap((product, indx) =>
+                      (product.size || []).map((size, index) => (
+                        <option key={index + indx + size + product._id}>
+                          {size.toUpperCase()}
+                        </option>
+                      )),
+                    ),
+                  ),
+                ]}
+              </select>
+            </div>
+          </div>
+
+          {/* Global Filter Trigger Submitter */}
+          <button
+            type="submit"
+            className="w-full bg-[#4338CA] text-white font-bold text-xs py-3.5 rounded-xl hover:bg-opacity-95 transition-all shadow-md mt-2"
+          >
+            Apply Filters
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

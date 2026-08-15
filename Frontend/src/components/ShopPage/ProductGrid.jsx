@@ -129,7 +129,7 @@ export default function ProductGrid({ search, filter }) {
         {data?.products.map((product) => (
           <div
             key={product._id}
-            className="bg-white border border-gray-400 rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow group flex flex-col"
+            className="bg-white border border-gray-400 rounded-2xl overflow-hidden shadow-md hover:shadow-lg hover:scale-102 transition-all group flex flex-col"
           >
             {/* Image Box Section */}
             <div className="relative aspect-square bg-gray-50 overflow-hidden">

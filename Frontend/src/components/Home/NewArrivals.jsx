@@ -27,7 +27,7 @@ const NewArrivals = () => {
                     <img
                       src={product?.mainImage?.url}
                       alt={product?.name}
-                      className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-56 object-contain group-hover:scale-105 transition-transform duration-300"
                     />
                     <span className="absolute top-3 right-3 bg-indigo-700 text-white text-xs font-bold px-2 py-1 rounded">
                       NEW

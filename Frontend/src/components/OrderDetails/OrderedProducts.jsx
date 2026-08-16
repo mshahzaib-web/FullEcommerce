@@ -108,7 +108,7 @@ function OrderedProducts() {
               <img
                 src={orderInfo?.product?.mainImage?.url}
                 alt={orderInfo?.product?.name}
-                className=" w-full object-cover rounded-md"
+                className=" w-full object-contain rounded-md"
               />
             ) : (
               <div className="flex w-full items-center justify-center bg-gray-100 ">

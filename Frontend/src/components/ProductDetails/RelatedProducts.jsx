@@ -110,9 +110,9 @@ export default function RelatedProducts({ category }) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {data?.products.map((product) => (
-            <>
-              {product.category == category && (
+          {data?.products.map(
+            (product) =>
+              product?.category == category && (
                 <div
                   key={product?._id}
                   className="bg-white border border-gray-400 rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow group flex flex-col"
@@ -122,7 +122,7 @@ export default function RelatedProducts({ category }) {
                     <img
                       src={product?.mainImage?.url}
                       alt={product?.name}
-                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-500"
                     />
                     {/* {product.tag && (
                 <span
@@ -139,7 +139,7 @@ export default function RelatedProducts({ category }) {
                       <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase">
                         {product?.brand}
                       </p>
-                      <h3 className="text-xs font-bold text-gray-800 mt-1 mb-1.5">
+                      <h3 className="line-clamp-3 text-xs font-bold text-gray-800 mt-1 mb-1.5">
                         {product?.name}
                       </h3>
 
@@ -148,7 +148,7 @@ export default function RelatedProducts({ category }) {
 
                     {/* Bottom Action/Pricing Alignment Controls */}
                     <div className="mt-auto">
-                      <div className="flex items-baseline space-x-2 mb-3">
+                      <div className="flex items-baseline space-x-2 my-3">
                         <span className="text-sm font-black text-[#4F46E5]">
                           ${product?.price}
                         </span>
@@ -185,9 +185,8 @@ export default function RelatedProducts({ category }) {
                     </div>
                   </div>
                 </div>
-              )}
-            </>
-          ))}
+              ),
+          )}
         </div>
       </div>
     </>

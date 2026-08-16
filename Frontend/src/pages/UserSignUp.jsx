@@ -1,9 +1,13 @@
 import UserSignUpForm from "../components/UserSignUp/UserSignUpForm";
+import Navbar from "../components/Home/Navbar";
 
 export default function UserSignUp() {
   return (
-    <div>
-      <UserSignUpForm />
-    </div>
+    <>
+      <Navbar />
+      <div>
+        <UserSignUpForm />
+      </div>
+    </>
   );
 }

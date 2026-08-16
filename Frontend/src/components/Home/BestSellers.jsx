@@ -32,12 +32,12 @@ const BestSellers = () => {
                     <img
                       src={product?.mainImage?.url}
                       alt={product?.name}
-                      className="w-full h-40 md:h-44 lg:h-56 object-cover rounded-md  group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-40 md:h-44 lg:h-56 object-contain rounded-md  group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                   <div>
                     <div className="p-4">
-                      <h3 className="font-semibold text-sm text-gray-800 mb-1">
+                      <h3 className="line-clamp-2 font-semibold text-sm text-gray-800 mb-1">
                         {product?.name}
                       </h3>
                       <p className="text-indigo-700 font-bold text-sm">

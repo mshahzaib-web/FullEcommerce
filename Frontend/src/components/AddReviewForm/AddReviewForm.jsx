@@ -21,17 +21,17 @@ export default function AddReviewForm() {
     queryFn: () => getProductDetails(id),
     retry: false,
   });
-  const product = data.product;
+  const product = data?.product;
 
   const addReviewMutation = useMutation({
     mutationFn: addProductReview,
     onSuccess: (data) => {
-      navigate(`/product/${product._id}/reviews`);
+      navigate(`/product/${product?._id}/reviews`);
       toast.success(data.message);
     },
 
     onError: (error) => {
-      navigate(`/user/product/${product._id}/add-review`);
+      navigate(`/user/product/${product?._id}/add-review`);
       toast.error(error.response.data.message);
     },
   });
@@ -87,7 +87,7 @@ export default function AddReviewForm() {
               Luxeaura
             </p>
             <p className="text-gray-900 text-sm sm:text-base font-medium">
-              {product.name}
+              {product?.name}
             </p>
           </div>
         </div>
@@ -146,7 +146,7 @@ export default function AddReviewForm() {
         {/* Submit Button */}
         <button
           type="button"
-          onClick={() => handleSubmit(product._id)}
+          onClick={() => handleSubmit(product?._id)}
           className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold text-base sm:text-lg py-3.5 sm:py-4 rounded-full flex items-center justify-center gap-2 transition-colors shadow-md hover:shadow-lg"
         >
           Submit Review

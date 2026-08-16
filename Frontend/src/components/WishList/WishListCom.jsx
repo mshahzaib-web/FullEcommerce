@@ -203,7 +203,7 @@ const WishListCom = () => {
                         <img
                           src={item.product.mainImage?.url}
                           alt={item.product.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-contain"
                         />
                       </div>
                       <button
@@ -421,7 +421,7 @@ const WishListCom = () => {
             ))}
           </div>
 
-          {data?.userWishlistProduct?.length === 0 && (
+          {!data?.userWishlistProduct?.length && (
             <div className="text-center py-16">
               <svg
                 className="w-16 h-16 text-gray-300 mx-auto mb-4"

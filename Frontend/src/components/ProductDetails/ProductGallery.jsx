@@ -16,7 +16,7 @@ export default function ProductGallery() {
           <img
             src={data.product.mainImage.url}
             alt={data.product.name}
-            className=" object-cover rounded-md"
+            className="w-full min-h-3/5 max-h-3/4 object-contain object-center rounded-md"
           />
           <div className="absolute bottom-4 right-4 flex gap-2">
             <button className="bg-white p-2 rounded-full shadow-md hover:bg-gray-50">
@@ -67,7 +67,7 @@ export default function ProductGallery() {
               <img
                 src={image.url}
                 alt="image"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
           ))}

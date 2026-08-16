@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 
 import { getProducts } from "../../api/Product/product";
@@ -14,6 +14,7 @@ import { useState } from "react";
  * Coordinates the filtering controls row alongside structural listing arrays.
  */
 export default function ProductGrid({ search, filter }) {
+  const navigate = useNavigate();
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
   console.log(filter.selectCategory);
@@ -46,8 +47,6 @@ export default function ProductGrid({ search, filter }) {
   //   console.log("Search API value:", debouncedSearch);
   //   // Call API or update parent state here
   // }, [debouncedSearch]);
-
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { data, isPending, error } = useQuery({
@@ -129,62 +128,48 @@ export default function ProductGrid({ search, filter }) {
         {data?.products.map((product) => (
           <div
             key={product._id}
-            className="bg-white border border-gray-400 rounded-2xl overflow-hidden shadow-md hover:shadow-lg hover:scale-102 transition-all group flex flex-col"
+            className="bg-white border border-gray-300 rounded-2xl overflow-hidden shadow-lg hover:shadow-lg hover:scale-102 transition-all group flex flex-col"
           >
-            {/* Image Box Section */}
-            <div className="relative aspect-square bg-gray-50 overflow-hidden">
-              <img
-                src={product.mainImage.url}
-                alt={product.name}
-                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-              />
-              {/* {product.tag && (
+            <Link to={`/product/${product?._id}`}>
+              {/* Image Box Section */}
+              <div className="relative aspect-square bg-gray-50 overflow-hidden">
+                <img
+                  src={product.mainImage.url}
+                  alt={product.name}
+                  className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-500"
+                />
+                {/* {product.tag && (
                 <span
                   className={`absolute top-3 left-3 text-[9px] font-black tracking-wider px-2 py-0.5 rounded-md ${product.tag === "NEW" ? "bg-[#4F46E5] text-white" : "bg-[#FCA5A5] text-[#991B1B]"}`}
                 >
                   {product.tag}
                 </span>
               )} */}
-            </div>
+              </div>
+            </Link>
 
             {/* Meta Text Information */}
             <div className="p-4 flex-1 flex flex-col justify-between">
-              <div>
-                <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase">
-                  {product.brand}
-                </p>
-                <h3 className="text-xs font-bold text-gray-800 mt-1 mb-1.5">
-                  {product.name}
-                </h3>
-
-                {/* Rating layout block indicators */}
-                {/* <div className="flex items-center space-x-1 mb-3">
-                  <div className="flex text-[#F59E0B]">
-                    {[...Array(5)].map((_, i) => (
-                      <svg
-                        key={i}
-                        className={`w-3 h-3 ${i < Math.floor(4) ? "fill-current" : "text-gray-200"}`}
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
-                  </div>
-                  {
-                    <span className="text-[10px] text-gray-400 font-bold">
-                      (6)
-                    </span>
-                  }
-                </div> */}
-              </div>
+              <Link to={`/product/${product?._id}`}>
+                <div>
+                  <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase">
+                    {product.brand}
+                  </p>
+                  <h3 className="line-clamp-3 text-xs font-bold text-gray-800 mt-1 mb-1.5">
+                    {product.name}
+                  </h3>
+                </div>
+              </Link>
 
               {/* Bottom Action/Pricing Alignment Controls */}
               <div className="mt-auto">
-                <div className="flex items-baseline space-x-2 mb-3">
-                  <span className="text-sm font-black text-[#4F46E5]">
-                    ${product.price}
-                  </span>
-                </div>
+                <Link to={`/product/${product?._id}`}>
+                  <div className="flex items-baseline space-x-2 my-3">
+                    <span className="text-sm font-black text-[#4F46E5]">
+                      ${product.price}
+                    </span>
+                  </div>
+                </Link>
 
                 {/* Addition Controls buttons bar wrapper layout */}
                 <div className="flex items-center gap-1.5">

@@ -1,9 +1,13 @@
 import UserLogInForm from "../components/UserLogIn/UserLogInForm";
+import Navbar from "../components/Home/Navbar";
 
 export default function UserLogIn() {
   return (
-    <div>
-      <UserLogInForm />
-    </div>
+    <>
+      <Navbar />
+      <div>
+        <UserLogInForm />
+      </div>
+    </>
   );
 }

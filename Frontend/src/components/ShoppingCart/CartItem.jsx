@@ -73,15 +73,15 @@ const CartItem = () => {
         </h1>
       </div>
 
-      {data.userCartProduct.map((item) => (
+      {data?.userCartProduct?.map((item) => (
         <div
-          key={item.product._id}
+          key={item?.product?._id}
           className="bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-500 grid sm:grid-cols-1 md:grid-cols-3 justify-around gap-4 sm:gap-6 mb-4"
         >
           <div className="w-full sm:w-32 h-32 shrink-0 bg-gray-50 rounded-lg overflow-hidden">
             <img
-              src={item.product.mainImage.url}
-              alt={item.product.name}
+              src={item?.product?.mainImage.url}
+              alt={item?.product?.name}
               className="w-full h-full object-cover"
             />
           </div>
@@ -90,28 +90,30 @@ const CartItem = () => {
           <div className=" flex flex-col">
             <div>
               <p className="text-xs font-bold text-gray-500 tracking-wider uppercase mb-1">
-                {item.product.brand}
+                {item?.product?.brand}
               </p>
               <h3 className="text-sm font-bold text-gray-900 mb-1">
-                {item.product.name}
+                {item?.product?.name}
               </h3>
-              {item.color == "None selected" ? (
+              {item?.color == "None selected" ? (
                 ""
               ) : (
                 <p className="text-sm text-gray-500">
                   {" "}
                   Color:{" "}
                   <span className="font-medium text-gray-700">
-                    {item.color}
+                    {item?.color}
                   </span>
                 </p>
               )}
-              {item.size == "None selected" ? (
+              {item?.size == "None selected" ? (
                 ""
               ) : (
                 <p className="text-sm text-gray-500">
                   Size:{" "}
-                  <span className="font-medium text-gray-700">{item.size}</span>
+                  <span className="font-medium text-gray-700">
+                    {item?.size}
+                  </span>
                 </p>
               )}
             </div>
@@ -123,7 +125,7 @@ const CartItem = () => {
                   Quantity:
                 </p>
                 <span className="ml-7 text-sm font-bold text-gray-700">
-                  {item.quantity}
+                  {item?.quantity}
                 </span>
               </div>
             </div>
@@ -132,19 +134,19 @@ const CartItem = () => {
           {/* Price & Actions */}
           <div className="flex flex-col justify-start items-end min-w-35">
             <p className="text-xl font-bold text-indigo-600">
-              ${item.product.price}
+              ${item?.product?.price}
             </p>
 
             <div className="flex gap-4 mt-4 sm:mt-0">
               <Link
-                to={`/product/${item.product._id}`}
+                to={`/product/${item?.product?._id}`}
                 className="flex items-center gap-1 font-bold text-sm text-indigo-500 hover:text-indigo-700 transition-colors hover:cursor-pointer"
               >
                 Buy
               </Link>
               <button
                 type="button"
-                onClick={() => handleRemoveCartProduct(item.product._id)}
+                onClick={() => handleRemoveCartProduct(item?.product?._id)}
                 className="flex items-center gap-1 text-sm text-gray-500 hover:text-red-600 transition-colors hover:cursor-pointer"
               >
                 <svg
@@ -193,7 +195,7 @@ const CartItem = () => {
         //Hiden input to send data
       ))}
 
-      {data?.userCartProduct?.length === 0 && (
+      {!data?.userCartProduct?.length && (
         <div className="text-center py-16">
           <svg
             className="w-16 h-16 text-gray-300 mx-auto mb-4"
@@ -230,7 +232,7 @@ const CartItem = () => {
                 </p>
 
                 <p className="mt-1 text-2xl font-bold text-indigo-600 sm:text-3xl">
-                  {data.userCartProduct.length}
+                  {data?.userCartProduct?.length}
                 </p>
               </div>
 
@@ -242,8 +244,8 @@ const CartItem = () => {
 
                 <p className="mt-1 text-2xl font-bold text-indigo-600 sm:text-3xl">
                   $
-                  {data.userCartProduct.reduce(
-                    (total, item) => total + item.product.price,
+                  {data?.userCartProduct.reduce(
+                    (total, item) => total + item?.product?.price,
                     0,
                   )}
                 </p>

@@ -48,19 +48,19 @@ function ProductCard({ adminSearchProduct }) {
           {data?.products.map((product) => (
             <div
               key={product?._id}
-              className=" bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col"
+              className=" bg-white rounded-2xl overflow-hidden shadow-md border border-gray-300 mb-3 hover:shadow-md transition-shadow duration-300 flex flex-col justify-around"
             >
               {/* Product Image */}
-              <div className="w-full h-full bg-gray-100 overflow-hidden">
+              <div className="w-full h-2/5 flex bg-gray-100 overflow-hidden">
                 <img
                   src={product?.mainImage?.url}
                   alt={product?.name}
-                  className="w-full h-full rounded-md object-cover"
+                  className="w-full mt-2 rounded-md object-contain"
                 />
               </div>
 
               {/* Card Content */}
-              <div className="p-5 flex flex-col grow">
+              <div className="p-5 flex flex-col">
                 {/* Category */}
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
                   {product?.category} • {product?.brand}
@@ -92,7 +92,7 @@ function ProductCard({ adminSearchProduct }) {
                 </div>
 
                 {/* Spacer to push buttons to bottom */}
-                <div className="mt-auto">
+                <div className="mt-5 flex flex-col">
                   {/* Update Button */}
                   <button
                     onClick={() => handleUpdateProductBtn(product?._id)}

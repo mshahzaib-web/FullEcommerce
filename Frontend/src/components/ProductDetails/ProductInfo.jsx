@@ -91,8 +91,6 @@ export default function ProductInfo() {
     retry: false,
   });
 
-  console.log(reviews);
-
   if (isLoading) {
     return <LoadingCom />; // Or a nice spinner component
   }

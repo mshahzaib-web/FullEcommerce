@@ -24,15 +24,15 @@ export default function CustomerReviewsCom() {
     queryFn: () => getProductDetails(id),
     retry: false,
   });
-  const product = productData.product;
+  const product = productData?.product;
 
   const handleWriteReviewBtn = (id) => {
     navigate(`/user/product/${id}/add-review`);
   };
 
   const { data, isPending } = useQuery({
-    queryKey: ["review", product._id],
-    queryFn: () => getProductReviews(product._id),
+    queryKey: ["review", product?._id],
+    queryFn: () => getProductReviews(product?._id),
     retry: false,
   });
 
@@ -107,13 +107,17 @@ export default function CustomerReviewsCom() {
         {/* Product Header Card */}
         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-gray-100 overflow-hidden shrink-0 flex items-center justify-center">
-            <img src={product?.mainImage?.url} alt="" />
+            <img
+              src={product?.mainImage?.url}
+              alt=""
+              className="w-full object-contain"
+            />
           </div>
           <div className="flex-1">
-            <h1 className="text-md font-bold text-gray-900">{product.name}</h1>
+            <h1 className="text-md font-bold text-gray-900">{product?.name}</h1>
             <div className="flex items-center gap-2 mt-1 flex-wrap">
               <span className="text-indigo-600 font-bold text-base sm:text-lg">
-                ${product.price}
+                ${product?.price}
               </span>
               <div className="flex items-center gap-1">
                 <svg
@@ -133,7 +137,7 @@ export default function CustomerReviewsCom() {
             </div>
           </div>
           <Link
-            to={`/product/${product._id}`}
+            to={`/product/${product?._id}`}
             className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 rounded-full transition-colors whitespace-nowrap"
           >
             Back to Product
